@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-base: #fcf9f8;
+  --color-highlighter: #fbd800;
+  --color-label: #006685;
+  
+  --color-surface-low: #f1edea;
+  --color-tertiary: #e2e8f0;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-base);
+    color: #1a1a1a;
+  }
+}
+
+@layer components {
+  .text-label-caps {
+    @apply uppercase tracking-[0.05em] text-label;
+  }
+  
+  .headline {
+    @apply font-display leading-[0.9] tracking-[-0.02em] uppercase relative z-10;
+  }
+  
+  .card {
+    @apply bg-surface-low p-6 border-none rounded-none relative;
+  }
+  
+  .chip {
+    @apply bg-tertiary text-label text-[10px] font-semibold py-1 px-2.5 rounded-lg inline-flex items-center;
+  }
+  
+  .metallic-btn {
+    @apply rounded-2xl text-white font-bold uppercase tracking-[0.05em] cursor-pointer transition-transform duration-200 shadow-[0_4px_12px_rgba(110,94,0,0.2)] hover:-translate-y-[2px];
+    background: linear-gradient(135deg, #6e5e00, #fbd800);
+  }
+  
+  .glass-float {
+    @apply absolute backdrop-blur-md bg-white/40 p-3 rounded-xl z-20 shadow-[0_8px_32px_rgba(0,0,0,0.05)];
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* STATIC PDF GENERATION & PRINT STYLES                                       */
+/* -------------------------------------------------------------------------- */
+
+/* Target the container when generating a PDF to force absolute static rendering */
+.static-print-mode,
+.static-print-mode * {
+  transition: none !important;
+  animation: none !important;
+  animation-delay: 0s !important;
+  transition-delay: 0s !important;
+  transform: none !important;
+}
+
+/* Fix for secondary titles and other elements using the display font (Space Grotesk) which render too low in html2canvas PDF export due to custom font vertical metrics measurements in Canvas. */
+.static-print-mode .headline,
+.static-print-mode h1,
+.static-print-mode h2,
+.static-print-mode h3,
+.static-print-mode h4,
+.static-print-mode h5,
+.static-print-mode h6,
+.static-print-mode .font-display {
+  /* Prevent low line-height collapses which cause html2canvas text rendering engine to clip/offset text downward */
+  line-height: 1.15 !important;
+  /* Shift baseline upward to offset the custom font canvas offset */
+  position: relative !important;
+  top: -0.08em !important;
+}
+
+/* Neutralize backdrop blurs since html2canvas translates them to opaque black/broken cells */
+.static-print-mode .backdrop-blur-md,
+.static-print-mode .backdrop-blur-xl {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Force high-contrast solid backgrounds on frosted glass components */
+.static-print-mode .bg-white\/80 {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+.static-print-mode .bg-white\/70,
+.static-print-mode .bg-white\/40,
+.static-print-mode .bg-slate-50\/40 {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+.static-print-mode .bg-slate-900\/50,
+.static-print-mode .bg-slate-900\/40 {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+}
+
+/* Hide interactive widgets or PDF-ignored items aggressively */
+.static-print-mode [data-html2canvas-ignore],
+.static-print-mode .print-ignore,
+.static-print-mode button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Safeguard to ensure any text-clips rendering as transparent fall back to readable deep gray */
+.static-print-mode .text-transparent {
+  color: inherit !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+

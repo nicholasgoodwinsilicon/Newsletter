@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Silicon Comte Newsletter",
+  "description": "An elegant, interactive, and high-fidelity digital newsletter and editorial showcase for the Silicon Comté ecosystem with native PDF generation and vector-accurate print rendering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
