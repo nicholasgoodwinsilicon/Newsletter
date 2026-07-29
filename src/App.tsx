@@ -1,18 +1,134 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Play, LineChart, Sparkles, User, AudioLines, ArrowRight, CornerDownRight, 
   CheckCircle2, Database, Network, Megaphone, Brain, Cpu, MessageSquare, 
   Calendar, Mic, ArrowUpRight, Check, Award, Compass, HelpCircle, Terminal,
-  FileDown, Loader2, FileText, MapPin, Ticket, Printer, Mail, Eye, EyeOff
+  FileDown, Loader2, FileText, MapPin, Ticket, Printer, Mail, Eye, EyeOff,
+  Menu, X, Plus
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
+interface Edition {
+  id: number;
+  editionNumber: number;
+  date: string;
+  dateUpper: string;
+  fullDate: string;
+  referenceNumber: string;
+}
+
+const monthsInFrench = [
+  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+];
+
+const getNextEditionDate = (lastDate: string) => {
+  const parts = lastDate.split(' ');
+  if (parts.length !== 2) return { date: 'Juillet 2026', dateUpper: 'JUILLET 2026', fullDate: '10 Juillet 2026' };
+  const monthStr = parts[0];
+  let year = parseInt(parts[1], 10);
+  if (isNaN(year)) year = 2026;
+  
+  const monthIndex = monthsInFrench.findIndex(m => m.toLowerCase() === monthStr.toLowerCase());
+  const nextMonthIndex = (monthIndex + 1) % 12;
+  let nextYear = year;
+  if (nextMonthIndex === 0) {
+    nextYear += 1;
+  }
+  const nextMonthStr = monthsInFrench[nextMonthIndex];
+  
+  return {
+    date: `${nextMonthStr} ${nextYear}`,
+    dateUpper: `${nextMonthStr.toUpperCase()} ${nextYear}`,
+    fullDate: `10 ${nextMonthStr} ${nextYear}`,
+  };
+};
+
 export default function App() {
+  const [editions, setEditions] = React.useState<Edition[]>(() => {
+    const saved = localStorage.getItem('silicon_comte_editions');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // ignore and fallback
+      }
+    }
+    return [
+      {
+        id: 3,
+        editionNumber: 3,
+        date: 'Juin 2026',
+        dateUpper: 'JUIN 2026',
+        fullDate: '10 Juin 2026',
+        referenceNumber: 'SC-NL-2026-N3',
+      }
+    ];
+  });
+
+  const [activeEdition, setActiveEdition] = React.useState<Edition>(() => {
+    const savedActiveId = localStorage.getItem('silicon_comte_active_edition_id');
+    if (savedActiveId && editions) {
+      const found = editions.find(e => e.id === parseInt(savedActiveId, 10));
+      if (found) return found;
+    }
+    return editions[0] || {
+      id: 3,
+      editionNumber: 3,
+      date: 'Juin 2026',
+      dateUpper: 'JUIN 2026',
+      fullDate: '10 Juin 2026',
+      referenceNumber: 'SC-NL-2026-N3',
+    };
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('silicon_comte_editions', JSON.stringify(editions));
+  }, [editions]);
+
+  React.useEffect(() => {
+    if (activeEdition) {
+      localStorage.setItem('silicon_comte_active_edition_id', String(activeEdition.id));
+    }
+  }, [activeEdition]);
+
+  const createNewEdition = () => {
+    const lastEd = editions.reduce((max, ed) => ed.editionNumber > max.editionNumber ? ed : max, editions[0]);
+    const nextEdNo = lastEd.editionNumber + 1;
+    const nextDates = getNextEditionDate(lastEd.date);
+    
+    const newEd: Edition = {
+      id: nextEdNo,
+      editionNumber: nextEdNo,
+      date: nextDates.date,
+      dateUpper: nextDates.dateUpper,
+      fullDate: nextDates.fullDate,
+      referenceNumber: `SC-NL-2026-N${nextEdNo}`,
+    };
+    
+    const updated = [...editions, newEd];
+    setEditions(updated);
+    setActiveEdition(newEd);
+  };
+
+  const getReferenceForEdition = (edNo: number) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `REF-${year}${month}${day}-${hours}${minutes}-V${edNo}`;
+  };
+
+  const referenceNumber = getReferenceForEdition(activeEdition.editionNumber);
+
   const newsletterRef = React.useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = React.useState(false);
   const [showFutureMaterial, setShowFutureMaterial] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   
   const toggleFutureMaterial = () => {
     const nextVal = !showFutureMaterial;
@@ -27,16 +143,6 @@ export default function App() {
     }
   };
   
-  const [referenceNumber] = React.useState(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    return `REF-${year}${month}${day}-${hours}${minutes}-V3`;
-  });
-
   const generatePDF = async () => {
     if (!newsletterRef.current) return;
     setIsGenerating(true);
@@ -372,7 +478,7 @@ export default function App() {
       });
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfPageWidth, pdfPageHeight, undefined, 'FAST');
-      pdf.save('Silicon_Comte_Newsletter_No3.pdf');
+      pdf.save(`Silicon_Comte_Newsletter_No${activeEdition.editionNumber}.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
     } finally {
@@ -410,7 +516,7 @@ export default function App() {
   };
 
   const generateMarkdown = () => {
-    const mdContent = `# Silicon Comté — Édition N°3 (Juin 2026)
+    const mdContent = `# Silicon Comté — Édition N°${activeEdition.editionNumber} (${activeEdition.date})
 L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
 ---
@@ -438,11 +544,11 @@ Identifié comme l'outil prioritaire pour fédérer notre communauté, notre Ann
 
 Pour garantir une plateforme moderne, sa création et sa gestion sont désormais automatisées. Afin d'offrir une clarté maximale, nous imposons une limite stricte de deux compétences phares par profil pour garantir une expertise ciblée.
 
-De plus, la fiabilité des données est notre priorité : vérification par API via le numéro SIRET et modération régulière garantissent un ancrage sérieux en Franche-Comté.
+De plus, la fiabilité des données is notre priorité : vérification par API via le numéro SIRET et modération régulière garantissent un ancrage sérieux en Franche-Comté.
 
 De plus, nos membres bénéficient d'avantages exclusifs : l'ajout d'un "badge adhérent" officiel et l'intégration d'un backlink certifié pointant vers leur site pour leur propre SEO.
 
-### Relais Info N°3 : Nouvelle Dynamique de Communication — Des outils repensés pour vous connecter
+### Relais Info N°${activeEdition.editionNumber} : Nouvelle Dynamique de Communication — Des outils repensés pour vous connecter
 Afin de fluidifier nos échanges, nous concentrons nos efforts là où notre écosystème est le plus actif : notre page LinkedIn officielle pour la visibilité externe.
 
 En parallèle, préparez-vous pour le lancement officiel de notre nouveau Blog destiné à relayer la richesse des témoignages et expertises de haut vol de nos membres.
@@ -544,7 +650,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'Silicon_Comte_Newsletter_No3.md');
+    link.setAttribute('download', `Silicon_Comte_Newsletter_No${activeEdition.editionNumber}.md`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -557,7 +663,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silicon Comté Newsletter — Édition N°3</title>
+  <title>Silicon Comté Newsletter — Édition N°${activeEdition.editionNumber}</title>
   <style>
     /* Clean media query overrides for responsive modern layouts */
     @media only screen and (max-width: 620px) {
@@ -625,7 +731,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
                     SILICON COMTÉ NEWSLETTER
                   </td>
                   <td align="right" style="background-color: #fbd800; color: #090d16; font-size: 10px; font-weight: 950; padding: 4px 12px; border-radius: 4px; font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px;">
-                    ÉDITION N°3
+                    ÉDITION N°${activeEdition.editionNumber}
                   </td>
                 </tr>
               </table>
@@ -640,7 +746,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
               <table border="0" cellpadding="0" cellspacing="0" style="margin-top: 20px;">
                 <tr>
                   <td style="border-top: 1px solid #1e293b; padding-top: 15px; color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: SFMono-Regular, Consolas, monospace;">
-                    Bulletin Mensuel • Juin 2026
+                    Bulletin Mensuel • ${activeEdition.date}
                   </td>
                 </tr>
               </table>
@@ -714,7 +820,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
                             COMMUNICATION DIGITALE // LINKEDIN & PORTAIL
                           </div>
                           <h3 style="color: #ffffff; font-size: 18px; font-weight: 850; margin: 0 0 16px 0; font-family: sans-serif; line-height: 1.35;">
-                            Relais Info N°3 : Nouvelle Dynamique de Communication — Des outils repensés pour vous connecter
+                            Relais Info N°${activeEdition.editionNumber} : Nouvelle Dynamique de Communication — Des outils repensés pour vous connecter
                           </h3>
                           <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0; font-family: sans-serif;">
                             Afin de fluidifier nos échanges, nous concentrons nos efforts là où notre écosystème est le plus actif : notre page LinkedIn officielle pour la visibilité externe.
@@ -1134,7 +1240,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
           <tr>
             <td style="background-color: #090d16; padding: 40px; text-align: center; border-top: 1px solid #1e293b;">
               <p style="color: #94a3b8; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px 0; font-family: monospace;">
-                Silicon Comté • Édition N°3
+                Silicon Comté • Édition N°${activeEdition.editionNumber}
               </p>
               <p style="color: #64748b; font-size: 11px; margin: 0 0 20px 0; line-height: 1.5; font-family: sans-serif;">
                 © 2026 SILICON COMTÉ. TOUS DROITS RÉSERVÉS / ÉDITION CONSEIL EN CO-PROD.
@@ -1195,7 +1301,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'Silicon_Comte_Newsletter_No3.html');
+    link.setAttribute('download', `Silicon_Comte_Newsletter_No${activeEdition.editionNumber}.html`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1284,14 +1390,26 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
             />
           </a>
           
-          {/* Glass-morphic Metadata Bar */}
-          <div className="h-9 flex items-center gap-5 bg-slate-900 border border-slate-800 text-white px-6 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.08)] text-xs font-mono font-bold tracking-widest uppercase leading-none">
-            <span className="text-highlighter flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-highlighter animate-pulse shrink-0"></span>
-              EDITION N°3
-            </span>
-            <span className="text-slate-600">|</span>
-            <span className="text-slate-300">JUIN 2026</span>
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* Glass-morphic Metadata Bar */}
+            <div className="h-9 flex items-center gap-5 bg-slate-900 border border-slate-800 text-white px-6 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.08)] text-xs font-mono font-bold tracking-widest uppercase leading-none">
+              <span className="text-highlighter flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-highlighter animate-pulse shrink-0"></span>
+                EDITION N°{activeEdition.editionNumber}
+              </span>
+              <span className="text-slate-600">|</span>
+              <span className="text-slate-300">{activeEdition.dateUpper}</span>
+            </div>
+
+            {/* Hamburger Button */}
+            <button
+              data-html2canvas-ignore="true"
+              onClick={() => setIsMenuOpen(true)}
+              className="h-9 w-9 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center text-white hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.15)] group"
+              title="Ouvrir le menu d'export"
+            >
+              <Menu className="w-4 h-4 text-highlighter group-hover:scale-110 transition-transform" />
+            </button>
           </div>
         </div>
       </nav>
@@ -1322,7 +1440,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
             >
               SILICON COMTÉ<br />
               <span className={`${isGenerating ? 'text-highlighter' : 'text-transparent bg-clip-text bg-gradient-to-r from-highlighter via-yellow-400 to-amber-500'} font-extrabold`}>
-                N°3 | L'ÉCOSYSTÈME
+                N°{activeEdition.editionNumber} | L'ÉCOSYSTÈME
               </span>
             </motion.h1>
 
@@ -1348,7 +1466,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
               <span className="absolute top-4 left-5 font-mono text-[9px] text-[#fbd800]/50 tracking-widest">NUMÉRO CERTIFIÉ //</span>
               <Calendar size={44} className="text-highlighter mb-5 opacity-90 drop-shadow-[0_0_15px_rgba(251,216,0,0.4)]" />
               <p className="font-mono text-center text-slate-400 text-[10px] tracking-widest uppercase font-bold">Édition de</p>
-              <p className="text-4xl font-extrabold font-display text-white mt-1 tracking-tight">Juin 2026</p>
+              <p className="text-4xl font-extrabold font-display text-white mt-1 tracking-tight">{activeEdition.date}</p>
               
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 h-6 flex justify-center items-center gap-1.5 text-[9px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-3 rounded-full w-max border border-emerald-500/20 leading-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
@@ -1391,9 +1509,9 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
 
               {/* Publication details in French */}
               <div className="mt-8 border-t border-slate-100 pt-6 w-full text-slate-400 font-mono text-[10px] uppercase space-y-2 hidden md:block">
-                <div className="flex justify-between"><span>Date d'édition&nbsp;:</span> <span className="font-semibold text-slate-600">10 Juin 2026</span></div>
+                <div className="flex justify-between"><span>Date d'édition&nbsp;:</span> <span className="font-semibold text-slate-600">{activeEdition.fullDate}</span></div>
                 <div className="flex justify-between"><span>Validation&nbsp;:</span> <span className="font-semibold text-[#006685]">Validé par le Bureau</span></div>
-                <div className="flex justify-between"><span>Référence&nbsp;:</span> <span className="font-semibold text-slate-600">SC-NL-2026-N3</span></div>
+                <div className="flex justify-between"><span>Référence&nbsp;:</span> <span className="font-semibold text-slate-600">SC-NL-2026-N{activeEdition.editionNumber}</span></div>
               </div>
             </div>
 
@@ -1803,7 +1921,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
                     <Ticket className="w-3.5 h-3.5 mr-2" /> TICKET OFFICIEL
                   </span>
                   <span className="h-8 inline-flex items-center justify-center font-mono text-highlighter text-xs uppercase tracking-widest font-extrabold bg-slate-950/80 px-4 rounded-full border border-slate-850 shadow-md">
-                    26 JUIN 2026
+                    26 {activeEdition.dateUpper}
                   </span>
                 </div>
 
@@ -1983,7 +2101,7 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
           <div className="lg:col-span-7">
             <motion.div {...fadeInUp}>
               <p className="font-mono text-slate-400 text-xs tracking-widest font-extrabold uppercase mb-4">
-                // CRÉATEURS DE VALEUR / ADHÉREZ N°3
+                // CRÉATEURS DE VALEUR / ADHÉREZ N°{activeEdition.editionNumber}
               </p>
               <h2 className="headline text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 mb-3 tracking-tight uppercase leading-none">
                 Pourquoi nous joindre&nbsp;?<br />
@@ -2540,84 +2658,195 @@ Par ailleurs, nous œuvrons activement à la simplification de notre écosystèm
         </div>
       </footer>
 
-      {/* 9. STANDALONE PDF EXPORT CONTROL STATION - EXCLUDED FROM ACTUAL PDF CANVAS */}
-      <section 
-        data-html2canvas-ignore="true" 
-        className="bg-slate-900 border-t border-slate-800 py-16 px-6 md:px-12 relative z-30"
-      >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          
-          <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl">
-            <span className="font-mono text-highlighter text-[10px] uppercase tracking-widest font-extrabold bg-slate-950 px-3.5 py-1.5 rounded-full border border-slate-800 shadow-md inline-block mb-4">
-              // ARCHIVAGE OPTIMISÉ
-            </span>
-            <h3 className="text-2xl md:text-3xl text-white font-extrabold tracking-tight uppercase font-display leading-tight">
-              Exporter la version numérique
-            </h3>
-            <p className="text-slate-400 font-light text-sm mt-3 leading-relaxed">
-              Téléchargez cette édition au format PDF haute fidélité. Le document généré s'ajustera automatiquement à la largeur du layout sans aucune coupure de page, idéal pour une impression propre ou une lecture déconnectée.
-            </p>
-          </div>
-          
-          <div className="flex flex-col lg:flex-row gap-4 shrink-0 w-full md:w-auto">
-            <button
-              onClick={generateMarkdown}
-              className="w-full lg:w-auto px-8 py-5 rounded-2xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3 bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 hover:shadow-[0_15px_30px_rgba(251,216,0,0.05)] hover:-translate-y-1 active:translate-y-0 transition-all duration-300 cursor-pointer"
-            >
-              <FileText className="w-5 h-5 text-highlighter" />
-              TÉLÉCHARGER LE TEXTE (MD)
-            </button>
+      {/* 9. SIDE PANEL DRAWER FOR EXPORT CONTROLS */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              data-html2canvas-ignore="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[100] cursor-pointer"
+            />
 
-            <button
-              onClick={generateHtmlEmail}
-              className="w-full lg:w-auto px-8 py-5 rounded-2xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3 bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 hover:shadow-[0_15px_30px_rgba(251,216,0,0.05)] hover:-translate-y-1 active:translate-y-0 transition-all duration-300 cursor-pointer"
+            {/* Sidebar Panel */}
+            <motion.div
+              data-html2canvas-ignore="true"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-full max-w-sm sm:max-w-md bg-slate-900 border-l border-slate-800 text-white z-[110] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)]"
             >
-              <Mail className="w-5 h-5 text-highlighter" />
-              EXPORTER EN HTML (EMAIL)
-            </button>
+              {/* Header */}
+              <div className="p-6 border-b border-slate-800 flex items-center justify-between shrink-0">
+                <div>
+                  <span className="font-mono text-highlighter text-[9px] uppercase tracking-widest font-extrabold bg-slate-950 px-2.5 py-1 rounded-full border border-slate-800 shadow-sm inline-block mb-1.5">
+                    // ARCHIVAGE OPTIMISÉ
+                  </span>
+                  <h3 className="text-lg font-extrabold tracking-tight uppercase font-display text-white">
+                    Options d'Édition
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="h-10 w-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 active:scale-95 transition-all cursor-pointer"
+                  title="Fermer le menu"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-            <button
-              onClick={toggleFutureMaterial}
-              className="w-full lg:w-auto px-8 py-5 rounded-2xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3 bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 hover:border-highlighter/50 hover:shadow-[0_15px_30px_rgba(251,216,0,0.05)] hover:-translate-y-1 active:translate-y-0 transition-all duration-300 cursor-pointer"
-            >
-              {showFutureMaterial ? (
-                <>
-                  <EyeOff className="w-5 h-5 text-highlighter" />
-                  <span>MASQUER L'ARCHIVE (IA)</span>
-                </>
-              ) : (
-                <>
-                  <Eye className="w-5 h-5 text-highlighter" />
-                  <span>AFFICHER L'ARCHIVE (IA)</span>
-                </>
-              )}
-            </button>
+              {/* Sidebar Content */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                <div>
+                  <h4 className="text-xs font-mono font-bold text-slate-500 uppercase tracking-widest mb-3">
+                    ARCHIVAGE & EXPORT
+                  </h4>
+                  <p className="text-slate-400 font-light text-xs leading-relaxed mb-6">
+                    Téléchargez cette édition au format PDF haute fidélité. Le document généré s'ajustera automatiquement à la largeur du layout sans aucune coupure de page, idéal pour une impression propre ou une lecture déconnectée.
+                  </p>
+                </div>
 
-            <button
-              onClick={generatePDF}
-              disabled={isGenerating}
-              className={`w-full lg:w-auto px-8 py-5 rounded-2xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3.5 shadow-lg border transition-all duration-300 ${
-                isGenerating 
-                  ? 'bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed'
-                  : 'bg-highlighter border-highlighter text-slate-950 hover:bg-yellow-400 hover:shadow-[0_15px_30px_rgba(251,216,0,0.25)] hover:-translate-y-1 active:translate-y-0 cursor-pointer'
-              }`}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  GÉNÉRATION DU PDF EN COURS...
-                </>
-              ) : (
-                <>
-                  <FileDown className="w-5 h-5 text-slate-950" />
-                  TÉLÉCHARGER LA NEWSLETTER (PDF)
-                </>
-              )}
-            </button>
-          </div>
-          
-        </div>
-      </section>
+                <div className="space-y-4">
+                  {/* PDF Download Button */}
+                  <button
+                    onClick={async () => {
+                      setIsMenuOpen(false);
+                      await new Promise((resolve) => setTimeout(resolve, 300));
+                      generatePDF();
+                    }}
+                    disabled={isGenerating}
+                    className={`w-full px-6 py-4 rounded-xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3 shadow-lg border transition-all duration-300 ${
+                      isGenerating 
+                        ? 'bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed'
+                        : 'bg-highlighter border-highlighter text-slate-950 hover:bg-yellow-400 hover:shadow-[0_10px_20px_rgba(251,216,0,0.2)] active:scale-95 cursor-pointer'
+                    }`}
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        GÉNÉRATION DU PDF...
+                      </>
+                    ) : (
+                      <>
+                        <FileDown className="w-4 h-4 text-slate-950" />
+                        TÉLÉCHARGER LE PDF
+                      </>
+                    )}
+                  </button>
+
+                  {/* HTML Email Export Button */}
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      generateHtmlEmail();
+                    }}
+                    className="w-full px-6 py-4 rounded-xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3 bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 hover:shadow-[0_10px_20px_rgba(251,216,0,0.05)] active:scale-95 transition-all duration-300 cursor-pointer"
+                  >
+                    <Mail className="w-4 h-4 text-highlighter" />
+                    EXPORTER EN HTML (EMAIL)
+                  </button>
+
+                  {/* Markdown Text Download Button */}
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      generateMarkdown();
+                    }}
+                    className="w-full px-6 py-4 rounded-xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3 bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 hover:shadow-[0_10px_20px_rgba(251,216,0,0.05)] active:scale-95 transition-all duration-300 cursor-pointer"
+                  >
+                    <FileText className="w-4 h-4 text-highlighter" />
+                    TÉLÉCHARGER LE TEXTE (MD)
+                  </button>
+
+                  {/* Future Archive (IA) Toggle Button */}
+                  <button
+                    onClick={() => {
+                      toggleFutureMaterial();
+                    }}
+                    className="w-full px-6 py-4 rounded-xl font-bold font-display uppercase tracking-wider text-xs flex items-center justify-center gap-3 bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 hover:border-highlighter/50 hover:shadow-[0_10px_20px_rgba(251,216,0,0.05)] active:scale-95 transition-all duration-300 cursor-pointer"
+                  >
+                    {showFutureMaterial ? (
+                      <>
+                        <EyeOff className="w-4 h-4 text-highlighter" />
+                        <span>MASQUER L'ARCHIVE (IA)</span>
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4 text-highlighter" />
+                        <span>AFFICHER L'ARCHIVE (IA)</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div className="pt-6 border-t border-slate-800">
+                  <h4 className="text-xs font-mono font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <Database className="w-3.5 h-3.5 text-highlighter" /> Éditions Précédentes
+                  </h4>
+                  <p className="text-slate-400 font-light text-xs leading-relaxed mb-4">
+                    Parcourez les éditions sauvegardées ou créez un nouveau bulletin basé sur le précédent.
+                  </p>
+                  
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {editions.map((ed) => {
+                      const isActive = ed.id === activeEdition.id;
+                      return (
+                        <button
+                          key={ed.id}
+                          onClick={() => setActiveEdition(ed)}
+                          className={`w-full text-left px-4 py-3 rounded-xl flex items-center justify-between border transition-all cursor-pointer group ${
+                            isActive
+                              ? 'bg-[#006685]/10 border-[#006685] text-white font-semibold'
+                              : 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800/50 hover:border-slate-700'
+                          }`}
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-xs font-display uppercase tracking-wider group-hover:text-highlighter transition-colors">
+                              Édition N°{ed.editionNumber}
+                            </span>
+                            <span className="text-[10px] font-mono text-slate-500">
+                              {ed.date}
+                            </span>
+                          </div>
+                          {isActive && (
+                            <Check className="w-4 h-4 text-highlighter shrink-0 animate-scale-in" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={createNewEdition}
+                    className="w-full mt-4 px-4 py-3.5 rounded-xl border border-dashed border-slate-700 hover:border-highlighter/60 bg-transparent text-highlighter hover:text-white hover:bg-slate-800/50 flex items-center justify-center gap-2 text-xs font-bold font-display uppercase tracking-wider transition-all active:scale-95 cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Créer une nouvelle lettre
+                  </button>
+                </div>
+              </div>
+
+              {/* Sidebar Footer */}
+              <div className="p-6 border-t border-slate-800 bg-slate-950/50 space-y-4 shrink-0">
+                <div className="flex justify-between items-center text-[10px] text-slate-500 uppercase tracking-widest font-bold font-mono">
+                  <span>SILICON COMTÉ © 2026</span>
+                  <span className="text-[#006685] bg-[#006685]/10 px-2 py-0.5 rounded border border-[#006685]/20">
+                    {referenceNumber}
+                  </span>
+                </div>
+                <div className="text-[9px] text-slate-600 leading-normal text-center">
+                  Assurez-vous que les polices Space Grotesk et Inter soient chargées pour un rendu vectoriel optimal.
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
