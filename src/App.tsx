@@ -190,7 +190,19 @@ export default function App() {
     const saved = localStorage.getItem('silicon_comte_editions');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Ensure edition 2 is Août 2026
+        return parsed.map((ed: Edition) => {
+          if (ed.editionNumber === 2) {
+            return {
+              ...ed,
+              date: 'Août 2026',
+              dateUpper: 'AOÛT 2026',
+              fullDate: '10 Août 2026',
+            };
+          }
+          return ed;
+        });
       } catch (e) {
         // ignore and fallback
       }
@@ -199,9 +211,9 @@ export default function App() {
       {
         id: 2,
         editionNumber: 2,
-        date: 'Juillet 2026',
-        dateUpper: 'JUILLET 2026',
-        fullDate: '10 Juillet 2026',
+        date: 'Août 2026',
+        dateUpper: 'AOÛT 2026',
+        fullDate: '10 Août 2026',
         referenceNumber: 'SC-NL-2026-N2',
       },
       {
@@ -219,14 +231,24 @@ export default function App() {
     const savedActiveId = localStorage.getItem('silicon_comte_active_edition_id');
     if (savedActiveId && editions) {
       const found = editions.find(e => e.id === parseInt(savedActiveId, 10));
-      if (found) return found;
+      if (found) {
+        if (found.editionNumber === 2) {
+          return {
+            ...found,
+            date: 'Août 2026',
+            dateUpper: 'AOÛT 2026',
+            fullDate: '10 Août 2026',
+          };
+        }
+        return found;
+      }
     }
     return editions[0] || {
       id: 2,
       editionNumber: 2,
-      date: 'Juillet 2026',
-      dateUpper: 'JUILLET 2026',
-      fullDate: '10 Juillet 2026',
+      date: 'Août 2026',
+      dateUpper: 'AOÛT 2026',
+      fullDate: '10 Août 2026',
       referenceNumber: 'SC-NL-2026-N2',
     };
   });
@@ -667,19 +689,13 @@ export default function App() {
     const content = getEditionContent(activeEdition.editionNumber);
     let mdContent = `# Silicon Comté — Édition N°${activeEdition.editionNumber} (${activeEdition.date})
 L'Écosystème : Le Guide de l'Innovation Numérique en BFC
-
----
-
-## ${content.presidentTitle} (Antoine Bouet)
-
-**"${content.presidentQuote}"**
-
-${content.presidentParagraphs.join('\n\n')}
 `;
 
     if (content.recapParagraphs && content.recapParagraphs.length > 0) {
       mdContent += `\n---\n\n## ${content.recapTitle}\n\n${content.recapParagraphs.join('\n\n')}\n`;
     }
+
+    mdContent += `\n---\n\n## ${content.presidentTitle} (Antoine Bouet)\n\n**"${content.presidentQuote}"**\n\n${content.presidentParagraphs.join('\n\n')}\n`;
 
     mdContent += `\n---\n\n## ${content.caNewsTitle}\n\n${content.caNewsIntro}\n\n- ${content.caNewsBullet1}\n- ${content.caNewsBullet2}\n
 ---
@@ -818,7 +834,19 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
             </td>
           </tr>
 
-          <!-- 1. LE MOT DU PRÉSIDENT -->
+          ${content.recapParagraphs && content.recapParagraphs.length > 0 ? `
+          <!-- 1. RECENT RECAP -->
+          <tr>
+            <td style="padding: 40px; background-color: #0f172a; color: #ffffff;" class="mobile-padding">
+              <h2 style="color: #fbd800; font-size: 20px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif; text-transform: uppercase;">
+                ${content.recapTitle}
+              </h2>
+              ${content.recapParagraphs.map(p => `<p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin-bottom: 12px; font-family: sans-serif;">${p}</p>`).join('')}
+            </td>
+          </tr>
+          ` : ''}
+
+          <!-- 2. LE MOT DU PRÉSIDENT -->
           <tr>
             <td style="padding: 40px; background-color: #fcf9f8;" class="mobile-padding">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -848,18 +876,6 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
               </table>
             </td>
           </tr>
-
-          ${content.recapParagraphs && content.recapParagraphs.length > 0 ? `
-          <!-- RECENT RECAP -->
-          <tr>
-            <td style="padding: 40px; background-color: #0f172a; color: #ffffff;" class="mobile-padding">
-              <h2 style="color: #fbd800; font-size: 20px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif; text-transform: uppercase;">
-                ${content.recapTitle}
-              </h2>
-              ${content.recapParagraphs.map(p => `<p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin-bottom: 12px; font-family: sans-serif;">${p}</p>`).join('')}
-            </td>
-          </tr>
-          ` : ''}
 
           <!-- CA NEWS -->
           <tr>
@@ -1653,8 +1669,32 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
         </div>
       </header>
 
-      {/* 3. SECTION 1: EDITORIAL (LE MOT DU PRÉSIDENT) */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-white relative shadow-md z-10 -mt-16 rounded-t-4xl max-w-[95%] lg:max-w-[1340px] mx-auto border-t-8 border-highlighter">
+      {/* 3. SECTION 1: RÉTROSPECTIVE ÉVÉNEMENT (CHAPTER 1) */}
+      {content.recapParagraphs && content.recapParagraphs.length > 0 && (
+        <section className="py-20 md:py-28 px-6 md:px-12 bg-slate-900 text-white relative shadow-md z-10 -mt-16 rounded-t-4xl max-w-[95%] lg:max-w-[1340px] mx-auto border-t-8 border-highlighter">
+          <div className="max-w-5xl mx-auto">
+            <motion.div {...fadeInUp}>
+              <p className="font-mono text-highlighter font-extrabold tracking-widest uppercase mb-3 text-xs md:text-sm flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-highlighter animate-pulse shrink-0"></span>
+                Rétrospective Événement
+              </p>
+              <h2 className="headline text-3xl md:text-5xl font-black text-white mb-8 uppercase tracking-tight">
+                {content.recapTitle}
+              </h2>
+              <div className="space-y-6 text-slate-300 font-light text-base md:text-lg leading-relaxed">
+                {content.recapParagraphs.map((paragraph, idx) => (
+                  <p key={idx} className="bg-slate-950/80 p-6 md:p-8 rounded-2xl border border-slate-800/80 shadow-md">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* 3.5 SECTION 2: EDITORIAL (LE MOT DU PRÉSIDENT - CHAPTER 2) */}
+      <section className={`py-20 md:py-28 px-6 md:px-12 bg-white relative z-10 ${content.recapParagraphs && content.recapParagraphs.length > 0 ? 'border-y border-slate-200/60' : '-mt-16 rounded-t-4xl max-w-[95%] lg:max-w-[1340px] mx-auto border-t-8 border-highlighter shadow-md'}`}>
         <div className="max-w-6xl mx-auto">
           
           <motion.div 
@@ -1717,30 +1757,6 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
 
         </div>
       </section>
-
-      {/* 3.5 RECENT EVENT RECAP SECTION (IF AVAILABLE) */}
-      {content.recapParagraphs && content.recapParagraphs.length > 0 && (
-        <section className="py-20 md:py-28 px-6 md:px-12 bg-slate-900 text-white relative z-10 border-y border-slate-800">
-          <div className="max-w-5xl mx-auto">
-            <motion.div {...fadeInUp}>
-              <p className="font-mono text-highlighter font-extrabold tracking-widest uppercase mb-3 text-xs md:text-sm flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-highlighter animate-pulse shrink-0"></span>
-                Rétrospective Événement
-              </p>
-              <h2 className="headline text-3xl md:text-5xl font-black text-white mb-8 uppercase tracking-tight">
-                {content.recapTitle}
-              </h2>
-              <div className="space-y-6 text-slate-300 font-light text-base md:text-lg leading-relaxed">
-                {content.recapParagraphs.map((paragraph, idx) => (
-                  <p key={idx} className="bg-slate-950/80 p-6 md:p-8 rounded-2xl border border-slate-800/80 shadow-md">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
 
       {/* 4. SECTION 2: ACTUALITÉS DU CONSEIL D'ADMINISTRATION with 'High-Tech Archivist' cards */}
       <section className="py-24 md:py-32 bg-slate-50 relative border-y border-slate-200/60 overflow-hidden">
@@ -2054,225 +2070,6 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
         </div>
       </section>
       </div>
-
-      {/* 5.5 SECTION 4: FÊTE DE L'INNOVATION 2026 (IMMERSIVE EVENT BANNER & DETAILED AGENDA) */}
-      <section className="py-24 md:py-32 px-6 md:px-12 bg-slate-950 text-white relative overflow-hidden border-b-4 border-slate-900">
-        {!isGenerating && (
-          <>
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-highlighter/5 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] bg-[#006685]/10 rounded-full blur-[100px] pointer-events-none"></div>
-          </>
-        )}
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          
-          <motion.div {...fadeInUp} className="mb-16">
-            <span className="font-mono text-highlighter text-xs uppercase tracking-widest font-extrabold bg-highlighter/10 px-4 py-1.5 rounded-full border border-highlighter/20 inline-block mb-4">
-              Grand Événement Territorial // Franche-Comté
-            </span>
-            <h2 className="headline text-4xl md:text-5xl lg:text-6xl font-black max-w-4xl tracking-tight leading-[1.1] uppercase">
-              Fête de l'Innovation&nbsp;:<br />
-              <span className={`${isGenerating ? 'text-highlighter' : 'text-transparent bg-clip-text bg-gradient-to-r from-highlighter to-cyan-400'}`}>
-                Édition Officielle 2026
-              </span>
-            </h2>
-          </motion.div>
-          
-          {/* Bento Grid representing event info and layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* Immersive Event Ticket - Bento block (cols-7) */}
-            <motion.div 
-              variants={fadeInUp}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true }}
-              className="lg:col-span-7 bg-slate-900/40 rounded-[2rem] border border-slate-800 p-8 md:p-10 flex flex-col justify-between group overflow-hidden relative min-h-[480px] shadow-2xl"
-            >
-              {/* Background graphic */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-50 group-hover:scale-105 transition-all duration-700 pointer-events-none"
-                style={{ backgroundImage: 'url("/fete_innovation.jpg")' }}
-              ></div>
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent pointer-events-none"></div>
-
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-12">
-                  <span className="h-8 inline-flex items-center justify-center font-mono text-[#006685] text-xs uppercase tracking-widest font-extrabold bg-white px-4 rounded-full border border-slate-200 shadow-md">
-                    <Ticket className="w-3.5 h-3.5 mr-2" /> TICKET OFFICIEL
-                  </span>
-                  <span className="h-8 inline-flex items-center justify-center font-mono text-highlighter text-xs uppercase tracking-widest font-extrabold bg-slate-950/80 px-4 rounded-full border border-slate-850 shadow-md">
-                    26 {activeEdition.dateUpper}
-                  </span>
-                </div>
-
-                <div className="space-y-6">
-                  <p className="font-mono text-xs uppercase tracking-widest text-[#006685] font-extrabold">INVITATION OFFICIELLE // BESANÇON</p>
-                  
-                  <h3 className="text-3xl md:text-4xl font-display font-black leading-tight text-white uppercase group-hover:text-highlighter transition-colors">
-                    Fête de l'Innovation 2026
-                  </h3>
-
-                  <p className="text-slate-300 font-light text-[15px] leading-relaxed max-w-xl">
-                    L'Association Silicon Comté et La Fabrique Numérique Besançon, l'AER BFC, le Village by CA, DECA BFC et La French Tech BFC, ont le plaisir de vous inviter à la Fête de l'Innovation 2026 ! Chaque année, cet événement met à l'honneur l'innovation, l'entrepreneuriat et le numérique sur notre territoire.
-                  </p>
-                </div>
-              </div>
-
-              {/* Bottom Details Bar */}
-              <div className="relative z-10 pt-8 mt-8 border-t border-slate-800/60 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-3 text-slate-300">
-                  <div className="w-10 h-10 rounded-xl bg-slate-950/60 flex items-center justify-center border border-slate-800">
-                    <Calendar className="w-5 h-5 text-highlighter" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-mono text-slate-500 uppercase block tracking-wider">Date & Heures</span>
-                    <span className="text-sm font-bold text-white">Vendredi 26 juin, de 13h à 18h</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-slate-300">
-                  <div className="w-10 h-10 rounded-xl bg-slate-950/60 flex items-center justify-center border border-slate-800">
-                    <MapPin className="w-5 h-5 text-[#006685]" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-mono text-slate-500 uppercase block tracking-wider">Lieu de rencontre</span>
-                    <span className="text-sm font-bold text-white">Espace Grammont, Besançon</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Event Program Timetable - Bento block (cols-5) */}
-            <motion.div 
-              variants={fadeInUp}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true }}
-              className="lg:col-span-5 bg-slate-900 rounded-[2rem] border border-slate-850 p-8 md:p-10 flex flex-col justify-between hover:shadow-[0_22px_50px_rgba(251,216,0,0.05)] hover:border-slate-800 transition-all duration-500 ease-out relative"
-            >
-              <div>
-                <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-850">
-                  <h3 className="text-xl font-display font-black tracking-tight text-white uppercase flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-highlighter shrink-0 animate-pulse"></span>
-                    Le Programme
-                  </h3>
-                  <span className="text-slate-500 text-xs font-mono font-bold uppercase py-1 px-2.5 bg-slate-950/60 rounded-md border border-slate-850">
-                    // TIMETABLE
-                  </span>
-                </div>
-
-                {/* Vertical Timeline */}
-                <div className="space-y-6 relative pl-3 before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:bg-gradient-to-b before:from-highlighter before:via-[#006685] before:to-slate-800">
-                  
-                  {/* Step 1 */}
-                  <div className="relative pl-6">
-                    <div className="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-highlighter border-2 border-slate-900 shadow-md"></div>
-                    <div className="flex items-center gap-2.5 mb-1">
-                      <span className="font-mono text-xs font-extrabold text-highlighter bg-highlighter/10 px-2 py-0.5 rounded">13h00</span>
-                      <span className="text-xs text-slate-400 font-mono tracking-widest uppercase font-bold">// OUVERTURE</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-white">Accueil des participants et discours d'ouverture</h4>
-                    <p className="text-xs text-slate-400 font-light mt-0.5">Annonce majeure et officielle de la labellisation French Tech Besançon.</p>
-                  </div>
-
-                  {/* Step 2 */}
-                  <div className="relative pl-6">
-                    <div className="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-[#006685] border-2 border-slate-900 shadow-md"></div>
-                    <div className="flex items-center gap-2.5 mb-1">
-                      <span className="font-mono text-xs font-extrabold text-[#006685] bg-[#006685]/10 px-2 py-0.5 rounded">13h30</span>
-                      <span className="text-xs text-slate-400 font-mono tracking-widest uppercase font-bold">// PITCHS</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-white">Pitchs de start-up locales innovantes</h4>
-                    <p className="text-xs text-slate-400 font-light mt-0.5">Démonstrations express de solutions technologiques régionales.</p>
-                  </div>
-
-                  {/* Step 3 */}
-                  <div className="relative pl-6">
-                    <div className="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-[#006685] border-2 border-slate-900 shadow-md"></div>
-                    <div className="flex items-center gap-2.5 mb-1">
-                      <span className="font-mono text-xs font-extrabold text-[#006685] bg-[#006685]/10 px-2 py-0.5 rounded">14h30</span>
-                      <span className="text-xs text-slate-400 font-mono tracking-widest uppercase font-bold">// CONFÉRENCE</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-white">Table ronde : Recherche et Synergies</h4>
-                    <p className="text-xs text-slate-400 font-light mt-0.5 font-sans">
-                      « Recherche publique, entrepreneuriat et entreprises numériques : quelles synergies ? » animée par <strong className="font-bold text-[#006685]">Sylvain Compagnon</strong> (DECA BFC).
-                    </p>
-                  </div>
-
-                  {/* Step 4 */}
-                  <div className="relative pl-6">
-                    <div className="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-slate-700 border-2 border-slate-900 shadow-md"></div>
-                    <div className="flex items-center gap-2.5 mb-1">
-                      <span className="font-mono text-xs font-extrabold text-slate-300 bg-slate-800 px-2 py-0.5 rounded">15h30</span>
-                      <span className="text-xs text-slate-400 font-mono tracking-widest uppercase font-bold">// PARTENAIRES</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-white">Pitchs de nos structures partenaires</h4>
-                    <p className="text-xs text-slate-400 font-light mt-0.5">Présentation des dispositifs de soutien, de financement et de formation.</p>
-                  </div>
-
-                  {/* Step 5 */}
-                  <div className="relative pl-6">
-                    <div className="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-md"></div>
-                    <div className="flex items-center gap-2.5 mb-1">
-                      <span className="font-mono text-xs font-extrabold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">16h30</span>
-                      <span className="text-xs text-slate-400 font-mono tracking-widest uppercase font-bold">// CLÔTURE</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-emerald-400">Buffet convivial, networking & RDV BtoB</h4>
-                    <p className="text-xs text-slate-400 font-light mt-0.5">Rencontres ciblées pour initier des collaborations concrètes.</p>
-                  </div>
-
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Bottom Panel with Description & Inscription Call-To-Action (cols-12) */}
-            <motion.div 
-              variants={fadeInUp}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true }}
-              className="lg:col-span-12 bg-slate-900/60 rounded-[2rem] border border-slate-850 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-lg hover:border-slate-800 transition-all duration-500"
-            >
-              <div className="space-y-4 max-w-3xl">
-                <div className="flex flex-wrap gap-2.5 items-center">
-                  <span className="text-xs font-mono font-bold text-slate-400 bg-slate-950/60 px-3 py-1 rounded-md border border-slate-850 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-highlighter shrink-0 animate-pulse"></span>
-                    CO-ORGANISÉ PAR SILICON COMTÉ
-                  </span>
-                  <span className="text-xs font-mono font-bold text-slate-400 bg-slate-950/60 px-3 py-1 rounded-md border border-slate-850">
-                    SANS FRAIS (INSCRIPTION REQUISE)
-                  </span>
-                </div>
-                <h4 className="text-xl font-display font-black text-white uppercase tracking-tight">
-                  Unissons nos énergies pour booster notre écosystème
-                </h4>
-                <p className="text-slate-400 font-light text-sm leading-relaxed">
-                  Cet événement réunit l'Association Silicon Comté, La Fabrique Numérique Besançon, l'AER BFC, le Village by CA, DECA BFC et La French Tech BFC pour un temps fort d'intelligence collective, soutenu activement par <strong className="font-bold text-white">Grand Besançon Métropole</strong> et la <strong className="font-bold text-white">Région Bourgogne-Franche-Comté</strong>.
-                </p>
-                <div className="flex items-center gap-2.5 text-xs text-highlighter font-mono font-bold pt-1">
-                  <Printer className="w-4 h-4 shrink-0" />
-                  <span>NOTE : Pensez à imprimer votre badge nominatif généré par la plateforme avant l'événement !</span>
-                </div>
-              </div>
-
-              <div className="shrink-0 w-full md:w-auto">
-                <a 
-                  href="https://fete-innovation.make-an-event.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-full md:w-auto inline-flex items-center justify-center font-display font-extrabold uppercase tracking-widest text-[#006685] hover:text-white bg-highlighter hover:bg-[#006685] px-10 py-5 rounded-2xl shadow-[0_10px_30px_rgba(251,216,0,0.3)] transition-all duration-300 text-sm group"
-                >
-                  JE M'INSCRIS ICI
-                  <ArrowUpRight className="w-5 h-5 ml-2 group-hover:scale-125 transition-transform" />
-                </a>
-              </div>
-            </motion.div>
-
-          </div>
-
-        </div>
-      </section>
 
       {/* 6. SECTION 5: VALORISER L'ADHÉSION (MEMBERSHIP AND PHYSICAL BADGE DECK) */}
       <section className="py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto border-b border-slate-200/60">
