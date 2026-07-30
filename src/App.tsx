@@ -130,7 +130,7 @@ function getEditionContent(editionNumber: number): EditionContent {
     guestRoleTag: "Conseil Business & Go-To-Market",
     guestBio: "Consultant indépendant basé à Besançon, il accompagne les dirigeants de TPE / PME sur leur stratégie commerciale et marketing, et est formateur au CNAM Bourgogne-Franche-Comté et à l'ECM.",
     guestQuote: "Vendre mieux, vendre plus, avec méthode : pour que la croissance cesse de dépendre du hasard.",
-    guestImage: "/bruno_roy.jpg",
+    guestImage: "/Bruno_Roy.png?v=original_photo_upload",
     qas: [
       {
         question: "Silicon Comté : Bruno, pouvez-vous nous présenter votre parcours ?",
@@ -186,72 +186,85 @@ const getNextEditionDate = (lastDate: string) => {
 };
 
 export default function App() {
-  const [editions, setEditions] = React.useState<Edition[]>(() => {
-    const saved = localStorage.getItem('silicon_comte_editions');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        // Ensure edition 2 is Août 2026
-        return parsed.map((ed: Edition) => {
-          if (ed.editionNumber === 2) {
-            return {
-              ...ed,
-              date: 'Août 2026',
-              dateUpper: 'AOÛT 2026',
-              fullDate: '10 Août 2026',
-            };
-          }
-          return ed;
-        });
-      } catch (e) {
-        // ignore and fallback
-      }
-    }
-    return [
-      {
-        id: 2,
-        editionNumber: 2,
-        date: 'Août 2026',
-        dateUpper: 'AOÛT 2026',
-        fullDate: '10 Août 2026',
-        referenceNumber: 'SC-NL-2026-N2',
-      },
-      {
-        id: 1,
-        editionNumber: 1,
-        date: 'Juin 2026',
-        dateUpper: 'JUIN 2026',
-        fullDate: '10 Juin 2026',
-        referenceNumber: 'SC-NL-2026-N1',
-      }
-    ];
-  });
-
-  const [activeEdition, setActiveEdition] = React.useState<Edition>(() => {
-    const savedActiveId = localStorage.getItem('silicon_comte_active_edition_id');
-    if (savedActiveId && editions) {
-      const found = editions.find(e => e.id === parseInt(savedActiveId, 10));
-      if (found) {
-        if (found.editionNumber === 2) {
-          return {
-            ...found,
-            date: 'Août 2026',
-            dateUpper: 'AOÛT 2026',
-            fullDate: '10 Août 2026',
-          };
-        }
-        return found;
-      }
-    }
-    return editions[0] || {
+  const DEFAULT_EDITIONS: Edition[] = [
+    {
       id: 2,
       editionNumber: 2,
       date: 'Août 2026',
       dateUpper: 'AOÛT 2026',
       fullDate: '10 Août 2026',
       referenceNumber: 'SC-NL-2026-N2',
-    };
+    },
+    {
+      id: 1,
+      editionNumber: 1,
+      date: 'Juin 2026',
+      dateUpper: 'JUIN 2026',
+      fullDate: '10 Juin 2026',
+      referenceNumber: 'SC-NL-2026-N1',
+    }
+  ];
+
+  const [editions, setEditions] = React.useState<Edition[]>(() => {
+    const saved = localStorage.getItem('silicon_comte_editions');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Clean out any stale higher edition numbers (>2)
+        const validEditions = parsed.filter((ed: Edition) => ed.editionNumber <= 2);
+        if (validEditions.length > 0) {
+          return validEditions.map((ed: Edition) => {
+            if (ed.editionNumber === 2) {
+              return {
+                ...ed,
+                date: 'Août 2026',
+                dateUpper: 'AOÛT 2026',
+                fullDate: '10 Août 2026',
+                referenceNumber: 'SC-NL-2026-N2',
+              };
+            }
+            return ed;
+          });
+        }
+      } catch (e) {
+        // ignore and fallback
+      }
+    }
+    return DEFAULT_EDITIONS;
   });
+
+  const [activeEdition, setActiveEdition] = React.useState<Edition>(() => {
+    const savedActiveId = localStorage.getItem('silicon_comte_active_edition_id');
+    if (savedActiveId && editions) {
+      const activeIdNum = parseInt(savedActiveId, 10);
+      if (activeIdNum <= 2) {
+        const found = editions.find(e => e.id === activeIdNum);
+        if (found) {
+          if (found.editionNumber === 2) {
+            return {
+              ...found,
+              date: 'Août 2026',
+              dateUpper: 'AOÛT 2026',
+              fullDate: '10 Août 2026',
+              referenceNumber: 'SC-NL-2026-N2',
+            };
+          }
+          return found;
+        }
+      }
+    }
+    return editions.find(e => e.editionNumber === 2) || DEFAULT_EDITIONS[0];
+  });
+
+  React.useEffect(() => {
+    if (activeEdition.editionNumber > 2) {
+      const ed2 = editions.find(e => e.editionNumber === 2) || DEFAULT_EDITIONS[0];
+      setActiveEdition(ed2);
+    }
+    if (editions.some(e => e.editionNumber > 2)) {
+      setEditions(editions.filter(e => e.editionNumber <= 2));
+    }
+  }, []);
 
   React.useEffect(() => {
     localStorage.setItem('silicon_comte_editions', JSON.stringify(editions));
@@ -687,7 +700,7 @@ export default function App() {
 
   const generateMarkdown = () => {
     const content = getEditionContent(activeEdition.editionNumber);
-    let mdContent = `# Silicon Comté — Édition N°${activeEdition.editionNumber} (${activeEdition.date})
+    let mdContent = `# Silicon Comté — Édition N°${activeEdition.editionNumber} — ${activeEdition.date} (${activeEdition.fullDate} / Reference: ${activeEdition.referenceNumber})
 L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 `;
 
@@ -827,7 +840,7 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
               <table border="0" cellpadding="0" cellspacing="0" style="margin-top: 20px;">
                 <tr>
                   <td style="border-top: 1px solid #1e293b; padding-top: 15px; color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: monospace;">
-                    Bulletin Mensuel • ${activeEdition.date}
+                    Édition N°${activeEdition.editionNumber} — ${activeEdition.date} (${activeEdition.fullDate} / Reference: ${activeEdition.referenceNumber})
                   </td>
                 </tr>
               </table>
@@ -1252,21 +1265,21 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
                   <td style="padding: 24px;">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
-                        <!-- Avatar image -->
-                        <td width="64" valign="top" class="column" align="center" style="padding-bottom: 12px;">
-                          <img src="${origin}/nicholas_goodwin.jpg?v=real_portrait" alt="Nicholas Goodwin" width="54" height="54" style="width: 54px; height: 54px; border-radius: 50%; border: 3px solid #006685; display: block; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.15);" referrerPolicy="no-referrer" />
+                        <!-- Guest Photo -->
+                        <td width="80" valign="top" class="column" align="center" style="padding-bottom: 12px;">
+                          <img src="${origin}${content.guestImage}" alt="${content.guestName}" width="72" height="72" style="width: 72px; height: 72px; border-radius: 12px; border: 3px solid #006685; display: block; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.15);" referrerPolicy="no-referrer" />
                         </td>
                         
                         <!-- Guest Info -->
                         <td valign="top" class="column" style="padding-left: 20px;">
                           <h3 style="color: #090d16; font-size: 18px; font-weight: 850; margin: 0 0 4px 0; font-family: sans-serif;">
-                            Nicholas Goodwin
+                            ${content.guestName}
                           </h3>
                           <p style="color: #006685; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: 1px; font-family: monospace;">
-                            Ebilyse • Conseil, SI et Transformation Digitale
+                            ${content.guestCompany} • ${content.guestRoleTag}
                           </p>
                           <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin: 0; font-family: sans-serif; font-style: italic;">
-                            Administrateur de Silicon Comté et pilote de la commission de la nouvelle Newsletter pour faire rayonner notre croissance régionale et le génie d'édition assisté par l'IA.
+                            ${content.guestBio}
                           </p>
                         </td>
                       </tr>
@@ -1583,13 +1596,13 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
           
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Glass-morphic Metadata Bar */}
-            <div className="h-9 flex items-center gap-5 bg-slate-900 border border-slate-800 text-white px-6 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.08)] text-xs font-mono font-bold tracking-widest uppercase leading-none">
+            <div className="h-9 flex items-center gap-3 md:gap-4 bg-slate-900 border border-slate-800 text-white px-5 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.08)] text-xs font-mono font-bold tracking-widest uppercase leading-none">
               <span className="text-highlighter flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-highlighter animate-pulse shrink-0"></span>
-                EDITION N°{activeEdition.editionNumber}
+                ÉDITION N°{activeEdition.editionNumber} — {activeEdition.dateUpper}
               </span>
-              <span className="text-slate-600">|</span>
-              <span className="text-slate-300">{activeEdition.dateUpper}</span>
+              <span className="text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-300 hidden sm:inline">({activeEdition.fullDate} / Ref: {activeEdition.referenceNumber})</span>
             </div>
 
             {/* Hamburger Button */}
@@ -2224,13 +2237,13 @@ Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une en
                 {/* Profile Widget Card */}
                 <div className="bg-slate-50/40 border border-slate-200/60 rounded-[2.5rem] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col items-center lg:items-start text-center lg:text-left w-full">
                   <div className="relative group mb-6">
-                    {!isGenerating && <div className="absolute -inset-1.5 bg-gradient-to-r from-highlighter to-[#006685] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition duration-500"></div>}
+                    {!isGenerating && <div className="absolute -inset-1.5 bg-gradient-to-r from-highlighter to-[#006685] rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition duration-500"></div>}
                     
-                    {/* Stylish Avatar Image Block */}
+                    {/* Stylish Portrait Image Block */}
                     <img 
                       src={content.guestImage} 
                       alt={content.guestName} 
-                      className="w-24 h-24 rounded-full object-cover shadow-md relative z-10 border-4 border-white select-none"
+                      className="w-32 h-32 md:w-36 md:h-36 rounded-2xl object-cover shadow-md relative z-10 border-4 border-white select-none"
                       referrerPolicy="no-referrer"
                     />
                   </div>
