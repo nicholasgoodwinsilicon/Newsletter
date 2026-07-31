@@ -9,13 +9,13 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-const annuaireCleanNetwork = '/annuaire_clean_network.jpg';
-const dgfipLogoImg = '/dgfip_logo.jpg';
-const ninkasiLogoImg = '/ninkasi_logo.jpg';
-const antoineBouetImg = '/antoine_bouet.png';
-const brunoRoyImg = '/bruno_roy.png';
-const nicholasGoodwinImg = '/nicholas_goodwin.jpg';
-const logoSiliconComte = '/logo-siliconcomte.png';
+import annuaireCleanNetwork from './assets/images/annuaire_clean_network.jpg';
+import dgfipLogoImg from './assets/images/dgfip_logo.jpg';
+import ninkasiLogoImg from './assets/images/ninkasi_logo.jpg';
+import antoineBouetImg from './assets/images/antoine_bouet.png';
+import brunoRoyImg from './assets/images/bruno_roy.png';
+import nicholasGoodwinImg from './assets/images/nicholas_goodwin.jpg';
+import logoSiliconComte from './assets/images/logo-siliconcomte.png';
 
 interface Edition {
   id: number;
