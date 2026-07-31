@@ -9,13 +9,13 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import annuaireCleanNetwork from './assets/images/annuaire_clean_network_1785489106437.jpg';
-import dgfipLogoImg from './assets/images/dgfip_logo.jpg';
-import ninkasiLogoImg from './assets/images/ninkasi_logo.jpg';
-import antoineBouetImg from './assets/images/antoine_bouet.png';
-import brunoRoyImg from './assets/images/Bruno_Roy.png';
-import nicholasGoodwinImg from './assets/images/nicholas_goodwin.jpg';
-import logoSiliconComte from './assets/images/logo-siliconcomte.png';
+const annuaireCleanNetwork = '/annuaire_clean_network.jpg';
+const dgfipLogoImg = '/dgfip_logo.jpg';
+const ninkasiLogoImg = '/ninkasi_logo.jpg';
+const antoineBouetImg = '/antoine_bouet.png';
+const brunoRoyImg = '/bruno_roy.png';
+const nicholasGoodwinImg = '/nicholas_goodwin.jpg';
+const logoSiliconComte = '/logo-siliconcomte.png';
 
 interface Edition {
   id: number;
@@ -199,7 +199,7 @@ export default function App() {
       editionNumber: 2,
       date: 'Août 2026',
       dateUpper: 'AOÛT 2026',
-      fullDate: '10 Août 2026',
+      fullDate: '5 Août 2026',
       referenceNumber: 'SC-NL-2026-N2',
     },
     {
@@ -226,7 +226,7 @@ export default function App() {
                 ...ed,
                 date: 'Août 2026',
                 dateUpper: 'AOÛT 2026',
-                fullDate: '10 Août 2026',
+                fullDate: '5 Août 2026',
                 referenceNumber: 'SC-NL-2026-N2',
               };
             }
@@ -252,7 +252,7 @@ export default function App() {
               ...found,
               date: 'Août 2026',
               dateUpper: 'AOÛT 2026',
-              fullDate: '10 Août 2026',
+              fullDate: '5 Août 2026',
               referenceNumber: 'SC-NL-2026-N2',
             };
           }
@@ -739,7 +739,19 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
   const generateHtmlEmail = () => {
     const content = getEditionContent(activeEdition.editionNumber);
-    const origin = window.location.origin || 'https://siliconcomte.com';
+    const isDevOrSandbox = !window.location.origin || 
+      window.location.origin.includes('localhost') || 
+      window.location.origin.includes('ais-dev') || 
+      window.location.origin.includes('ais-pre');
+    const origin = isDevOrSandbox
+      ? 'https://silicon-comte-newsletter.web.app'
+      : window.location.origin;
+    const getAbsoluteUrl = (url: string) => {
+      if (!url) return '';
+      if (url.startsWith('http://') || url.startsWith('https://')) return url;
+      if (url.startsWith('data:')) return url;
+      return `${origin}${url.startsWith('/') ? '' : '/'}${url}`;
+    };
     const htmlContent = `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -792,7 +804,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
           <!-- NAVBAR LOGO -->
           <tr>
             <td style="background-color: #ffffff; padding: 24px 40px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-              <img src="${origin}/logo-siliconcomte.png" alt="Silicon Comté" style="max-width: 200px; height: auto;" />
+              <img src="${getAbsoluteUrl(logoSiliconComte)}" alt="Silicon Comté" style="max-width: 200px; height: auto;" />
             </td>
           </tr>
 
@@ -845,7 +857,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
                         <td width="72" valign="top" style="padding-right: 18px;">
-                          <img src="${origin}/dgfip_logo.jpg" alt="DGFiP Logo" width="64" height="64" style="width: 64px; height: 64px; border-radius: 12px; border: 2px solid #006685; display: block; object-fit: cover; background-color: #ffffff;" referrerPolicy="no-referrer" />
+                          <img src="${getAbsoluteUrl(dgfipLogoImg)}" alt="DGFiP Logo" width="64" height="64" style="width: 64px; height: 64px; border-radius: 12px; border: 2px solid #006685; display: block; object-fit: cover; background-color: #ffffff;" referrerPolicy="no-referrer" />
                         </td>
                         <td valign="top">
                           <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 4px 0;">
@@ -874,7 +886,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
                         <td width="72" valign="top" style="padding-right: 18px;">
-                          <img src="${origin}/ninkasi_logo.jpg" alt="Ninkasi Logo" width="64" height="64" style="width: 64px; height: 64px; border-radius: 12px; border: 2px solid #fbd800; display: block; object-fit: cover; background-color: #ffffff;" referrerPolicy="no-referrer" />
+                          <img src="${getAbsoluteUrl(ninkasiLogoImg)}" alt="Ninkasi Logo" width="64" height="64" style="width: 64px; height: 64px; border-radius: 12px; border: 2px solid #fbd800; display: block; object-fit: cover; background-color: #ffffff;" referrerPolicy="no-referrer" />
                         </td>
                         <td valign="top">
                           <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 4px 0;">
@@ -915,7 +927,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                     <table border="0" cellpadding="0" cellspacing="0" align="left" style="margin-right: 25px; margin-bottom: 20px;" class="responsive-table mobile-center">
                       <tr>
                         <td align="center" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 15px;">
-                          <img src="${origin}/antoine_bouet.png" alt="Antoine Bouet" width="110" height="110" style="border-radius: 50%; border: 3px solid #006685; display: block; object-fit: cover;" />
+                          <img src="${getAbsoluteUrl(antoineBouetImg)}" alt="Antoine Bouet" width="110" height="110" style="border-radius: 50%; border: 3px solid #006685; display: block; object-fit: cover;" />
                           <div style="margin-top: 12px; font-size: 14px; font-weight: bold; color: #0f172a; font-family: sans-serif;">Antoine Bouet</div>
                           <div style="font-size: 9px; color: #006685; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; font-family: monospace; margin-top: 3px;">Président</div>
                         </td>
@@ -966,7 +978,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 25px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px;">
                 <tr>
                   <td width="100" valign="top">
-                    <img src="${origin}${content.guestImage}" alt="${content.guestName}" width="90" height="90" style="border-radius: 50%; object-fit: cover;" />
+                    <img src="${getAbsoluteUrl(content.guestImage)}" alt="${content.guestName}" width="90" height="90" style="border-radius: 50%; object-fit: cover;" />
                   </td>
                   <td valign="top" style="padding-left: 15px; font-family: sans-serif;">
                     <div style="font-size: 18px; font-weight: 900; color: #0f172a;">${content.guestName}</div>
@@ -980,12 +992,18 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 "${content.guestQuote}"
               </div>
 
-              ${content.qas.map(qa => `
-                <div style="margin-bottom: 20px; font-family: sans-serif;">
-                  <div style="font-weight: 800; color: #006685; font-size: 14px; margin-bottom: 6px;">${qa.question}</div>
-                  <div style="color: #334155; font-size: 13.5px; line-height: 1.6;">${qa.answer}</div>
+              ${content.qas.map(qa => {
+                const match = qa.answer.match(/^([^:]+:\s*)([\s\S]*)$/);
+                const formattedAns = match 
+                  ? `<span style="display: inline-block; background-color: #e0f2fe; color: #006685; border: 1px solid #7dd3fc; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px; font-family: sans-serif; vertical-align: middle;">${match[1]}</span><span style="vertical-align: middle;">${match[2]}</span>`
+                  : qa.answer;
+                return `
+                <div style="margin-bottom: 22px; font-family: sans-serif;">
+                  <div style="font-weight: 800; color: #006685; font-size: 14px; margin-bottom: 8px;">${qa.question}</div>
+                  <div style="color: #334155; font-size: 13.5px; line-height: 1.6;">${formattedAns}</div>
                 </div>
-              `).join('')}
+              `;
+              }).join('')}
             </td>
           </tr>
 
@@ -1314,7 +1332,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                       <tr>
                         <!-- Guest Photo -->
                         <td width="80" valign="top" class="column" align="center" style="padding-bottom: 12px;">
-                          <img src="${origin}${content.guestImage}" alt="${content.guestName}" width="72" height="72" style="width: 72px; height: 72px; border-radius: 12px; border: 3px solid #006685; display: block; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.15);" referrerPolicy="no-referrer" />
+                          <img src="${getAbsoluteUrl(content.guestImage)}" alt="${content.guestName}" width="72" height="72" style="width: 72px; height: 72px; border-radius: 12px; border: 3px solid #006685; display: block; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.15);" referrerPolicy="no-referrer" />
                         </td>
                         
                         <!-- Guest Info -->
@@ -2469,8 +2487,23 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                     </div>
                   </div>
                   
-                  <div className="lg:pl-14 text-slate-600 leading-relaxed text-base md:text-[17px] font-light whitespace-pre-line space-y-3">
-                    <p>{qa.answer}</p>
+                  <div className="lg:pl-14 text-slate-700 leading-relaxed text-base md:text-[17px] whitespace-pre-line space-y-3">
+                    {(() => {
+                      const match = qa.answer.match(/^([^:]+:\s*)([\s\S]*)$/);
+                      if (match) {
+                        const speakerName = match[1].replace(' :', '').replace(':', '').trim();
+                        return (
+                          <p className="leading-relaxed">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 mr-2.5 mb-1.5 md:mb-0 rounded-xl bg-[#006685]/10 border border-[#006685]/20 text-[#006685] font-extrabold text-xs uppercase tracking-wider shadow-sm select-none align-middle">
+                              <User size={13} className="text-[#006685] shrink-0" />
+                              {speakerName} :
+                            </span>
+                            <span className="text-slate-800 font-normal">{match[2]}</span>
+                          </p>
+                        );
+                      }
+                      return <p className="text-slate-800 font-normal">{qa.answer}</p>;
+                    })()}
                   </div>
                 </motion.div>
               ))}
@@ -2717,7 +2750,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                        </span>
                      </div>
                      <img 
-                       src="/logo-siliconcomte.png" 
+                       src={logoSiliconComte} 
                        alt="Certification" 
                        className="w-[70px] opacity-25 filter grayscale contrast-125" 
                      />
