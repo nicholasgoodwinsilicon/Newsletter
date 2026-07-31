@@ -9,13 +9,14 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-const annuaireCleanNetwork = '/annuaire_clean_network.jpg';
-const dgfipLogoImg = '/dgfip_logo.jpg';
-const ninkasiLogoImg = '/ninkasi_logo.jpg';
-const antoineBouetImg = '/antoine_bouet.png';
-const brunoRoyImg = '/bruno_roy.png';
-const nicholasGoodwinImg = '/nicholas_goodwin.jpg';
-const logoSiliconComte = '/logo-siliconcomte.png';
+import annuaireCleanNetwork from './assets/images/annuaire_clean_network.jpg';
+import dgfipLogoImg from './assets/images/dgfip_logo.jpg';
+import ninkasiLogoImg from './assets/images/ninkasi_logo.jpg';
+import antoineBouetImg from './assets/images/antoine_bouet.png';
+import brunoRoyImg from './assets/images/bruno_roy.png';
+import nicholasGoodwinImg from './assets/images/nicholas_goodwin.jpg';
+import logoSiliconComte from './assets/images/logo-siliconcomte.png';
+import illustrationHome from './assets/images/illustration-home-new.png';
 
 interface Edition {
   id: number;
@@ -1686,7 +1687,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
       {/* 2. HIGH-IMPACT MULTI-LAYERED HERO SECTION */}
       <header className="relative w-full overflow-hidden bg-slate-950 pt-24 pb-32 md:pt-36 md:pb-48 px-6 md:px-12 text-white border-b-8 border-highlighter">
         {/* Underlay Grid & Imagery with custom blend and darkness overlay */}
-        <div className={`absolute inset-0 z-0 opacity-40 bg-[url('/illustration-home-new.png')] bg-cover bg-center bg-no-repeat ${isGenerating ? '' : 'mix-blend-luminosity'}`}></div>
+        <div className={`absolute inset-0 z-0 opacity-40 bg-cover bg-center bg-no-repeat ${isGenerating ? '' : 'mix-blend-luminosity'}`} style={{ backgroundImage: `url(${illustrationHome})` }}></div>
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-900"></div>
 
         <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -2709,7 +2710,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 
                 {/* Gradient Holo Top Ribbon */}
                 <div className="h-28 w-full bg-gradient-to-r from-highlighter via-yellow-400 to-[#e5c500] shrink-0 z-10 flex items-center justify-center pt-5 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20 bg-[url('/illustration-home-new.png')] bg-cover mix-blend-overlay"></div>
+                  <div className="absolute inset-0 opacity-20 bg-cover mix-blend-overlay" style={{ backgroundImage: `url(${illustrationHome})` }}></div>
                   <span className={`h-8 inline-flex items-center justify-center font-display font-extrabold uppercase tracking-widest text-[#006685] text-[11px] relative z-10 ${isGenerating ? 'bg-white' : 'bg-white/40 backdrop-blur-md'} px-5 rounded-full border border-white/40 leading-none`}>
                     Sceau Adhérent 2026/2027
                   </span>
@@ -2718,7 +2719,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 {/* Badge Main Body */}
                 <div className="flex-1 p-8 text-center flex flex-col justify-between relative bg-gradient-to-b from-white to-slate-50/50">
                    {/* Logo vector embedded subtle */}
-                   <div className="absolute inset-x-8 inset-y-16 opacity-[0.035] bg-[url('/logo-siliconcomte.png')] bg-center bg-no-repeat bg-contain pointer-events-none"></div>
+                   <div className="absolute inset-x-8 inset-y-16 opacity-[0.035] bg-center bg-no-repeat bg-contain pointer-events-none" style={{ backgroundImage: `url(${logoSiliconComte})` }}></div>
                    
                    <div className="pt-4">
                      <h3 className="text-3xl font-display font-black text-slate-950 tracking-tight leading-none uppercase">
@@ -2764,7 +2765,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
       {/* 8. FOOTER WITH REFIND OUTLINES AND BRAND INTEGRATIONS */}
       <footer className="bg-slate-950 pt-24 pb-16 px-6 md:px-12 relative overflow-hidden text-white border-t-[12px] border-highlighter">
-        <div className="absolute inset-0 z-0 opacity-[0.035] bg-[url('/illustration-home-new.png')] bg-cover bg-center bg-no-repeat mix-blend-luminosity"></div>
+        <div className="absolute inset-0 z-0 opacity-[0.035] bg-cover bg-center bg-no-repeat mix-blend-luminosity" style={{ backgroundImage: `url(${illustrationHome})` }}></div>
         
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-16">
           
