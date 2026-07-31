@@ -9,14 +9,16 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-const annuaireCleanNetwork = '/annuaire_clean_network.jpg';
-const dgfipLogoImg = '/dgfip_logo.jpg';
-const ninkasiLogoImg = '/ninkasi_logo.jpg';
-const antoineBouetImg = '/antoine_bouet.png';
-const brunoRoyImg = '/bruno_roy.png';
-const nicholasGoodwinImg = '/nicholas_goodwin.jpg';
-const logoSiliconComte = '/logo-siliconcomte.png';
-const illustrationHome = '/illustration-home-new.png';
+import { 
+  annuaireCleanNetwork,
+  dgfipLogoImg,
+  ninkasiLogoImg,
+  antoineBouetImg,
+  brunoRoyImg,
+  nicholasGoodwinImg,
+  logoSiliconComte,
+  illustrationHome
+} from './assets/imagesData';
 
 interface Edition {
   id: number;
