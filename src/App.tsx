@@ -9,14 +9,14 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import annuaireCleanNetwork from './assets/images/annuaire_clean_network.jpg';
-import dgfipLogoImg from './assets/images/dgfip_logo.jpg';
-import ninkasiLogoImg from './assets/images/ninkasi_logo.jpg';
-import antoineBouetImg from './assets/images/antoine_bouet.png';
-import brunoRoyImg from './assets/images/bruno_roy.png';
-import nicholasGoodwinImg from './assets/images/nicholas_goodwin.jpg';
-import logoSiliconComte from './assets/images/logo-siliconcomte.png';
-import illustrationHome from './assets/images/illustration-home-new.png';
+const annuaireCleanNetwork = '/annuaire_clean_network.jpg';
+const dgfipLogoImg = '/dgfip_logo.jpg';
+const ninkasiLogoImg = '/ninkasi_logo.jpg';
+const antoineBouetImg = '/antoine_bouet.png';
+const brunoRoyImg = '/bruno_roy.png';
+const nicholasGoodwinImg = '/nicholas_goodwin.jpg';
+const logoSiliconComte = '/logo-siliconcomte.png';
+const illustrationHome = '/illustration-home-new.png';
 
 interface Edition {
   id: number;
@@ -320,6 +320,7 @@ export default function App() {
   const [isGenerating, setIsGenerating] = React.useState(false);
   const [showFutureMaterial, setShowFutureMaterial] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [showHelloWorld, setShowHelloWorld] = React.useState(false);
   
   const toggleFutureMaterial = () => {
     const nextVal = !showFutureMaterial;
@@ -1645,6 +1646,68 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
   const cardHoverEffect = isGenerating ? "" : "hover:shadow-[0_22px_50px_rgba(0,102,133,0.08)] hover:border-highlighter hover:-translate-y-3 transition-all duration-500 ease-out";
 
+  if (showHelloWorld) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white font-sans p-6 md:p-12 flex flex-col items-center justify-center">
+        <div className="max-w-3xl w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl text-center space-y-8 relative">
+          
+          <button
+            onClick={() => setShowHelloWorld(false)}
+            className="absolute top-6 right-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-mono rounded-lg transition-colors cursor-pointer border border-slate-700 flex items-center gap-2"
+          >
+            ← Back to Newsletter
+          </button>
+
+          <div className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs tracking-widest uppercase">
+            ● Static Image Test & Proof
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white font-serif">
+            Hello, World!
+          </h1>
+          
+          <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+            This simple page proves that static images are hosted directly from the root <code className="bg-slate-800 text-amber-400 px-2 py-0.5 rounded text-xs font-mono">public/</code> directory with 100% reliability.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-left">
+            <div className="p-6 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">1. Association Logo</span>
+              <div className="bg-white p-4 rounded-lg flex items-center justify-center min-h-[100px]">
+                <img src={logoSiliconComte} alt="Silicon Comté Logo" className="max-h-16 object-contain" />
+              </div>
+              <div className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                Path: <code className="text-slate-300">{logoSiliconComte}</code>
+              </div>
+            </div>
+
+            <div className="p-6 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">2. Speaker Portrait</span>
+              <div className="bg-slate-900 p-4 rounded-lg flex items-center justify-center min-h-[100px]">
+                <img src={antoineBouetImg} alt="Antoine Bouët" className="w-20 h-20 rounded-full border-2 border-cyan-500 object-cover" />
+              </div>
+              <div className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                Path: <code className="text-slate-300">{antoineBouetImg}</code>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-4">
+            <button
+              onClick={() => setShowHelloWorld(false)}
+              className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition-all cursor-pointer shadow-lg hover:shadow-cyan-500/20"
+            >
+              Return to Silicon Comté Newsletter
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div ref={newsletterRef} className="font-sans min-h-screen bg-[#fcf9f8] selection:bg-highlighter selection:text-black scroll-smooth">
       
@@ -1661,6 +1724,17 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
           </a>
           
           <div className="flex items-center gap-3 sm:gap-4">
+            {/* Hello World Test Toggle */}
+            <button
+              data-html2canvas-ignore="true"
+              onClick={() => setShowHelloWorld(true)}
+              className="h-9 px-3.5 bg-slate-900/90 border border-slate-700 text-emerald-400 hover:text-white hover:bg-slate-800 rounded-full flex items-center gap-2 text-xs font-mono font-bold transition-all cursor-pointer shadow-sm group"
+              title="Test image loading page"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400 group-hover:rotate-12 transition-transform" />
+              <span>Hello World</span>
+            </button>
+
             {/* Glass-morphic Metadata Bar */}
             <div className="h-9 flex items-center gap-3 md:gap-4 bg-slate-900 border border-slate-800 text-white px-5 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.08)] text-xs font-mono font-bold tracking-widest uppercase leading-none">
               <span className="text-highlighter flex items-center gap-2">
