@@ -1649,7 +1649,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
   if (showHelloWorld) {
     return (
       <div className="min-h-screen bg-slate-950 text-white font-sans p-6 md:p-12 flex flex-col items-center justify-center">
-        <div className="max-w-3xl w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl text-center space-y-8 relative">
+        <div className="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl text-center space-y-8 relative">
           
           <button
             onClick={() => setShowHelloWorld(false)}
@@ -1659,37 +1659,75 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
           </button>
 
           <div className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs tracking-widest uppercase">
-            ● Static Image Test & Proof
+            ● Static Image Gallery & Verification
           </div>
 
           <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white font-serif">
             Hello, World!
           </h1>
           
-          <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
             This simple page proves that static images are hosted directly from the root <code className="bg-slate-800 text-amber-400 px-2 py-0.5 rounded text-xs font-mono">public/</code> directory with 100% reliability.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-left">
-            <div className="p-6 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-4 text-left">
+            <div className="p-5 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
               <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">1. Association Logo</span>
-              <div className="bg-white p-4 rounded-lg flex items-center justify-center min-h-[100px]">
-                <img src={logoSiliconComte} alt="Silicon Comté Logo" className="max-h-16 object-contain" />
+              <div className="bg-slate-800/80 p-4 rounded-lg flex items-center justify-center h-28 border border-slate-700/50">
+                <img src={logoSiliconComte} alt="Silicon Comté Logo" className="max-h-12 object-contain" />
               </div>
-              <div className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <div className="text-[11px] font-mono text-emerald-400">
                 Path: <code className="text-slate-300">{logoSiliconComte}</code>
               </div>
             </div>
 
-            <div className="p-6 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
-              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">2. Speaker Portrait</span>
-              <div className="bg-slate-900 p-4 rounded-lg flex items-center justify-center min-h-[100px]">
-                <img src={antoineBouetImg} alt="Antoine Bouët" className="w-20 h-20 rounded-full border-2 border-cyan-500 object-cover" />
+            <div className="p-5 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">2. Antoine Bouët</span>
+              <div className="bg-slate-800/80 p-4 rounded-lg flex items-center justify-center h-28 border border-slate-700/50">
+                <img src={antoineBouetImg} alt="Antoine Bouët" className="w-16 h-16 rounded-full border-2 border-cyan-500 object-cover" />
               </div>
-              <div className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <div className="text-[11px] font-mono text-emerald-400">
                 Path: <code className="text-slate-300">{antoineBouetImg}</code>
+              </div>
+            </div>
+
+            <div className="p-5 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">3. Bruno Roy</span>
+              <div className="bg-slate-800/80 p-4 rounded-lg flex items-center justify-center h-28 border border-slate-700/50">
+                <img src={brunoRoyImg} alt="Bruno Roy" className="w-16 h-16 rounded-full border-2 border-amber-500 object-cover" />
+              </div>
+              <div className="text-[11px] font-mono text-emerald-400">
+                Path: <code className="text-slate-300">{brunoRoyImg}</code>
+              </div>
+            </div>
+
+            <div className="p-5 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">4. Nicholas Goodwin</span>
+              <div className="bg-slate-800/80 p-4 rounded-lg flex items-center justify-center h-28 border border-slate-700/50">
+                <img src={nicholasGoodwinImg} alt="Nicholas Goodwin" className="w-16 h-16 rounded-full border-2 border-purple-500 object-cover" />
+              </div>
+              <div className="text-[11px] font-mono text-emerald-400">
+                Path: <code className="text-slate-300">{nicholasGoodwinImg}</code>
+              </div>
+            </div>
+
+            <div className="p-5 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">5. DGFiP Logo</span>
+              <div className="bg-white p-4 rounded-lg flex items-center justify-center h-28 border border-slate-700/50">
+                <img src={dgfipLogoImg} alt="DGFiP Logo" className="max-h-16 object-contain" />
+              </div>
+              <div className="text-[11px] font-mono text-emerald-400">
+                Path: <code className="text-slate-300">{dgfipLogoImg}</code>
+              </div>
+            </div>
+
+            <div className="p-5 bg-slate-950/60 border border-slate-800 rounded-xl space-y-3">
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block">6. Ninkasi Logo</span>
+              <div className="bg-slate-800/80 p-4 rounded-lg flex items-center justify-center h-28 border border-slate-700/50">
+                <img src={ninkasiLogoImg} alt="Ninkasi Logo" className="max-h-16 object-contain" />
+              </div>
+              <div className="text-[11px] font-mono text-emerald-400">
+                Path: <code className="text-slate-300">{ninkasiLogoImg}</code>
               </div>
             </div>
           </div>
