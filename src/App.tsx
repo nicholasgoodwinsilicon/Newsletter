@@ -2660,13 +2660,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               </p>
             </motion.div>
 
-            <motion.div 
-              variants={staggerContainer}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true }}
-              className="space-y-8"
-            >
+            <div className="space-y-8">
               {[ 
                 { num: '01', title: 'Badge Adhérent exclusif', desc: 'Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.' },
                 { num: '02', title: 'Référencement (backlinks) dans l\'annuaire', desc: 'Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté, indexé pour rassurer vos prospects.' },
@@ -2676,7 +2670,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               ].map((item, i) => (
                 <motion.div 
                   key={i} 
-                  variants={fadeInUp} 
+                  {...fadeInUp} 
                   className="flex gap-6 items-start group relative"
                 >
                   <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-display text-lg font-black bg-highlighter text-slate-950 group-hover:scale-110 group-hover:bg-[#006685] group-hover:text-white transition-all duration-300 shadow-[0_6px_20px_rgba(251,216,0,0.35)]">
@@ -2692,7 +2686,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </div>
           
           {/* Right Side: Virtual Holo Badge with 3D feel & interactive reflection */}
