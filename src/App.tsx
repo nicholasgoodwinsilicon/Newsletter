@@ -9,18 +9,14 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { imagesData } from './assets/imagesData';
-
-const {
-  annuaireCleanNetwork,
-  dgfipLogoImg,
-  ninkasiLogoImg,
-  antoineBouetImg,
-  brunoRoyImg,
-  nicholasGoodwinImg,
-  logoSiliconComte,
-  illustrationHome
-} = imagesData;
+import annuaireCleanNetwork from './assets/images/annuaire_network_gen_1785492666868.jpg';
+import dgfipLogoImg from './assets/images/dgfip_logo_gen_1785492632316.jpg';
+import ninkasiLogoImg from './assets/images/ninkasi_logo_gen_1785492644719.jpg';
+import antoineBouetImg from './assets/images/antoine_bouet_1785516356917.jpg';
+import brunoRoyImg from './assets/images/bruno_roy_1785516370883.jpg';
+import nicholasGoodwinImg from './assets/images/nicholas_goodwin_1785516383007.jpg';
+import logoSiliconComte from './assets/images/logo_silicon_comte_1785516342574.jpg';
+import illustrationHome from './assets/images/fete_innovation_gen_1785492681600.jpg';
 
 interface Edition {
   id: number;
@@ -38,7 +34,7 @@ interface EditionContent {
   recapTitle?: string;
   recapParagraphs?: string[];
   agendaIntro: string;
-  agendaEvents: { date: string; title: string; desc: string; link?: string }[];
+  agendaEvents: { date: string; title: string; desc: string; tag?: string; location?: string; link?: string }[];
   caNewsTitle: string;
   caNewsIntro: string;
   caNewsBullet1: string;
@@ -62,52 +58,52 @@ function getEditionContent(editionNumber: number): EditionContent {
       presidentQuote: "Apprenons à nous connaître pour mieux nous valoriser !",
       presidentParagraphs: [
         "L'association Silicon Comté se redynamise avec une énergie nouvelle et une ambition forte. Notre priorité absolue est claire : fédérer l'ensemble de l'écosystème numérique local de Franche-Comté en remettant l'événementiel, le partage d'expertise et l'innovation au cœur de nos actions. La richesse de nos récents rendez-vous a créé un véritable élan, et c'est en nous réunissant que nous continuerons de créer de la valeur pour notre territoire.",
-        "Cette année, notre engagement s'accélère. Nous faisons de l'adoption de l'Intelligence Artificielle un axe majeur de notre développement, la considérant comme un véritable \"super-pouvoir\" pour nos membres. Cette volonté se traduit par nos rencontres mensuelles \"Apéros IA\" au Ninkasi, ainsi que par la refonte de notre annuaire des compétences. Désormais automatisé par l'IA, cet outil a vocation à devenir un véritable observatoire du numérique local.",
+        "Cette année, notre engagement s'accélère. Nous faisons de l'adoption de l'Intelligence Artificielle un axe majeur de notre développement, la considérant comme un véritable \"super-pouvoir\" pour nos membres. Cette volonté se traduit par nos rencontres mensuelles \"Apéros IA\" au Ninkasi, ainsi que par la refonte de notre annuaire des compétences. Désormais automatisé par l'IA, cet outil a vocation d'observatoire du numérique local.",
         "En rejoignant Silicon Comté, nos membres bénéficient d'une multitude d'avantages exclusifs conçus pour accélérer leur croissance. De la mise en valeur prioritaire de vos expertises au sein de notre nouvel annuaire à l'opportunité d'animer nos célèbres Digital Apéros, nous créons des espaces uniques d'échange. Ce réseau dynamique favorise les synergies d'affaires, le partage de bonnes pratiques sur les technologies de pointe, et multiplie les opportunités de networking de haut niveau pour propulser ensemble la visibilité de nos talents régionaux."
       ],
-      agendaIntro: "Découvrez notre sélection des temps forts de l'écosystème numérique en Franche-Comté :",
+      agendaIntro: "Événements à ne pas manquer (Agenda des Rencontres) :",
       agendaEvents: [
-        { date: "20 JUIN 2026", title: "Afterwork Networking", desc: "Soirée de convivialité et d'échanges informels entre membres et passionnés." },
-        { date: "26 JUIN 2026", title: "Fête de l'Innovation 2026", desc: "Grand rassemblement régional à l'Espace Grammont à Besançon." },
-        { date: "21 JUILLET 2026", title: "Apéros IA #01", desc: "Rencontre thématique mensuelle au Ninkasi sur les opportunités de l'IA." },
-        { date: "15 SEPTEMBRE 2026", title: "Digital Apéro", desc: "Rendez-vous de rentrée dans les locaux d'un membre adhérent." }
+        { date: "20 JUIN 2026", title: "Afterwork Networking (Thème : BFC Numérique)", desc: "Célébrons la cohésion dynamique de l'écosystème avec notre partenaire BFC Numérique pour clôturer le trimestre estival.", tag: "NETWORKING", location: "BFC Numérique" },
+        { date: "26 JUIN 2026", title: "Fête de l'Innovation 2026", desc: "Lieu : Espace Grammont, Besançon. Grand rassemblement régional d'innovation, pitchs et networking de 13h à 18h.", tag: "INNOVATION", location: "Espace Grammont" },
+        { date: "21 JUILLET 2026", title: "Apéros IA (Thème : Au Ninkasi)", desc: "Format informel de 45 min à 1h pour échanger de manière collective autour des nouveautés IA de la région, tester des outils et partager des compilations de prompts.", tag: "APÉRO IA #01", location: "Ninkasi" },
+        { date: "15 SEPTEMBRE 2026", title: "Digital Apéro (Thème : IA Agentique & Éthique)", desc: "Lieu : Le Comptoir Général. Conférence de 30–45 minutes pour une trentaine de personnes, suivie d'un apéritif convivial.", tag: "DIGITAL APÉRO", location: "Le Comptoir Général" }
       ],
-      caNewsTitle: "Projet Majeur N°1 : Annuaire des Compétences",
-      caNewsIntro: "Identifié comme l'outil prioritaire pour fédérer notre communauté, notre Annuaire des Compétences fait peau neuve pour devenir un véritable observatoire du numérique local. Ouvert à tous les acteurs du numérique de la région (entreprises, indépendants ou étudiants), ce projet incarne notre devise : \"se connaître pour se faire connaître\".",
+      caNewsTitle: "Actualités du Conseil d'administration",
+      caNewsIntro: "Projet Majeur N°1 : Annuaire des Compétences — Le nouveau cœur battant de notre écosystème\n\nIdentifié comme l'outil prioritaire pour fédérer notre communauté, notre Annuaire des Compétences fait peau neuve pour devenir un véritable observatoire du numérique local. Ouvert à tous les acteurs du numérique de la région (entreprises, indépendants ou étudiants), ce projet incarne notre devise : \"se connaître pour se faire connaître\".",
       caNewsBullet1: "Plateforme automatisée : Pour garantir une plateforme moderne, sa création et sa gestion sont désormais automatisées. Limite stricte de deux compétences phares par profil pour garantir une expertise ciblée.",
-      caNewsBullet2: "Réseaux & Blog : Afin de fluidifier nos échanges, nous concentrons nos efforts sur notre page LinkedIn officielle et le lancement de notre nouveau Blog média.",
-      interviewTitle: "L'entretien Décryptage",
+      caNewsBullet2: "Fiabilité des données & Avantages : Vérification par API via le numéro SIRET et modération régulière. Nos membres bénéficient d'un \"badge adhérent\" officiel et d'un backlink certifié pointant vers leur site pour leur propre SEO.",
+      interviewTitle: "L'Entretien Décryptage",
       interviewSubtitle: "Chaque mois, un membre met en lumière ses expertises et sa vision de l'écosystème.",
       guestName: "Nicholas Goodwin",
       guestCompany: "Ebilyse",
-      guestRoleTag: "Co-fondateur & Dir. Newsletter",
-      guestBio: "Conseil, transformation numérique et systèmes d'information pour artisans, TPE & PME.",
-      guestQuote: "L'IA est un véritable \"super-pouvoir\" pour trouver des idées de formats originaux et alternatifs.",
+      guestRoleTag: "Conseil, transformation numérique & SI",
+      guestBio: "Conseil, transformation numérique et systèmes d'information chez Ebilyse.",
+      guestQuote: "Je souhaitais m'impliquer pour mettre en lumière les progrès, la croissance et l'enthousiasme grandissant au sein de notre association.",
       guestImage: nicholasGoodwinImg,
       qas: [
         {
-          question: "Nicholas, pour commencer, pouvez-vous nous présenter Ebilyse et votre parcours ?",
-          answer: "D'origine britannique, je bénéficie de plus de 40 années d'expérience dans des entreprises internationales, avec une spécialisation en informatique, marketing et communication. Avec Françoise Goodwin Hillier, experte en gestion d'entreprise et ressources humaines, nous avons créé Ebilyse. Notre mission est de proposer du conseil et un accompagnement sur mesure pour les artisans, TPE/PME et jeunes entreprises. Notre objectif est simple : leur faire gagner du temps pour qu'ils puissent se concentrer sur leur cœur de métier et augmenter leur rentabilité."
+          question: "Silicon Comté : Nicholas, pouvez-vous nous présenter Ebilyse et votre parcours ?",
+          answer: "Nicholas Goodwin : D'origine britannique, je bénéficie de plus de 40 années d'expérience dans des entreprises internationales, avec une spécialisation en informatique, marketing et communication. Avec Françoise Goodwin Hillier, experte en gestion d'entreprise et ressources humaines, nous avons créé Ebilyse. Notre mission est de proposer du conseil et un accompagnement sur mesure pour les artisans, TPE/PME et jeunes entreprises. Notre objectif est simple : leur faire gagner du temps pour qu'ils puissent se concentrer sur leur cœur de métier et augmenter leur rentabilité."
         },
         {
-          question: "Vous êtes membre de Silicon Comté depuis la création de l'association. Qu'est-ce qui vous a motivé à y adhérer dès le départ ?",
-          answer: "La mise en relation d'affaires et le réseau sont au cœur de notre ADN, comme en témoigne notre rôle de co-organisateurs de l'Apéro Entrepreneurs de Besançon. Pour une entreprise comme la nôtre, qui accompagne les acteurs locaux dans leur numérisation, il était indispensable de faire partie d'un collectif qui fédère l'écosystème numérique. Rompre l'isolement des petites structures et partager des visions innovantes fait partie de nos priorités."
+          question: "Silicon Comté : Vous êtes membre de Silicon Comté depuis la création de l'association. Qu'est-ce qui vous a motivé à y adhérer dès le départ ?",
+          answer: "Nicholas Goodwin : La mise en relation d'affaires et le réseau sont au cœur de notre ADN, au même titre en relation de confiance et en prenant soin de nos partenaires de Besançon. Pour une entreprise comme la nôtre, qui accompagne les acteurs locaux dans leur numérisation, il était indispensable de faire partie d'un collectif qui fédère l'écosystème numérique. Rompre l'isolement des petites structures et partager des visions innovantes fait partie de nos priorités."
         },
         {
-          question: "Vous participez très régulièrement à nos différents événements. Que venez-vous y chercher en tant que chef d'entreprise ?",
-          answer: "J'y trouve une formidable source de sagesse et d'expérience. Ces rencontres permettent de puiser de l'inspiration non seulement auprès des autres membres, mais aussi des dynamiques du département du Doubs et du monde technologique en général."
+          question: "Silicon Comté : Vous participez très régulièrement à nos différents événements. Que venez-vous y chercher en tant que chef d'entreprise ?",
+          answer: "Nicholas Goodwin : J’y trouve une formidable source d'idées et d'expérience. Ces rencontres permettent de puiser de l'inspiration non seulement auprès des autres membres, mais aussi des dynamiques du Grand Besançon et du monde technologique en général. C'est l'occasion d'échanger sur de nouvelles idées et de découvrir des outils qui peuvent transformer notre façon de travailler."
         },
         {
-          question: "Récemment, vous avez franchi un cap supplémentaire en rejoignant le Conseil d'Administration et en prenant la direction de la commission Newsletter. Qu'est-ce qui a motivé cet engagement plus profond ?",
-          answer: "Je souhaitais m'impliquer pour mettre en lumière les progrès, la croissance et l'enthousiasme grandissant au sein de notre association. En reprenant l'édition de cette newsletter mensuelle en français, mon ambition est de partager des informations utiles et intrigantes pour nos lecteurs. De plus, c'est l'occasion idéale d'utiliser concrètement l'IA comme un véritable \"super-pouvoir\"."
+          question: "Silicon Comté : Récemment, vous avez franchi un cap supplémentaire en rejoignant le Conseil d'Administration et en prenant la direction de la commission Newsletter. Qu'est-ce qui a motivé cet engagement plus profond ?",
+          answer: "Nicholas Goodwin : Je souhaitais m'impliquer pour mettre en lumière les progrès, la croissance et l'enthousiasme grandissant au sein de notre association. En reprenant l'édition de cette newsletter mensuelle en français, mon ambition est de partager des informations utiles et intrigantes pour nos lecteurs. De plus, c'est l'occasion idéale d'utiliser concrètement l'IA comme un véritable \"super-pouvoir\" pour nos formats."
         }
       ],
       membershipBullets: [
-        "Badge Adhérent exclusif : Sceau numérique officiel de labellisation à intégrer sur votre site.",
-        "Référencement (backlinks) dans l'annuaire : Boostez votre SEO technique grâce à un lien certifié.",
-        "Accueillir un Digital Apéro : Une occasion unique de recevoir l'ensemble de l'écosystème.",
-        "Pot de Rentrée réservé : Accès exclusif à nos grands rassemblements informels de networking.",
-        "Mise en avant Interview : Une opportunité d'être interviewé et mis en valeur dans la newsletter."
+        "Badge Adhérent exclusif : Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.",
+        "Référencement (backlinks) dans l'annuaire : Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté, indexé pour rassurer vos prospects.",
+        "Accueillir un Digital Apéro : Une occasion unique de recevoir l'ensemble de l'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.",
+        "Pot de Rentrée réservé : Accès exclusif et privé à nos grands rassemblements informels de networking de début de saison pour nouer des liens solides.",
+        "Mise en avant Interview : Une opportunité d'être interviewé et mis en valeur dans la newsletter (à l'image de celui ci-après) pour promouvoir vos succès et votre savoir-faire."
       ]
     };
   }
@@ -126,10 +122,10 @@ function getEditionContent(editionNumber: number): EditionContent {
     ],
     agendaIntro: "Ne manquez pas notre nouveau rendez-vous récurrent ! Les Apéros IA se tiennent désormais chaque 2ème mardi du mois dans l'ambiance conviviale de la Brasserie Ninkasi à Besançon. Venez échanger, débattre et vous inspirer :",
     agendaEvents: [
-      { date: "11 AOÛT 2026", title: "La rédaction web", desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »" },
-      { date: "8 SEPTEMBRE 2026", title: "L'IA et l'écologie", desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? »" },
-      { date: "13 OCTOBRE 2026", title: "IA et sécurité / confidentialité des données", desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. »" },
-      { date: "10 NOVEMBRE 2026", title: "Les agents IA", desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! »" }
+      { date: "11 AOÛT 2026", title: "La rédaction web", desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »", tag: "APÉRO IA #02", location: "Ninkasi" },
+      { date: "8 SEPTEMBRE 2026", title: "L'IA et l'écologie", desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? »", tag: "APÉRO IA #03", location: "Ninkasi" },
+      { date: "13 OCTOBRE 2026", title: "IA et sécurité / confidentialité des données", desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. »", tag: "APÉRO IA #04", location: "Ninkasi" },
+      { date: "10 NOVEMBRE 2026", title: "Les agents IA", desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! »", tag: "APÉRO IA #05", location: "Ninkasi" }
     ],
     caNewsTitle: "ANNUAIRE & NOTRE COMMUNAUTÉ",
     caNewsIntro: "Faites rayonner vos compétences ! L'Annuaire des Compétences est le nouveau cœur battant de notre écosystème numérique. Propulsé par l'IA pour automatiser sa création, cet outil est une vitrine unique pour booster votre visibilité régionale.",
@@ -200,20 +196,20 @@ const getNextEditionDate = (lastDate: string) => {
 export default function App() {
   const DEFAULT_EDITIONS: Edition[] = [
     {
-      id: 2,
-      editionNumber: 2,
-      date: 'Août 2026',
-      dateUpper: 'AOÛT 2026',
-      fullDate: '5 Août 2026',
-      referenceNumber: 'SC-NL-2026-N2',
-    },
-    {
       id: 1,
       editionNumber: 1,
       date: 'Juin 2026',
       dateUpper: 'JUIN 2026',
       fullDate: '10 Juin 2026',
       referenceNumber: 'SC-NL-2026-N1',
+    },
+    {
+      id: 2,
+      editionNumber: 2,
+      date: 'Août 2026',
+      dateUpper: 'AOÛT 2026',
+      fullDate: '5 Août 2026',
+      referenceNumber: 'SC-NL-2026-N2',
     }
   ];
 
@@ -226,6 +222,15 @@ export default function App() {
         const validEditions = parsed.filter((ed: Edition) => ed.editionNumber <= 2);
         if (validEditions.length > 0) {
           return validEditions.map((ed: Edition) => {
+            if (ed.editionNumber === 1) {
+              return {
+                ...ed,
+                date: 'Juin 2026',
+                dateUpper: 'JUIN 2026',
+                fullDate: '10 Juin 2026',
+                referenceNumber: 'SC-NL-2026-N1',
+              };
+            }
             if (ed.editionNumber === 2) {
               return {
                 ...ed,
@@ -250,8 +255,17 @@ export default function App() {
     if (savedActiveId && editions) {
       const activeIdNum = parseInt(savedActiveId, 10);
       if (activeIdNum <= 2) {
-        const found = editions.find(e => e.id === activeIdNum);
+        const found = editions.find(e => e.id === activeIdNum || e.editionNumber === activeIdNum);
         if (found) {
+          if (found.editionNumber === 1) {
+            return {
+              ...found,
+              date: 'Juin 2026',
+              dateUpper: 'JUIN 2026',
+              fullDate: '10 Juin 2026',
+              referenceNumber: 'SC-NL-2026-N1',
+            };
+          }
           if (found.editionNumber === 2) {
             return {
               ...found,
@@ -265,13 +279,13 @@ export default function App() {
         }
       }
     }
-    return editions.find(e => e.editionNumber === 2) || DEFAULT_EDITIONS[0];
+    return editions.find(e => e.editionNumber === 1) || DEFAULT_EDITIONS[0];
   });
 
   React.useEffect(() => {
     if (activeEdition.editionNumber > 2) {
-      const ed2 = editions.find(e => e.editionNumber === 2) || DEFAULT_EDITIONS[0];
-      setActiveEdition(ed2);
+      const ed1 = editions.find(e => e.editionNumber === 1) || DEFAULT_EDITIONS[0];
+      setActiveEdition(ed1);
     }
     if (editions.some(e => e.editionNumber > 2)) {
       setEditions(editions.filter(e => e.editionNumber <= 2));
@@ -1075,71 +1089,6 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
       </td>
     </tr>
   </table>
-          <tr>
-            <td style="background-color: #090d16; padding: 45px 40px; border-bottom: 2px solid #1e293b;" class="mobile-padding">
-              <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                  <td>
-                    <span style="color: #006685; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; display: block; margin-bottom: 6px;">
-                      // ACTIONS & CHANTIERS DE L'ÉCOSYSTÈME
-                    </span>
-                    <h2 style="color: #ffffff; font-size: 26px; font-weight: 900; margin-top: 0; margin-bottom: 30px; text-transform: uppercase; font-family: sans-serif; letter-spacing: -0.5px;">
-                      Actualités du Conseil d'administration
-                    </h2>
-                    
-                    <!-- WORK ITEM 3: COMMUNICATION (EXACT COPY OF LinkedIn & Blog PARAGRAPHS) -->
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border: 1px solid #1f2937; border-left: 4px solid #10b981; border-radius: 18px; margin-bottom: 25px;">
-                      <tr>
-                        <td style="padding: 28px;">
-                          <div style="font-family: monospace; color: #10b981; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
-                            COMMUNICATION DIGITALE // LINKEDIN & PORTAIL
-                          </div>
-                          <h3 style="color: #ffffff; font-size: 18px; font-weight: 850; margin: 0 0 16px 0; font-family: sans-serif; line-height: 1.35;">
-                            Relais Info N°${activeEdition.editionNumber} : Nouvelle Dynamique de Communication — Des outils repensés pour vous connecter
-                          </h3>
-                          <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0; font-family: sans-serif;">
-                            Afin de fluidifier nos échanges, nous concentrons nos efforts là où notre écosystème est le plus actif : notre page LinkedIn officielle pour la visibilité externe.
-                          </p>
-                          <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                            En parallèle, préparez-vous pour le lancement officiel de notre nouveau Blog destiné à relayer la richesse des témoignages et expertises de haut vol de nos membres.
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                    
-                    <!-- WORK ITEM 1: ANNUAIRE DE COMPÉTENCES (EXACT COPY OF ALL 4 PARAGRAPHS) -->
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border: 1px solid #1f2937; border-left: 4px solid #006685; border-radius: 18px;">
-                      <tr>
-                        <td style="padding: 28px;">
-                          <div style="font-family: monospace; color: #006685; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
-                            PROJET CRITIQUE N°1 // DIGITAL CARD
-                          </div>
-                          <h3 style="color: #ffffff; font-size: 18px; font-weight: 850; margin: 0 0 16px 0; font-family: sans-serif; line-height: 1.35;">
-                            Projet Majeur N°1 : Annuaire des Compétences — Le nouveau cœur battant de notre écosystème
-                          </h3>
-                          <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0; font-family: sans-serif;">
-                            Identifié comme l'outil prioritaire pour fédérer notre communauté, notre Annuaire des Compétences fait peau neuve pour devenir un véritable observatoire du numérique local. Ouvert à tous les acteurs du numérique de la région (entreprises, indépendants ou étudiants), ce projet incarne notre devise : "se connaître pour se faire connaître".
-                          </p>
-                          <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0; font-family: sans-serif;">
-                            Pour garantir une plateforme moderne, sa création et sa gestion sont désormais automatisées. Afin d'offrir une clarté maximale, nous imposons une limite stricte de deux compétences phares par profil pour garantir une expertise ciblée.
-                          </p>
-                          <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0; font-family: sans-serif;">
-                            De plus, la fiabilité des données est notre priorité : vérification par API via le numéro SIRET et modération régulière garantissent un ancrage sérieux en Franche-Comté.
-                          </p>
-                          <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                            De plus, nos membres bénéficient d'avantages exclusifs : l'ajout d'un "badge adhérent" officiel et l'intégration d'un backlink certifié pointant vers leur site pour leur propre SEO.
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-
 
           <!-- 4. POURQUOI NOUS JOINDRE ? (LIGHT BG CELL WITH ALL 5 BULLETS FULL TEXT) -->
           <tr>
@@ -2072,244 +2021,456 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
             <motion.div 
               {...anim({ rotate: -2, scale: 0.95 }, { rotate: 0, scale: 1 }, undefined, 'whileInView')}
               viewport={{ once: true }}
-              className="hidden md:flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-lg border border-slate-200/80"
+              className="hidden md:flex items-center justify-center w-12 h-12 bg-white rounded-2xl shadow-md border border-slate-200/80 text-[#006685]"
             >
-              <div className="w-10 h-10 rounded-xl bg-[#006685] text-white flex items-center justify-center shrink-0 shadow-md">
-                <MapPin size={20} />
-              </div>
-              <div className="text-left">
-                <span className="text-[10px] font-mono text-[#006685] font-black uppercase tracking-wider block">
-                  ÉCOSYSTÈME FRANCHE-COMTÉ
-                </span>
-                <span className="text-xs font-extrabold text-slate-950 block">
-                  Annuaire Régional 2026
-                </span>
-              </div>
+              <Megaphone size={22} className="stroke-[2.5]" />
             </motion.div>
           </div>
           
           {/* Main Visual Showcase Grid */}
-          <div className="space-y-12 max-w-6xl mx-auto">
-            
-            {/* 1. Hero Feature Card: Annuaire des Compétences & Vie de l'association */}
-            <motion.div 
-              {...fadeInUp}
-              className="bg-slate-950 rounded-[2.5rem] border border-slate-800 shadow-2xl overflow-hidden text-white grid grid-cols-1 lg:grid-cols-12 gap-0 group"
-            >
-              {/* Left Column: Official Silicon Comté Regional Showcase */}
-              <div className="lg:col-span-5 relative min-h-[340px] lg:min-h-[460px] overflow-hidden bg-slate-900 flex flex-col justify-between p-6 md:p-8">
-                {/* Clean Abstract Network Background (no burnt-in text) */}
-                <img 
-                  src={annuaireCleanNetwork} 
-                  alt="Écosystème Numérique Silicon Comté Franche-Comté" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-950/20 z-10"></div>
-                
-                {/* Top Badge Overlay with Legible White Logo Container */}
-                <div className="relative z-20 flex justify-between items-center gap-2">
-                  <div className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-lg flex items-center gap-2">
-                    <img src={logoSiliconComte} alt="Silicon Comté" className="h-5 w-auto object-contain" />
-                    <span className="text-[#006685] text-[10px] font-mono font-black uppercase tracking-wider border-l border-slate-200 pl-2">
-                      BFC RÉSEAU
-                    </span>
-                  </div>
-                  <span className="px-3 py-1.5 bg-highlighter text-slate-950 font-mono font-black text-[10px] uppercase rounded-full shadow-md flex items-center gap-1.5">
-                    ⚡ IA PROPULSÉ
-                  </span>
-                </div>
-
-                {/* Center Regional Motto Box */}
-                <div className="relative z-20 my-auto py-4">
-                  <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-2">
-                    <p className="text-xs font-semibold text-slate-200 leading-snug">
-                      « Favoriser le développement d'un écosystème numérique en Franche-Comté »
-                    </p>
-                    <p className="text-[11px] font-mono text-highlighter font-bold italic">
-                      Apprenons à nous connaître pour mieux nous valoriser !
-                    </p>
-                  </div>
-                </div>
-
-                {/* Bottom Pertinent Tags & Search Interactive Preview */}
-                <div className="relative z-20">
-                  <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-3">
-                    <div className="flex items-center gap-2.5 bg-slate-950/90 border border-slate-800 rounded-xl px-3.5 py-2 text-slate-400 text-xs font-mono">
-                      <Search size={14} className="text-highlighter shrink-0" />
-                      <span className="text-slate-300 font-sans text-xs truncate">Trouver un expert, agence, startup...</span>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {['IA & Data', 'Dev Software', 'Cyber', 'UX & Design', 'SEO'].map((tag, i) => (
-                        <span key={i} className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 border border-slate-700/90 font-medium">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Narrative Content */}
-              <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-between bg-slate-950 relative z-20">
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="font-mono text-[11px] text-highlighter font-extrabold uppercase tracking-widest bg-highlighter/10 px-3 py-1 rounded-full border border-highlighter/20">
-                      INFO CA // ÉDITION #{activeEdition.editionNumber}
-                    </span>
-                  </div>
-
-                  <h3 className="text-3xl md:text-4xl font-display font-black text-white tracking-tight uppercase mb-6 leading-tight">
-                    Vie de l'association & <br />
-                    <span className="text-highlighter">Annuaire des Compétences</span>
-                  </h3>
-
-                  <p className="text-slate-300 font-light text-base md:text-lg leading-relaxed mb-8">
-                    {content.caNewsIntro}
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 pt-6 border-t border-slate-850">
-                    <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
-                      <span className="text-highlighter font-black font-display text-xl block">120+</span>
-                      <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Acteurs Référencés</span>
-                    </div>
-                    <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
-                      <span className="text-emerald-400 font-black font-display text-xl block">SEO +</span>
-                      <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Backlinks Web</span>
-                    </div>
-                    <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
-                      <span className="text-cyan-400 font-black font-display text-xl block">100% IA</span>
-                      <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Fiches Auto</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-850">
-                  <span className="text-xs text-slate-400 font-mono flex items-center gap-2">
-                    <CheckCircle2 size={14} className="text-emerald-400" />
-                    Propulsé par le réseau Silicon Comté
-                  </span>
-                  <a 
-                    href="https://www.siliconcomte.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="w-full sm:w-auto px-6 py-3 bg-highlighter text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg"
-                  >
-                    Explorer l'Annuaire <ArrowUpRight size={16} />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* 2. Actionable Grid: Fiche Annuaire + LinkedIn Community */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              
-              {/* Card A: Create Your Directory Listing */}
-              {content.caNewsBullet1 && (
+          <div className="space-y-10 max-w-5xl mx-auto">
+            {activeEdition.editionNumber === 1 ? (
+              <>
+                {/* 1. RELAIS INFO // VOL. 03 (Dark Navy Card with 2-Column Layout) */}
                 <motion.div 
                   {...fadeInUp}
-                  className="bg-white rounded-[2rem] border border-slate-200/80 p-8 shadow-sm hover:shadow-xl hover:border-[#006685]/40 transition-all duration-300 flex flex-col justify-between group"
+                  className="bg-[#0c1427] rounded-[2.5rem] border border-slate-800 p-8 md:p-12 text-white shadow-2xl relative overflow-hidden flex flex-col justify-between"
                 >
-                  <div>
-                    {/* Visual Card Header Preview */}
-                    <div className="bg-gradient-to-br from-[#006685]/10 via-slate-50 to-amber-500/10 p-5 rounded-2xl border border-[#006685]/20 mb-6 relative overflow-hidden">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] font-mono font-black uppercase text-[#006685] tracking-widest bg-white px-2.5 py-1 rounded-full border border-[#006685]/20 shadow-xs">
-                          AXE MAJEUR // AXE 01
-                        </span>
-                        <UserPlus size={18} className="text-[#006685]" />
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
+                    {/* Left Column: Icon + Tag + Title */}
+                    <div className="md:col-span-5 space-y-5">
+                      <div className="w-14 h-14 rounded-2xl bg-slate-900/90 border border-slate-800 text-[#fbd800] flex items-center justify-center shrink-0 shadow-inner">
+                        <Megaphone size={26} className="stroke-[2]" />
                       </div>
-                      <h4 className="font-display font-black text-xl text-slate-950 uppercase tracking-tight mb-2">
-                        {content.caNewsBullet1.includes(':') 
-                          ? content.caNewsBullet1.split(':')[0].replace(/^[👉📱🌐\s]+/, '').trim()
-                          : "Créez votre fiche Annuaire"}
-                      </h4>
-                      <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        Ouvert aux membres & non-membres
+                      <div>
+                        <span className="font-mono text-xs font-black text-[#fbd800] tracking-widest uppercase block mb-3">
+                          RELAIS INFO // VOL. 03
+                        </span>
+                        <h3 className="text-2xl md:text-3xl font-display font-black text-white tracking-tight leading-snug">
+                          Nouvelle Dynamique de Communication : Des outils repensés pour vous connecter
+                        </h3>
                       </div>
                     </div>
 
-                    <p className="text-slate-600 font-light text-sm md:text-base leading-relaxed mb-6">
-                      {content.caNewsBullet1.includes(':') 
-                        ? content.caNewsBullet1.split(':').slice(1).join(':').trim() 
-                        : content.caNewsBullet1}
-                    </p>
+                    {/* Right Column: Narrative Body Paragraphs */}
+                    <div className="md:col-span-7 space-y-5 text-slate-300 font-normal text-sm md:text-base leading-relaxed pt-1 md:pt-0">
+                      <p>
+                        Afin de fluidifier nos échanges, nous concentrons nos efforts là où notre écosystème est le plus actif : notre page LinkedIn officielle pour la visibilité externe.
+                      </p>
+                      <p>
+                        En parallèle, préparez-vous pour le lancement officiel de notre nouveau Blog destiné à relayer la richesse des témoignages et expertises de haut vol de nos membres.
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-[#006685] uppercase">
-                      ACTION CA
+                  {/* Card Footer Divider & Link */}
+                  <div className="border-t border-slate-800/80 pt-6 mt-10 flex items-center justify-between">
+                    <a 
+                      href="https://www.linkedin.com/company/silicon-comte/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="font-mono text-xs font-black tracking-widest text-[#fbd800] uppercase hover:underline flex items-center gap-2"
+                    >
+                      PAGE LINKEDIN OFFICIELLE
+                    </a>
+                    <Check size={18} className="text-[#fbd800]" />
+                  </div>
+                </motion.div>
+
+                {/* 2. PROJET MAJEUR // VOL. 01 (White Card with 2-Column Layout) */}
+                <motion.div 
+                  {...fadeInUp}
+                  className="bg-white rounded-[2.5rem] border border-slate-200/90 p-8 md:p-12 text-slate-900 shadow-xl relative overflow-hidden flex flex-col justify-between"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
+                    {/* Left Column: Icon + Tag + Title */}
+                    <div className="md:col-span-5 space-y-5">
+                      <div className="w-14 h-14 rounded-2xl bg-cyan-50 border border-cyan-100 text-[#006685] flex items-center justify-center shrink-0 shadow-xs">
+                        <Database size={26} className="stroke-[2]" />
+                      </div>
+                      <div>
+                        <span className="font-mono text-xs font-black text-[#006685] tracking-widest uppercase block mb-3">
+                          PROJET MAJEUR // VOL. 01
+                        </span>
+                        <h3 className="text-2xl md:text-3xl font-display font-black text-slate-950 tracking-tight leading-snug">
+                          Annuaire des Compétences : Le nouveau cœur battant de notre écosystème
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Narrative Body Paragraphs */}
+                    <div className="md:col-span-7 space-y-5 text-[#1e293b] font-normal text-sm md:text-base leading-relaxed pt-1 md:pt-0">
+                      <p className="text-[#1e293b] font-normal leading-relaxed">
+                        Identifié comme <strong className="font-bold text-slate-950">l'outil prioritaire pour fédérer notre communauté</strong>, notre Annuaire des Compétences fait peau neuve pour devenir un véritable observatoire du numérique local. Ouvert à tous les acteurs du numérique de la région — qu'il s'agisse d'entreprises, d'indépendants ou d'étudiants —, ce projet incarne parfaitement le moteur de nos actions : "se connaître pour se faire connaître".
+                      </p>
+                      <p className="text-[#1e293b] font-normal leading-relaxed">
+                        Pour garantir une plateforme moderne, <strong className="font-bold text-slate-950">sa création et sa gestion sont désormais automatisées</strong>. Afin d'offrir une clarté maximale et d'aller droit à l'essentiel, nous avons fait le choix qualitatif d'imposer une limite stricte de <strong className="font-bold text-slate-950">deux compétences phares par profil</strong>. Fini les listes interminables, place à l'expertise ciblée !
+                      </p>
+                      <p className="text-[#1e293b] font-normal leading-relaxed">
+                        De plus, la fiabilité des données est notre priorité : nous avons instauré une modération avec validation régulière, couplée à une <strong className="font-bold text-slate-950">vérification API via le numéro SIRET</strong> pour certifier un ancrage réel et sérieux en Franche-Comté.
+                      </p>
+                      <p className="text-[#1e293b] font-normal leading-relaxed">
+                        Au-delà d'un simple répertoire, cet annuaire est une mine d'or pour comprendre notre territoire. Il nous permettra de faire du <em className="italic font-semibold text-slate-950">data storytelling</em>, en transformant les données collectées en infographies visuelles pour illustrer les grandes tendances.
+                      </p>
+                      <p className="text-[#1e293b] font-normal leading-relaxed">
+                        Enfin, bien que l'outil soit ouvert aux non-adhérents, <strong className="font-bold text-slate-950">nos membres bénéficient d'avantages exclusifs</strong> : l'ajout d'un "badge adhérent" sur leur profil et, surtout, l'intégration d'un <em className="italic font-semibold text-slate-950">backlink</em> pointant vers leur site, un atout précieux pour booster leur propre référencement en ligne.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card Footer Divider & Link */}
+                  <div className="border-t border-slate-100 pt-6 mt-10 flex items-center justify-between">
+                    <span className="font-mono text-xs font-black tracking-widest text-[#006685] uppercase">
+                      VÉRIFIÉ SIRET API
+                    </span>
+                    <Check size={18} className="text-[#006685]" />
+                  </div>
+                </motion.div>
+              </>
+            ) : (
+              /* Hero Feature Card for other editions */
+              <motion.div 
+                {...fadeInUp}
+                className="bg-slate-950 rounded-[2.5rem] border border-slate-800 shadow-2xl overflow-hidden text-white grid grid-cols-1 lg:grid-cols-12 gap-0 group"
+              >
+                {/* Left Column: Official Silicon Comté Regional Showcase */}
+                <div className="lg:col-span-5 relative min-h-[340px] lg:min-h-[460px] overflow-hidden bg-slate-900 flex flex-col justify-between p-6 md:p-8">
+                  <img 
+                    src={annuaireCleanNetwork} 
+                    alt="Écosystème Numérique Silicon Comté Franche-Comté" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-950/20 z-10"></div>
+                  
+                  <div className="relative z-20 flex justify-between items-center gap-2">
+                    <div className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-lg flex items-center gap-2">
+                      <img src={logoSiliconComte} alt="Silicon Comté" className="h-5 w-auto object-contain" />
+                      <span className="text-[#006685] text-[10px] font-mono font-black uppercase tracking-wider border-l border-slate-200 pl-2">
+                        BFC RÉSEAU
+                      </span>
+                    </div>
+                    <span className="px-3 py-1.5 bg-highlighter text-slate-950 font-mono font-black text-[10px] uppercase rounded-full shadow-md flex items-center gap-1.5">
+                      ⚡ IA PROPULSÉ
+                    </span>
+                  </div>
+
+                  <div className="relative z-20 my-auto py-4">
+                    <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-2">
+                      <p className="text-xs font-semibold text-slate-200 leading-snug">
+                        « Favoriser le développement d'un écosystème numérique en Franche-Comté »
+                      </p>
+                      <p className="text-[11px] font-mono text-highlighter font-bold italic">
+                        Apprenons à nous connaître pour mieux nous valoriser !
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="relative z-20">
+                    <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-3">
+                      <div className="flex items-center gap-2.5 bg-slate-950/90 border border-slate-800 rounded-xl px-3.5 py-2 text-slate-400 text-xs font-mono">
+                        <Search size={14} className="text-highlighter shrink-0" />
+                        <span className="text-slate-300 font-sans text-xs truncate">Trouver un expert, agence, startup...</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['IA & Data', 'Dev Software', 'Cyber', 'UX & Design', 'SEO'].map((tag, i) => (
+                          <span key={i} className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 border border-slate-700/90 font-medium">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Narrative Content */}
+                <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-between bg-slate-950 relative z-20">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="font-mono text-[11px] text-highlighter font-extrabold uppercase tracking-widest bg-highlighter/10 px-3 py-1 rounded-full border border-highlighter/20">
+                        INFO CA // ÉDITION #{activeEdition.editionNumber}
+                      </span>
+                    </div>
+
+                    <h3 className="text-3xl md:text-4xl font-display font-black text-white tracking-tight uppercase mb-6 leading-tight">
+                      Vie de l'association & <br />
+                      <span className="text-highlighter">Annuaire des Compétences</span>
+                    </h3>
+
+                    <p className="text-slate-300 font-light text-base md:text-lg leading-relaxed mb-8">
+                      {content.caNewsIntro}
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 pt-6 border-t border-slate-850">
+                      <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
+                        <span className="text-highlighter font-black font-display text-xl block">120+</span>
+                        <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Acteurs Référencés</span>
+                      </div>
+                      <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
+                        <span className="text-emerald-400 font-black font-display text-xl block">SEO +</span>
+                        <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Backlinks Web</span>
+                      </div>
+                      <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
+                        <span className="text-cyan-400 font-black font-display text-xl block">100% IA</span>
+                        <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Fiches Auto</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-850">
+                    <span className="text-xs text-slate-400 font-mono flex items-center gap-2">
+                      <CheckCircle2 size={14} className="text-emerald-400" />
+                      Propulsé par le réseau Silicon Comté
                     </span>
                     <a 
                       href="https://www.siliconcomte.com" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-950 group-hover:text-[#006685] transition-colors"
+                      className="w-full sm:w-auto px-6 py-3 bg-highlighter text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg"
                     >
-                      Ajouter ma fiche <ArrowRight size={15} />
+                      Explorer l'Annuaire <ArrowUpRight size={16} />
                     </a>
                   </div>
-                </motion.div>
-              )}
-
-              {/* Card B: LinkedIn Ecosystem Community */}
-              {content.caNewsBullet2 && (
-                <motion.div 
-                  {...fadeInUp}
-                  className="bg-white rounded-[2rem] border border-slate-200/80 p-8 shadow-sm hover:shadow-xl hover:border-[#0077b5]/40 transition-all duration-300 flex flex-col justify-between group"
-                >
-                  <div>
-                    {/* Visual Card Header Preview for LinkedIn */}
-                    <div className="bg-gradient-to-br from-[#0077b5]/10 via-slate-50 to-blue-500/10 p-5 rounded-2xl border border-[#0077b5]/20 mb-6 relative overflow-hidden">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] font-mono font-black uppercase text-[#0077b5] tracking-widest bg-white px-2.5 py-1 rounded-full border border-[#0077b5]/20 shadow-xs flex items-center gap-1.5">
-                          <Linkedin size={12} className="text-[#0077b5]" /> LINKEDIN COMMU
-                        </span>
-                        <span className="text-xs font-mono font-bold text-slate-500 bg-white/80 px-2 py-0.5 rounded-md">
-                          1 500+ abonnés
-                        </span>
-                      </div>
-                      <h4 className="font-display font-black text-xl text-slate-950 uppercase tracking-tight mb-2">
-                        {content.caNewsBullet2.includes(':') 
-                          ? content.caNewsBullet2.split(':')[0].replace(/^[👉📱🌐\s]+/, '').trim()
-                          : "Restons connectés"}
-                      </h4>
-                      <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-                        <span className="w-2 h-2 rounded-full bg-[#0077b5]"></span>
-                        Actualités & coulisses en direct
-                      </div>
-                    </div>
-
-                    <p className="text-slate-600 font-light text-sm md:text-base leading-relaxed mb-6">
-                      {content.caNewsBullet2.includes(':') 
-                        ? content.caNewsBullet2.split(':').slice(1).join(':').trim() 
-                        : content.caNewsBullet2}
-                    </p>
-                  </div>
-
-                  <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-[#0077b5] uppercase flex items-center gap-1.5">
-                      <Linkedin size={14} /> Silicon Comté
-                    </span>
-                    <a 
-                      href="https://www.linkedin.com/company/silicon-comte/" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-950 group-hover:text-[#0077b5] transition-colors"
-                    >
-                      Page LinkedIn <ExternalLink size={14} />
-                    </a>
-                  </div>
-                </motion.div>
-              )}
-
-            </div>
-
+                </div>
+              </motion.div>
+            )}
           </div>
           
         </div>
       </section>
+
+      {/* 4.5 SECTION 3: SPOTLIGHT FÊTE DE L'INNOVATION 2026 (CHAPTER 3 OF EDITION 1) */}
+      {activeEdition.editionNumber === 1 && (
+        <section id="fete-innovation" className="py-24 md:py-32 px-6 md:px-12 bg-slate-950 text-white relative overflow-hidden border-b-4 border-slate-900">
+          {!isGenerating && (
+            <>
+              <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-highlighter/5 rounded-full blur-[120px] pointer-events-none"></div>
+              <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] bg-[#006685]/10 rounded-full blur-[100px] pointer-events-none"></div>
+            </>
+          )}
+
+          <div className="max-w-7xl mx-auto relative z-10">
+            
+            {/* Header section */}
+            <motion.div {...fadeInUp} className="mb-16">
+              <span className="font-mono text-[#fbd800] text-xs uppercase tracking-widest font-extrabold bg-[#fbd800]/10 px-4 py-1.5 rounded-full border border-[#fbd800]/20 inline-block mb-4">
+                GRAND ÉVÉNEMENT TERRITORIAL // FRANCHE-COMTÉ
+              </span>
+              <h2 className="headline text-4xl md:text-5xl lg:text-6xl font-black max-w-5xl tracking-tight leading-[1.1] uppercase">
+                Fête de l'Innovation&nbsp;:<br />
+                <span className="bg-gradient-to-r from-[#fbd800] via-cyan-400 to-[#00a3e0] bg-clip-text text-transparent inline-block">
+                  ÉDITION OFFICIELLE 2026
+                </span>
+              </h2>
+            </motion.div>
+
+            {/* Top Cards Showcase Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+              
+              {/* Left Box: Invitation Card */}
+              <motion.div 
+                {...fadeInUp}
+                className="bg-[#0a0f1d] border border-slate-700/90 rounded-[2.5rem] p-8 md:p-10 lg:col-span-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
+              >
+                <div>
+                  {/* Top Badges Row */}
+                  <div className="flex items-center justify-between gap-3 mb-8">
+                    <span className="bg-white text-slate-950 font-mono font-black text-xs uppercase px-4 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
+                      <Ticket size={14} className="text-slate-950" />
+                      TICKET OFFICIEL
+                    </span>
+                    <span className="bg-slate-900 text-[#fbd800] border border-[#fbd800]/40 font-mono font-bold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+                      26 JUIN 2026
+                    </span>
+                  </div>
+
+                  {/* Tagline */}
+                  <span className="font-mono text-[#006685] font-extrabold text-xs uppercase tracking-widest block mb-3">
+                    INVITATION OFFICIELLE // BESANÇON
+                  </span>
+
+                  {/* Card Title */}
+                  <h3 className="text-3xl md:text-4xl font-display font-black text-white tracking-tight uppercase mb-6 leading-tight">
+                    FÊTE DE L'INNOVATION 2026
+                  </h3>
+
+                  {/* Paragraph text */}
+                  <p className="text-[#94a3b8] font-normal text-base md:text-lg leading-relaxed mb-10">
+                    L'Association Silicon Comté et La Fabrique Numérique Besançon, l'AER BFC, le Village by CA, DECA BFC et La French Tech BFC, ont le plaisir de vous inviter à la Fête de l'Innovation 2026 ! Chaque année, cet événement met à l'honneur l'innovation, l'entrepreneuriat et le numérique sur notre territoire.
+                  </p>
+                </div>
+
+                {/* Bottom Info Blocks */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-slate-800">
+                  <div className="bg-[#060a14] border border-slate-700/80 p-4 rounded-2xl flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-[#fbd800] shrink-0">
+                      <Calendar size={18} />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider block">DATE & HEURES</span>
+                      <span className="text-xs md:text-sm font-semibold text-white block mt-0.5">Vendredi 26 juin, de 13h à 18h</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#060a14] border border-slate-700/80 p-4 rounded-2xl flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-[#fbd800] shrink-0">
+                      <MapPin size={18} />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider block">LIEU DE RENCONTRE</span>
+                      <span className="text-xs md:text-sm font-semibold text-white block mt-0.5">Espace Grammont, Besançon</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Right Box: Le Programme */}
+              <motion.div 
+                {...fadeInUp}
+                className="bg-[#0a0f1d] border border-slate-700/90 rounded-[2.5rem] p-8 md:p-10 lg:col-span-6 flex flex-col justify-between shadow-2xl relative overflow-hidden"
+              >
+                <div>
+                  {/* Header Row */}
+                  <div className="flex items-center justify-between gap-3 mb-6">
+                    <h3 className="font-display font-black text-2xl text-white tracking-tight uppercase flex items-center gap-2.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#fbd800] shrink-0"></span>
+                      LE PROGRAMME
+                    </h3>
+                    <span className="font-mono text-xs text-slate-400 font-bold uppercase tracking-widest bg-slate-900/90 border border-slate-700/80 px-3.5 py-1.5 rounded-full">
+                      // TIMETABLE
+                    </span>
+                  </div>
+
+                  {/* Schedule Timeline items */}
+                  <div className="space-y-6 pt-2">
+                    {/* Item 1 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#fbd800] mt-1.5 shrink-0"></div>
+                      <div>
+                        <div className="font-mono text-xs">
+                          <span className="font-bold text-[#fbd800]">13h00</span>
+                          <span className="text-slate-400 uppercase tracking-wider ml-2">// OUVERTURE</span>
+                        </div>
+                        <h4 className="font-bold text-white text-base mt-0.5">Accueil des participants et discours d'ouverture</h4>
+                        <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                          Annonce majeure et officielle de la labellisation French Tech Besançon.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Item 2 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 mt-1.5 shrink-0"></div>
+                      <div>
+                        <div className="font-mono text-xs">
+                          <span className="font-bold text-cyan-400">13h30</span>
+                          <span className="text-slate-400 uppercase tracking-wider ml-2">// PITCHS</span>
+                        </div>
+                        <h4 className="font-bold text-white text-base mt-0.5">Pitchs de start-up locales innovantes</h4>
+                        <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                          Démonstrations express de solutions technologiques régionales.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Item 3 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 mt-1.5 shrink-0"></div>
+                      <div>
+                        <div className="font-mono text-xs">
+                          <span className="font-bold text-cyan-400">14h30</span>
+                          <span className="text-slate-400 uppercase tracking-wider ml-2">// CONFÉRENCE</span>
+                        </div>
+                        <h4 className="font-bold text-white text-base mt-0.5">Table ronde : Recherche et Synergies</h4>
+                        <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                          « Recherche publique, entrepreneuriat et entreprises numériques : quelles synergies ? » animée par <span className="text-cyan-400 font-medium">Sylvain Compagnon</span> (DECA BFC).
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Item 4 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-2.5 h-2.5 rounded-full bg-slate-500 mt-1.5 shrink-0"></div>
+                      <div>
+                        <div className="font-mono text-xs">
+                          <span className="font-bold text-slate-400">15h30</span>
+                          <span className="text-slate-400 uppercase tracking-wider ml-2">// PARTENAIRES</span>
+                        </div>
+                        <h4 className="font-bold text-white text-base mt-0.5">Pitchs de nos structures partenaires</h4>
+                        <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                          Présentation des dispositifs de soutien, de financement et de formation.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Item 5 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 mt-1.5 shrink-0"></div>
+                      <div>
+                        <div className="font-mono text-xs">
+                          <span className="font-bold text-emerald-400">16h30</span>
+                          <span className="text-slate-400 uppercase tracking-wider ml-2">// CLÔTURE</span>
+                        </div>
+                        <h4 className="font-bold text-emerald-400 text-base mt-0.5">Buffet convivial, networking & RDV BtoB</h4>
+                        <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                          Rencontres ciblées pour initier des collaborations concrètes.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* Bottom Wide Banner */}
+            <motion.div 
+              {...fadeInUp}
+              className="bg-[#0a0f1d] border border-slate-700/90 rounded-[2.5rem] p-8 md:p-10 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 relative overflow-hidden"
+            >
+              <div className="flex-1">
+                {/* Header Pills */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="bg-slate-900 text-slate-300 font-mono text-[11px] font-bold uppercase px-3.5 py-1.5 rounded-full border border-slate-700/80 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#fbd800]"></span>
+                    CO-ORGANISÉ PAR SILICON COMTÉ
+                  </span>
+                  <span className="bg-slate-900 text-slate-400 font-mono text-[11px] font-bold uppercase px-3.5 py-1.5 rounded-full border border-slate-700/80">
+                    SANS FRAIS (INSCRIPTION REQUISE)
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-2xl md:text-3xl font-display font-black text-white tracking-tight uppercase mt-4 mb-3">
+                  UNISSONS NOS ÉNERGIES POUR BOOSTER NOTRE ÉCOSYSTÈME
+                </h3>
+
+                {/* Paragraph */}
+                <p className="text-[#94a3b8] text-sm md:text-base font-normal leading-relaxed max-w-4xl">
+                  Cet événement réunit <strong className="font-bold text-white">l'Association Silicon Comté</strong>, <strong className="font-bold text-white">La Fabrique Numérique Besançon</strong>, <strong className="font-bold text-white">l'AER BFC</strong>, <strong className="font-bold text-white">le Village by CA</strong>, <strong className="font-bold text-white">DECA BFC</strong> et <strong className="font-bold text-white">La French Tech BFC</strong> pour un temps fort d'intelligence collective, soutenu activement par <strong className="font-bold text-white">Grand Besançon Métropole</strong> et la <strong className="font-bold text-white">Région Bourgogne-Franche-Comté</strong>.
+                </p>
+
+                {/* Print Badge Note */}
+                <div className="font-mono text-xs text-[#fbd800] font-bold flex items-center gap-2 mt-5">
+                  <Printer size={15} className="text-[#fbd800] shrink-0" />
+                  <span>NOTE : Pensez à imprimer votre badge nominatif généré par la plateforme avant l'événement !</span>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <a 
+                href="https://fete-innovation.make-an-event.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-[#fbd800] text-[#091b2c] font-black text-xs md:text-sm uppercase tracking-wider px-8 py-4 rounded-2xl hover:bg-white hover:text-slate-950 hover:scale-105 active:scale-95 transition-all shadow-[0_0_25px_rgba(251,216,0,0.3)] flex items-center gap-2 cursor-pointer shrink-0 w-full lg:w-auto justify-center"
+              >
+                JE M'INSCRIS ICI <ArrowUpRight size={18} />
+              </a>
+            </motion.div>
+
+          </div>
+        </section>
+      )}
 
       {/* 5. SECTION 3: REPENSER LE DÉVELOPPEMENT & L'ART DE L'IA (RESERVÉ POUR FUTURES ÉDITIONS - TOGGLEABLE ACCORDING TO USER STATE) */}
       <div id="section-future-archive" style={{ display: showFutureMaterial ? 'block' : 'none' }} className="no-print">
@@ -2664,14 +2825,14 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 <div>
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
                     <span className="px-3 py-1 bg-highlighter text-slate-950 text-xs font-mono font-black uppercase rounded-full tracking-wider">
-                      🤖 LE RENDEZ-VOUS IA RÉCURRENT
+                      {activeEdition.editionNumber === 1 ? "ÉVÉNEMENTS À NE PAS MANQUER" : "🤖 LE RENDEZ-VOUS IA RÉCURRENT"}
                     </span>
                     <span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-mono font-bold uppercase rounded-full border border-slate-700 flex items-center gap-1">
-                      <MapPin size={12} className="text-highlighter" /> Brasserie Ninkasi Besançon
+                      <MapPin size={12} className="text-highlighter" /> {activeEdition.editionNumber === 1 ? "Franche-Comté" : "Brasserie Ninkasi Besançon"}
                     </span>
                   </div>
                   <h3 className="text-2xl md:text-3xl font-extrabold text-white font-display tracking-tight">
-                    Les Apéros IA <span className="text-highlighter font-light">Silicon Comté</span>
+                    {activeEdition.editionNumber === 1 ? "Agenda des Rencontres" : <>Les Apéros IA <span className="text-highlighter font-light">Silicon Comté</span></>}
                   </h3>
                   <p className="text-slate-300 text-sm md:text-base font-light mt-2 max-w-2xl leading-relaxed">
                     {content.agendaIntro}
@@ -2681,13 +2842,13 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
               <div className="shrink-0 bg-slate-900/90 border border-slate-800 p-5 rounded-2xl text-center w-full lg:w-auto min-w-[210px] shadow-inner">
                 <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-widest block mb-1">
-                  PÉRIODICITÉ RÉGULIÈRE
+                  {activeEdition.editionNumber === 1 ? "CALENDRIER SC 2026" : "PÉRIODICITÉ RÉGULIÈRE"}
                 </span>
                 <span className="text-highlighter font-extrabold text-base md:text-lg block">
-                  Chaque 2<sup>ème</sup> Mardi
+                  {activeEdition.editionNumber === 1 ? "Saison 2026" : <>Chaque 2<sup>ème</sup> Mardi</>}
                 </span>
                 <span className="text-slate-300 text-xs block mt-1 font-medium">
-                  18h30 • Ambiance Conviviale
+                  {activeEdition.editionNumber === 1 ? "Réservé aux membres & partenaires" : "18h30 • Ambiance Conviviale"}
                 </span>
               </div>
             </div>
@@ -2730,7 +2891,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                       <div>
                         <div className="flex items-center justify-between gap-2 mb-3">
                           <span className="h-6 inline-flex items-center justify-center text-[10px] font-mono font-bold tracking-widest uppercase bg-slate-950 text-highlighter px-3 py-0 rounded-full shadow-sm leading-none border border-slate-800">
-                            APÉRO IA #{idx + 2}
+                            {ev.tag || (activeEdition.editionNumber === 1 ? 'ÉVÉNEMENT' : `APÉRO IA #${idx + 2}`)}
                           </span>
                           <span className="text-slate-400">
                             <Brain size={16} />
@@ -2746,9 +2907,9 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
                       <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-semibold text-[#006685]">
                         <span className="flex items-center gap-1">
-                          <MapPin size={12} /> Ninkasi
+                          <MapPin size={12} /> {ev.location || (activeEdition.editionNumber === 1 ? 'Besançon' : 'Ninkasi')}
                         </span>
-                        <span className="font-mono text-slate-400">18h30</span>
+                        <span className="font-mono text-slate-400">{activeEdition.editionNumber === 1 ? 'Inscriptions' : '18h30'}</span>
                       </div>
                     </div>
                  </motion.div>
