@@ -10,13 +10,13 @@ import {
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import annuaireCleanNetwork from './assets/images/annuaire_network_gen_1785492666868.jpg';
-import dgfipLogoImg from './assets/images/dgfip_logo_gen_1785492632316.jpg';
-import ninkasiLogoImg from './assets/images/ninkasi_logo_gen_1785492644719.jpg';
-import antoineBouetImg from './assets/images/antoine_bouet-1.jpg';
-import brunoRoyImg from './assets/images/bruno_roy_1785516370883.jpg';
-import nicholasGoodwinImg from './assets/images/nicholas_goodwin_1785516383007.jpg';
-import logoSiliconComte from './assets/images/logo_silicon_comte_1785516342574.jpg';
-import illustrationHome from './assets/images/fete_innovation_gen_1785492681600.jpg';
+import dgfipLogoImg from './assets/images/dgfip.jpg';
+import ninkasiLogoImg from './assets/images/ninkasi.jpg';
+import antoineBouetImg from './assets/images/antoine_bouet.jpg';
+import brunoRoyImg from './assets/images/BrunoRoy.jpg';
+import nicholasGoodwinImg from './assets/images/nicholas_goodwin.jpg';
+import logoSiliconComte from './assets/images/logo-siliconcomte.jpg';
+import illustrationHome from './assets/images/illustration-home-new.png';
 
 interface Edition {
   id: number;
@@ -880,8 +880,8 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                   <td style="padding: 24px;">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
-                        <td width="72" valign="top" style="padding-right: 18px;">
-                          <img src="${getAbsoluteUrl(dgfipLogoImg)}" alt="DGFiP Logo" width="64" height="64" style="width: 64px; height: 64px; border-radius: 12px; border: 2px solid #006685; display: block; object-fit: cover; background-color: #ffffff;" referrerPolicy="no-referrer" />
+                        <td width="110" valign="top" style="padding-right: 18px;">
+                          <img src="${getAbsoluteUrl(dgfipLogoImg)}" alt="DGFiP Logo" width="96" height="54" style="width: 96px; height: 54px; border-radius: 12px; border: 2px solid #006685; display: block; object-fit: contain; background-color: #ffffff; padding: 4px; box-sizing: border-box;" referrerPolicy="no-referrer" />
                         </td>
                         <td valign="top">
                           <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 4px 0;">
@@ -910,7 +910,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
                         <td width="72" valign="top" style="padding-right: 18px;">
-                          <img src="${getAbsoluteUrl(ninkasiLogoImg)}" alt="Ninkasi Logo" width="64" height="64" style="width: 64px; height: 64px; border-radius: 12px; border: 2px solid #fbd800; display: block; object-fit: cover; background-color: #ffffff;" referrerPolicy="no-referrer" />
+                          <img src="${getAbsoluteUrl(ninkasiLogoImg)}" alt="Ninkasi Logo" width="96" height="54" style="width: 96px; height: 54px; border-radius: 12px; border: 2px solid #fbd800; display: block; object-fit: contain; background-color: #ffffff; padding: 4px; box-sizing: border-box;" referrerPolicy="no-referrer" />
                         </td>
                         <td valign="top">
                           <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 4px 0;">
@@ -1719,17 +1719,6 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
           </a>
           
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Hello World Test Toggle */}
-            <button
-              data-html2canvas-ignore="true"
-              onClick={() => setShowHelloWorld(true)}
-              className="h-9 px-3.5 bg-slate-900/90 border border-slate-700 text-emerald-400 hover:text-white hover:bg-slate-800 rounded-full flex items-center gap-2 text-xs font-mono font-bold transition-all cursor-pointer shadow-sm group"
-              title="Test image loading page"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400 group-hover:rotate-12 transition-transform" />
-              <span>Hello World</span>
-            </button>
-
             {/* Glass-morphic Metadata Bar */}
             <div className="h-9 flex items-center gap-3 md:gap-4 bg-slate-900 border border-slate-800 text-white px-5 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.08)] text-xs font-mono font-bold tracking-widest uppercase leading-none">
               <span className="text-highlighter flex items-center gap-2">
@@ -1840,7 +1829,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                         <img 
                           src={dgfipLogoImg} 
                           alt="DGFiP Logo" 
-                          className="w-16 h-16 rounded-2xl object-cover border-2 border-[#006685] bg-white p-0.5 shadow-md shrink-0"
+                          className="h-14 w-28 rounded-2xl object-contain border-2 border-[#006685] bg-white p-1.5 shadow-md shrink-0"
                           referrerPolicy="no-referrer"
                         />
                         <div>
@@ -1883,7 +1872,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                         <img 
                           src={ninkasiLogoImg} 
                           alt="Ninkasi Logo" 
-                          className="w-16 h-16 rounded-2xl object-cover border-2 border-highlighter bg-white p-0.5 shadow-md shrink-0"
+                          className="h-14 w-28 rounded-2xl object-contain border-2 border-highlighter bg-white p-1.5 shadow-md shrink-0"
                           referrerPolicy="no-referrer"
                         />
                         <div>
@@ -2935,7 +2924,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                     <img 
                       src={ninkasiLogoImg} 
                       alt="Ninkasi Brasserie" 
-                      className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-2 border-highlighter shadow-xl bg-white p-0.5"
+                      className="h-16 w-32 md:h-20 md:w-40 rounded-2xl object-contain border-2 border-highlighter shadow-xl bg-white p-2"
                       referrerPolicy="no-referrer"
                     />
                     <span className="absolute -bottom-2 -right-2 bg-highlighter text-slate-950 p-1.5 rounded-full shadow-md">
