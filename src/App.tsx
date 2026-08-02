@@ -12,7 +12,7 @@ import { jsPDF } from 'jspdf';
 import annuaireCleanNetwork from './assets/images/annuaire_network_gen_1785492666868.jpg';
 import dgfipLogoImg from './assets/images/dgfip_logo_gen_1785492632316.jpg';
 import ninkasiLogoImg from './assets/images/ninkasi_logo_gen_1785492644719.jpg';
-import antoineBouetImg from './assets/images/antoine_bouet_1785516356917.jpg';
+import antoineBouetImg from './assets/images/antoine_bouet-1.jpg';
 import brunoRoyImg from './assets/images/bruno_roy_1785516370883.jpg';
 import nicholasGoodwinImg from './assets/images/nicholas_goodwin_1785516383007.jpg';
 import logoSiliconComte from './assets/images/logo_silicon_comte_1785516342574.jpg';
