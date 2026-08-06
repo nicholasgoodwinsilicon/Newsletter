@@ -122,10 +122,10 @@ function getEditionContent(editionNumber: number): EditionContent {
     ],
     agendaIntro: "Ne manquez pas notre nouveau rendez-vous récurrent ! Les Apéros IA se tiennent désormais chaque 2ème mardi du mois dans l'ambiance conviviale de la Brasserie Ninkasi à Besançon. Venez échanger, débattre et vous inspirer :",
     agendaEvents: [
-      { date: "11 AOÛT 2026", title: "La rédaction web", desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »", tag: "APÉRO IA #02", location: "Ninkasi" },
-      { date: "8 SEPTEMBRE 2026", title: "L'IA et l'écologie", desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? »", tag: "APÉRO IA #03", location: "Ninkasi" },
-      { date: "13 OCTOBRE 2026", title: "IA et sécurité / confidentialité des données", desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. »", tag: "APÉRO IA #04", location: "Ninkasi" },
-      { date: "10 NOVEMBRE 2026", title: "Les agents IA", desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! »", tag: "APÉRO IA #05", location: "Ninkasi" }
+      { date: "8 SEPTEMBRE 2026", title: "La rédaction web", desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »", tag: "APÉRO IA #02", location: "Ninkasi" },
+      { date: "13 OCTOBRE 2026", title: "L'IA et l'écologie", desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? »", tag: "APÉRO IA #03", location: "Ninkasi" },
+      { date: "10 NOVEMBRE 2026", title: "IA et sécurité / confidentialité des données", desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. »", tag: "APÉRO IA #04", location: "Ninkasi" },
+      { date: "8 DÉCEMBRE 2026", title: "Les agents IA", desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! »", tag: "APÉRO IA #05", location: "Ninkasi" }
     ],
     caNewsTitle: "ANNUAIRE & NOTRE COMMUNAUTÉ",
     caNewsIntro: "Faites rayonner vos compétences ! L'Annuaire des Compétences est le nouveau cœur battant de notre écosystème numérique. Propulsé par l'IA pour automatiser sa création, cet outil est une vitrine unique pour booster votre visibilité régionale.",
