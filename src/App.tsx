@@ -756,7 +756,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
     mdContent += `\n---\n\n## Agenda des Rencontres\n\n${content.agendaIntro}\n\n${content.agendaEvents.map(ev => `- **${ev.date} — ${ev.title}** : ${ev.desc}${ev.link ? ` ([S'inscrire sur Eventbrite](${ev.link}))` : ''}`).join('\n')}\n`;
 
-    mdContent += `\n---\n\n## Rejoignez l'impulsion de l'innovation\n\nDevenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une entreprise, un indépendant, une startup ou un étudiant, adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences, de booster votre visibilité et de rejoindre un réseau solidaire et innovant.\n\n[S'INSCRIRE / RENOUVELER L'ADHÉSION](https://www.siliconcomte.com)\n\n---\n© 2026 SILICON COMTÉ. TOUS DROITS RÉSERVÉS.\n`;
+    mdContent += `\n---\n\n## Rejoignez l'impulsion de l'innovation\n\nDevenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une entreprise, un indépendant, une startup ou un étudiant, adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences, de booster votre visibilité et de rejoindre un réseau solidaire et innovant.\n\n[S'INSCRIRE / RENOUVELER L'ADHÉSION](https://www.siliconcomte.fr)\n\n---\n© 2026 SILICON COMTÉ. TOUS DROITS RÉSERVÉS.\n`;
 
     const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -1079,7 +1079,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.5; margin-top: 0; margin-bottom: 25px; font-family: sans-serif;">
                 Devenez acteur du dynamisme numérique en Franche-Comté ! Adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences et d'intégrer un réseau solidaire.
               </p>
-              <a href="https://www.siliconcomte.com" target="_blank" style="display: inline-block; padding: 14px 28px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; text-transform: uppercase; border-radius: 8px;">
+              <a href="https://www.siliconcomte.fr" target="_blank" style="display: inline-block; padding: 14px 28px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; text-transform: uppercase; border-radius: 8px;">
                 S'inscrire / Renouveler l'adhésion
               </a>
             </td>
@@ -1795,7 +1795,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                       Propulsé par le réseau Silicon Comté
                     </span>
                     <a 
-                      href="https://www.siliconcomte.com" 
+                      href="https://www.siliconcomte.fr" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="w-full sm:w-auto px-6 py-3 bg-highlighter text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg"
@@ -2637,7 +2637,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
             </h2>
             
             <a 
-              href="https://www.siliconcomte.com" 
+              href="https://www.siliconcomte.fr" 
               target="_blank" 
               rel="noopener noreferrer"
               className="bg-highlighter text-slate-950 px-8 py-4.5 rounded-xl font-bold font-display uppercase tracking-widest text-xs md:text-sm flex items-center justify-center gap-3.5 hover:bg-yellow-400 hover:-translate-y-1.5 active:translate-y-0 hover:shadow-[0_20px_40px_rgba(251,216,0,0.35)] transition-all duration-300 w-full md:w-max group"
@@ -2668,7 +2668,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                   </p>
                   <ul className="space-y-3.5 text-slate-300 font-sans text-sm">
                     <li>
-                      <a href="https://www.siliconcomte.com" target="_blank" rel="noopener noreferrer" className="hover:text-highlighter transition-colors flex items-center gap-2.5">
+                      <a href="https://www.siliconcomte.fr" target="_blank" rel="noopener noreferrer" className="hover:text-highlighter transition-colors flex items-center gap-2.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-highlighter shrink-0"></span>
                         siliconcomte.com
                       </a>
