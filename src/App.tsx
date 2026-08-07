@@ -122,7 +122,14 @@ function getEditionContent(editionNumber: number): EditionContent {
     ],
     agendaIntro: "Ne manquez pas notre nouveau rendez-vous récurrent ! Les Apéros IA se tiennent désormais chaque 2ème mardi du mois dans l'ambiance conviviale de la Brasserie Ninkasi à Besançon. Venez échanger, débattre et vous inspirer :",
     agendaEvents: [
-      { date: "1 SEPTEMBRE 2026", title: "La rédaction web", desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »", tag: "APÉRO IA #02", location: "Ninkasi" },
+      { 
+        date: "1 SEPTEMBRE 2026", 
+        title: "La rédaction web", 
+        desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »", 
+        tag: "APÉRO IA #02", 
+        location: "Ninkasi",
+        link: "https://www.eventbrite.fr/e/billets-apero-ia-mardi-1er-septembre-18h30-ninkasi-besancon-la-redaction-web-1997140168004"
+      },
       { date: "13 OCTOBRE 2026", title: "L'IA et l'écologie", desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? »", tag: "APÉRO IA #03", location: "Ninkasi" },
       { date: "10 NOVEMBRE 2026", title: "IA et sécurité / confidentialité des données", desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. »", tag: "APÉRO IA #04", location: "Ninkasi" },
       { date: "8 DÉCEMBRE 2026", title: "Les agents IA", desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! »", tag: "APÉRO IA #05", location: "Ninkasi" }
@@ -747,7 +754,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
     mdContent += `\n---\n\n## ${content.interviewTitle}\n**Invité : ${content.guestName} (${content.guestCompany})**\n*${content.guestBio}*\n\n> "${content.guestQuote}"\n\n${content.qas.map(qa => `- **${qa.question}**\n  - ${qa.answer}`).join('\n\n')}\n`;
 
-    mdContent += `\n---\n\n## Agenda des Rencontres\n\n${content.agendaIntro}\n\n${content.agendaEvents.map(ev => `- **${ev.date} — ${ev.title}** : ${ev.desc}`).join('\n')}\n`;
+    mdContent += `\n---\n\n## Agenda des Rencontres\n\n${content.agendaIntro}\n\n${content.agendaEvents.map(ev => `- **${ev.date} — ${ev.title}** : ${ev.desc}${ev.link ? ` ([S'inscrire sur Eventbrite](${ev.link}))` : ''}`).join('\n')}\n`;
 
     mdContent += `\n---\n\n## Rejoignez l'impulsion de l'innovation\n\nDevenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une entreprise, un indépendant, une startup ou un étudiant, adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences, de booster votre visibilité et de rejoindre un réseau solidaire et innovant.\n\n[S'INSCRIRE / RENOUVELER L'ADHÉSION](https://www.siliconcomte.com)\n\n---\n© 2026 SILICON COMTÉ. TOUS DROITS RÉSERVÉS.\n`;
 
@@ -1052,6 +1059,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                           </td>
                           <td valign="top" style="padding-left: 15px; font-size: 13.5px; line-height: 1.5; color: #334155; font-family: sans-serif;">
                             <strong style="color: #0f172a;">${ev.title} :</strong> ${ev.desc}
+                            ${ev.link ? `<div style="margin-top: 8px;"><a href="${ev.link}" target="_blank" style="display: inline-block; padding: 6px 14px; background-color: #006685; color: #ffffff; font-size: 11px; font-weight: bold; font-family: sans-serif; text-decoration: none; border-radius: 6px;">🎟️ S'inscrire sur Eventbrite</a></div>` : ''}
                           </td>
                         </tr>
                       </table>
@@ -1093,435 +1101,6 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
       </td>
     </tr>
   </table>
-
-          <!-- 3. FÊTE DE L'INNOVATION 2026 SPOTLIGHT (YELLOW & BLACK HIGH CONTRAST) -->
-          <tr>
-            <td style="background-color: #090d16; padding: 45px; border-top: 5px solid #fbd800;" class="mobile-padding" align="center">
-              <span style="font-family: monospace; border: 1px solid #fbd800; color: #fbd800; font-size: 11px; font-weight: bold; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1.5px;">
-                GRAND ÉVÉNEMENT RÉGIONAL // BESANÇON
-              </span>
-              
-              <h2 style="color: #ffffff; font-size: 28px; font-weight: 900; margin-top: 20px; margin-bottom: 12px; text-transform: uppercase; font-family: sans-serif; letter-spacing: -0.5px; line-height: 1.15;">
-                Fête de l'Innovation 2026
-              </h2>
-              
-              <p style="color: #cbd5e1; font-size: 14.5px; line-height: 1.6; max-width: 530px; margin-top: 0; margin-bottom: 25px; font-family: sans-serif;">
-                L'Association Silicon Comté et La Fabrique Numérique Besançon, l'AER BFC, le Village by CA, DECA BFC et La French Tech BFC, ont le plaisir de vous inviter à la Fête de l'Innovation 2026 !
-              </p>
-              
-              <!-- INFO BAR -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 25px; border-top: 1px solid #1e293b; border-bottom: 1px solid #1e293b; padding: 15px 0;">
-                <tr>
-                  <td align="center">
-                    <div style="font-family: sans-serif; font-size: 14px; color: #ffffff; margin-bottom: 6px;">
-                      📅 <strong style="color: #fbd800;">Date :</strong> Vendredi 26 juin 2026, de 13h à 18h
-                    </div>
-                    <div style="font-family: sans-serif; font-size: 14px; color: #ffffff; margin-bottom: 6px;">
-                      📍 <strong style="color: #fbd800;">Lieu :</strong> Espace Grammont – 20 rue Mégevand, Besançon
-                    </div>
-                    <div style="font-family: sans-serif; font-size: 14px; color: #ffffff;">
-                      🏢 <strong style="color: #fbd800;">Soutiens :</strong> Grand Besançon Métropole et la Région Bourgogne-Franche-Comté
-                    </div>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.6; max-width: 530px; margin-top: 0; margin-bottom: 30px; font-family: sans-serif; text-align: left;">
-                Chaque année, cet événement met à l'honneur l'innovation, l'entrepreneuriat et le numérique sur notre territoire pour favoriser les rencontres, les collaborations et l'émergence de nouveaux projets.
-              </p>
-
-              <!-- OFFICIAL PROGRAM TABLE IN SPOTLIGHT CARD -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border-radius: 12px; margin-bottom: 30px; padding: 20px; text-align: left;">
-                <tr>
-                  <td style="padding-bottom: 12px; border-bottom: 1px solid #1e293b;">
-                    <strong style="color: #fbd800; font-family: monospace; font-size: 13px;">PROGRAMME OFFICIEL :</strong>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; font-family: sans-serif; font-size: 13px; color: #cbd5e1; border-bottom: 1px solid #1e293b;">
-                    <strong style="color: #ffffff; font-family: monospace; font-size: 12.5px; margin-right: 10px;">13h00</strong> Accueil et discours d'ouverture & annonce de la labellisation French Tech Besançon.
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; font-family: sans-serif; font-size: 13px; color: #cbd5e1; border-bottom: 1px solid #1e293b;">
-                    <strong style="color: #ffffff; font-family: monospace; font-size: 12.5px; margin-right: 10px;">13h30</strong> Pitchs de start-up locales innovantes.
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; font-family: sans-serif; font-size: 13px; color: #cbd5e1; border-bottom: 1px solid #1e293b;">
-                    <strong style="color: #ffffff; font-family: monospace; font-size: 12.5px; margin-right: 10px;">14h30</strong> Table ronde « Recherche publique, entrepreneuriat et entreprises numériques : quelles synergies ? » animée par Sylvain Compagnon (DECA BFC).
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; font-family: sans-serif; font-size: 13px; color: #cbd5e1; border-bottom: 1px solid #1e293b;">
-                    <strong style="color: #ffffff; font-family: monospace; font-size: 12.5px; margin-right: 10px;">15h30</strong> Pitchs partenaires (structures d'accompagnement, financement, formation).
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 0; font-family: sans-serif; font-size: 13px; color: #cbd5e1;">
-                    <strong style="color: #ffffff; font-family: monospace; font-size: 12.5px; margin-right: 10px;">16h30</strong> Buffet et networking de haut niveau (Rendez-vous BtoB inclus).
-                  </td>
-                </tr>
-              </table>
-
-              <!-- CTA BUTTON -->
-              <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="background-color: #fbd800; border-radius: 12px; box-shadow: 0 10px 25px rgba(251,216,0,0.25);">
-                    <a href="https://fete-innovation.make-an-event.com" target="_blank" style="font-family: sans-serif; font-size: 13px; font-weight: 900; color: #090d16; text-decoration: none; padding: 16px 36px; display: inline-block; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
-                      JE M'INSCRIS GRATUITEMENT
-                    </a>
-                  </td>
-                </tr>
-              </table>
-              <div style="color: #64748b; font-size: 11px; font-family: sans-serif; margin-top: 15px; font-style: italic;">
-                * Entrée totalement libre mais réservation obligatoire pour le buffet de clôture.
-              </div>
-            </td>
-          </tr>
-
-          <!-- 4. POURQUOI NOUS JOINDRE ? (LIGHT BG CELL WITH ALL 5 BULLETS FULL TEXT) -->
-          <tr>
-            <td style="padding: 40px; background-color: #ffffff;" class="mobile-padding">
-              <span style="font-family: monospace; color: #006685; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 4px;">
-                // ADHÉREZ & PARTAGEZ L'EXCELLENCE
-              </span>
-              <h2 style="color: #090d16; font-size: 24px; font-weight: 900; margin-top: 0; margin-bottom: 12px; font-family: sans-serif; letter-spacing: -0.5px;">
-                Pourquoi nous joindre ?
-              </h2>
-              <p style="color: #475569; font-size: 15px; line-height: 1.5; margin-top: 0; margin-bottom: 30px; font-family: sans-serif;">
-                Bénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation locale et votre croissance numérique régionale.
-              </p>
-              
-              <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <!-- ADVANTAGE 1 -->
-                <tr>
-                  <td style="padding-bottom: 22px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="36" valign="top" align="center">
-                          <div style="background-color: #006685; color: #ffffff; width: 26px; height: 26px; line-height: 26px; font-size: 13px; font-weight: bold; border-radius: 50%; text-align: center; font-family: sans-serif;">1</div>
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.55; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #090d16;">Badge Adhérent exclusif :</strong> Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <!-- ADVANTAGE 2 -->
-                <tr>
-                  <td style="padding-bottom: 22px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="36" valign="top" align="center">
-                          <div style="background-color: #006685; color: #ffffff; width: 26px; height: 26px; line-height: 26px; font-size: 13px; font-weight: bold; border-radius: 50%; text-align: center; font-family: sans-serif;">2</div>
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.55; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #090d16;">Référencement (backlinks) dans l'annuaire :</strong> Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté, indexé pour rassurer vos prospects.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <!-- ADVANTAGE 3 -->
-                <tr>
-                  <td style="padding-bottom: 22px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="36" valign="top" align="center">
-                          <div style="background-color: #006685; color: #ffffff; width: 26px; height: 26px; line-height: 26px; font-size: 13px; font-weight: bold; border-radius: 50%; text-align: center; font-family: sans-serif;">3</div>
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.55; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #090d16;">Accueillir un Digital Apéro :</strong> Une occasion unique de recevoir l'ensemble de l'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <!-- ADVANTAGE 4 -->
-                <tr>
-                  <td style="padding-bottom: 22px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="36" valign="top" align="center">
-                          <div style="background-color: #006685; color: #ffffff; width: 26px; height: 26px; line-height: 26px; font-size: 13px; font-weight: bold; border-radius: 50%; text-align: center; font-family: sans-serif;">4</div>
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.55; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #090d16;">Pot de Rentrée réservé :</strong> Accès exclusif et privé à nos grands rassemblements informels de networking de début de saison pour nouer des liens solides.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <!-- ADVANTAGE 5 -->
-                <tr>
-                  <td style="padding-bottom: 5px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="36" valign="top" align="center">
-                          <div style="background-color: #006685; color: #ffffff; width: 26px; height: 26px; line-height: 26px; font-size: 13px; font-weight: bold; border-radius: 50%; text-align: center; font-family: sans-serif;">5</div>
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.55; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #090d16;">Mise en avant Interview :</strong> Une opportunité d'être interviewé et mis en valeur dans la newsletter (à l'image de celui ci-après) pour promouvoir vos succès et votre savoir-faire.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- 5. L'ENTRETIEN EXCLUSIF (NICHOLAS GOODWIN INTERVIEW - FULL COPY WITH GUEST BLOCK) -->
-          <tr>
-            <td style="padding: 40px; background-color: #fcf9f8; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;" class="mobile-padding">
-              <span style="font-family: monospace; color: #006685; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 4px;">
-                // L'ENTRETIEN DÉCRYPTAGE / EXCLUSIF INÉDIT
-              </span>
-              <h2 style="color: #090d16; font-size: 24px; font-weight: 900; margin-top: 0; margin-bottom: 25px; font-family: sans-serif; letter-spacing: -0.5px;">
-                L'Entretien Décryptage (Entretien Exclusif)
-              </h2>
-              
-              <!-- INTERVIEW GUEST CARD -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 35px;">
-                <tr>
-                  <td style="padding: 24px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <!-- Guest Photo -->
-                        <td width="80" valign="top" class="column" align="center" style="padding-bottom: 12px;">
-                          <img src="${getAbsoluteUrl(content.guestImage)}" alt="${content.guestName}" width="72" height="72" style="width: 72px; height: 72px; border-radius: 12px; border: 3px solid #006685; display: block; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.15);" referrerPolicy="no-referrer" />
-                        </td>
-                        
-                        <!-- Guest Info -->
-                        <td valign="top" class="column" style="padding-left: 20px;">
-                          <h3 style="color: #090d16; font-size: 18px; font-weight: 850; margin: 0 0 4px 0; font-family: sans-serif;">
-                            ${content.guestName}
-                          </h3>
-                          <p style="color: #006685; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: 1px; font-family: monospace;">
-                            ${content.guestCompany} • ${content.guestRoleTag}
-                          </p>
-                          <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin: 0; font-family: sans-serif; font-style: italic;">
-                            ${content.guestBio}
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-              
-              <!-- DIALOGUE (VERBATIM FROM MARKDOWN FILE) -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                  <td style="padding-bottom: 24px; border-bottom: 1px solid #e2e8f0; margin-bottom: 24px;">
-                    <p style="color: #006685; font-size: 14px; font-weight: bold; margin: 0 0 8px 0; font-family: sans-serif;">
-                      Silicon Comté : Nicholas, pouvez-vous nous présenter Ebilyse et votre parcours ?
-                    </p>
-                    <p style="color: #334155; font-size: 14.5px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                      <strong style="color: #090d16;">Nicholas Goodwin :</strong> D'origine britannique, je bénéficie de plus de 40 années d'expérience dans des entreprises internationales, avec une spécialisation en informatique, marketing et communication. Avec Françoise Goodwin Hillier, experte en gestion d'entreprise et ressources humaines, nous avons créé Ebilyse. Notre mission est de proposer du conseil et un accompagnement sur mesure pour les artisans, TPE/PME et jeunes entreprises. Notre objectif est simple : leur faire gagner du temps pour qu'ils puissent se concentrer sur leur cœur de métier et augmenter leur rentabilité.
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-top: 20px; padding-bottom: 24px; border-bottom: 1px solid #e2e8f0; margin-bottom: 24px;">
-                    <p style="color: #006685; font-size: 14px; font-weight: bold; margin: 0 0 8px 0; font-family: sans-serif;">
-                      Silicon Comté : Vous êtes membre de Silicon Comté depuis la création de l'association. Qu'est-ce qui vous a motivé à y adhérer dès le départ ?
-                    </p>
-                    <p style="color: #334155; font-size: 14.5px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                      <strong style="color: #090d16;">Nicholas Goodwin :</strong> La mise en relation d'affaires et le réseau sont au cœur de notre ADN, au même titre en relation de confiance et en prenant soin de nos partenaires de Besançon. Pour une entreprise comme la nôtre, qui accompagne les acteurs locaux dans leur numérisation, il était indispensable de faire partie d'un collectif qui fédère l'écosystème numérique. Rompre l'isolement des petites structures et partager des visions innovantes fait partie de nos priorités.
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-top: 20px; padding-bottom: 24px; border-bottom: 1px solid #e2e8f0; margin-bottom: 24px;">
-                    <p style="color: #006685; font-size: 14px; font-weight: bold; margin: 0 0 8px 0; font-family: sans-serif;">
-                      Silicon Comté : Vous participez très régulièrement à nos différents événements. Que venez-vous y chercher en tant que chef d'entreprise ?
-                    </p>
-                    <p style="color: #334155; font-size: 14.5px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                      <strong style="color: #090d16;">Nicholas Goodwin :</strong> J’y trouve une formidable source d'idées et d'expérience. Ces rencontres permettent de puiser de l'inspiration non seulement auprès des autres membres, mais aussi des dynamiques du Grand Besançon et du monde technologique en général. C'est l'occasion d'échanger sur de nouvelles idées et de découvrir des outils qui peuvent transformer notre façon de travailler.
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-top: 20px;">
-                    <p style="color: #006685; font-size: 14px; font-weight: bold; margin: 0 0 8px 0; font-family: sans-serif;">
-                      Silicon Comté : Récemment, vous avez franchi un cap supplémentaire en rejoignant le Conseil d'Administration et en prenant la direction de la commission Newsletter. Qu'est-ce qui a motivé cet engagement plus profond ?
-                    </p>
-                    <p style="color: #334155; font-size: 14.5px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                      <strong style="color: #090d16;">Nicholas Goodwin :</strong> Je souhaitais m'impliquer pour mettre en lumière les progrès, la croissance et l'enthousiasme grandissant au sein de notre association. En reprenant l'édition de cette newsletter mensuelle en français, mon ambition est de partager des informations utiles et intrigantes pour nos lecteurs. De plus, c'est l'occasion idéale d'utiliser concrètement l'IA comme un véritable "super-pouvoir" pour nos formats.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- 6. HORIZONTAL AGENDA (LIGHT BLUE-GRAY SLATE ROADMAP CELL WITH FULL TEXT DESCRIPTIONS) -->
-          <tr>
-            <td style="padding: 40px; background-color: #f1f5f9; border-top: 1px solid #cbd5e1;" class="mobile-padding">
-              <span style="font-family: monospace; color: #006685; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 4px;">
-                // NOTRE PROGRAMMATION LOCALE EXCLUSIVE
-              </span>
-              <h2 style="color: #090d16; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 25px; font-family: sans-serif; letter-spacing: -0.5px;">
-                Événements à ne pas manquer (Agenda des Rencontres)
-              </h2>
-              
-              <!-- INTERACTIVE TABLE AGENDA (ALL 4 EVENTS EXACT DATES & COPY) -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                
-                <!-- EVENT 1 (20 JUIN) -->
-                <tr>
-                  <td style="padding-bottom: 20px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="110" valign="top" style="background-color: #006685; color: #ffffff; border-radius: 6px; text-align: center; padding: 6px 10px; font-weight: bold; font-size: 10px; font-family: monospace; text-transform: uppercase;">
-                          20 JUIN
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.5; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #0f172a;">Afterwork Networking (BFC Numérique) :</strong> Concept : Célébrons la cohésion dynamique de l'écosystème avec notre partenaire BFC Numérique pour clôturer le trimestre estival.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                
-                <!-- EVENT 2 (26 JUIN) -->
-                <tr>
-                  <td style="padding-bottom: 20px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="110" valign="top" style="background-color: #fbd800; color: #090d16; border-radius: 6px; text-align: center; padding: 6px 10px; font-weight: bold; font-size: 10px; font-family: monospace; text-transform: uppercase;">
-                          26 JUIN
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.5; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #0f172a;">Fête de l'Innovation 2026 :</strong> Lieu : Espace Grammont, Besançon. Grand rassemblement régional d'innovation, pitchs et networking.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                
-                <!-- EVENT 3 (21 JUILLET) -->
-                <tr>
-                  <td style="padding-bottom: 20px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="110" valign="top" style="background-color: #0c111d; color: #ffffff; border-radius: 6px; text-align: center; padding: 6px 10px; font-weight: bold; font-size: 10px; font-family: monospace; text-transform: uppercase;">
-                          21 JUILLET
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.5; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #0f172a;">Apéros IA (Au Ninkasi) :</strong> Format informel de 45 min à 1h pour échanger de manière collective autour des nouveautés IA de la région, tester des outils et partager des compilations de prompts.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                
-                <!-- EVENT 4 (15 SEPTEMBRE) -->
-                <tr>
-                  <td>
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="110" valign="top" style="background-color: #10b981; color: #ffffff; border-radius: 6px; text-align: center; padding: 6px 10px; font-weight: bold; font-size: 10px; font-family: monospace; text-transform: uppercase;">
-                          15 SEPTEMBRE
-                        </td>
-                        <td valign="top" style="padding-left: 15px; font-size: 14px; line-height: 1.5; color: #334155; font-family: sans-serif;">
-                          <strong style="color: #0f172a;">Digital Apéro (IA Agentique & Éthique) :</strong> Lieu : Le Comptoir Général. Conférence de 30–45 minutes pour une trentaine de personnes, suivie d'un apéritif convivial.
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                
-              </table>
-            </td>
-          </tr>
-
-          <!-- CALL TO ACTION: REJOIGNEZ L'IMPULSION -->
-          <tr>
-            <td style="padding: 45px 40px; background-color: #0c111d; border-top: 4px solid #fbd800; text-align: center;" class="mobile-padding">
-              <span style="font-family: monospace; color: #fbd800; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 8px;">
-                // REJOIGNEZ L'IMPULSION DE L'INNOVATION
-              </span>
-              <h2 style="color: #ffffff; font-size: 24px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif; letter-spacing: -0.5px; line-height: 1.2;">
-                Rejoignez l'impulsion de l'innovation
-              </h2>
-              <p style="color: #94a3b8; font-size: 14px; line-height: 1.5; margin-top: 0; margin-bottom: 25px; font-family: sans-serif; max-width: 500px; margin-left: auto; margin-right: auto;">
-                Devenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une entreprise, un indépendant, une startup ou un étudiant, adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences de la région et d'intégrer un réseau solidaire et innovant.
-              </p>
-              
-              <table border="0" cellpadding="0" cellspacing="0" align="center">
-                <tr>
-                  <td align="center" style="background-color: #fbd800; border-radius: 8px;">
-                    <a href="https://www.siliconcomte.com" target="_blank" style="display: inline-block; padding: 14px 28px; color: #090d16; font-family: sans-serif; font-size: 13px; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px;">
-                      S'inscrire / Renouveler l'adhésion
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- EMAIL FOOTER WITH VERSION AND COMPLIANCE (INTEGRATION LOGS) -->
-          <tr>
-            <td style="background-color: #090d16; padding: 40px; text-align: center; border-top: 1px solid #1e293b;">
-              <p style="color: #94a3b8; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px 0; font-family: monospace;">
-                Silicon Comté • Édition N°${activeEdition.editionNumber}
-              </p>
-              <p style="color: #64748b; font-size: 11px; margin: 0 0 20px 0; line-height: 1.5; font-family: sans-serif;">
-                © 2026 SILICON COMTÉ. TOUS DROITS RÉSERVÉS / ÉDITION CONSEIL EN CO-PROD.
-              </p>
-              
-              <!-- Unique version label requested by Nicholas Goodwin to confirm real-time updates -->
-              <span style="display: inline-block; font-family: monospace; font-size: 9px; color: #ffffff; background-color: #006685; border: 1px solid #005570; padding: 4px 12px; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px;">
-                ${referenceNumber}
-              </span>
-            </td>
-          </tr>
-          
-        </table>
-      </td>
-    </tr>
-  </table>
-  
-  <!-- SECTION FOR FUTURE USE (HIDDEN FROM VIEW AND PRINT) -->
-  <div id="for-future-use" class="no-print" style="display: none;">
-    <!-- Paragraphe retiré de "Le Mot du Président" -->
-    <div>
-      <p>Par ailleurs, nous œuvrons activement à la simplification de notre écosystème grâce au projet de "co-adhésion" que nous lançons en partenariat avec La French Tech BFC et la Fabrique Numérique de Besançon. Notre objectif est de proposer un guichet unique, simple et fort pour tous les entrepreneurs locaux.</p>
-    </div>
-
-    <!-- Section "Alchimie Digitale N°2" -->
-    <div>
-      <h3>Alchimie Digitale N°2 : La Force du Collectif — La Révolution de la Co-Adhésion</h3>
-      <p>L'union fait la force ! C’est pourquoi nous lançons le projet stratégique de "co-adhésion". Cette initiative vise à créer une passerelle unique et fluide entre trois piliers du territoire pour simplifier l'accès administratif et financier :</p>
-      <ul>
-        <li><strong>Silicon Comté</strong> : Rencontres de terrain, Digital Apéros, ateliers.</li>
-        <li><strong>La French Tech BFC</strong> : Accès aux programmes nationaux (Next40/120, Tremplin), visibilité.</li>
-        <li><strong>La Fabrique Numérique de Besançon</strong> : Formation professionnelle, inclusion numérique et pôle d'innovation.</li>
-      </ul>
-      <p>Une seule cotisation pour trois fois plus d'opportunités de networking et d'impact !</p>
-    </div>
-
-    <!-- Section "Repenser le Développement avec l'IA" -->
-    <div>
-      <h3>Repenser le Développement avec l'IA : Un nouveau "Super-Pouvoir"</h3>
-      <h4>IA Agentique & Éthique : Apprenez à co-piloter vos projets avec l'IA</h4>
-      <p>Adoptez l'adoption de l'IA pour automatiser vos tâches récurrentes tout en respectant une charte éthique stricte de souveraineté des données.</p>
-      <p>Découvrez des cas d'usage réels, apprenez à formuler des requêtes complexes, et optimisez votre flux quotidien sans compromettre la sécurité.</p>
-      <div>
-        <strong>Prompt du mois :</strong>
-        <p>"Générer des idées de partenariats croisés et de marketing d'entraide pour mon commerce local situé à Besançon."</p>
-      </div>
-      <div>
-        <strong>Observatoire des compétences :</strong>
-        <p>INTELLIGENCE ARTIFICIELLE : 42% de l'écosystème local</p>
-        <p>DÉVELOPPEMENT WEB : 28% de l'écosystème local</p>
-      </div>
-    </div>
-  </div>
 </body>
 </html>`;
     
@@ -3014,6 +2593,21 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                           {ev.desc}
                         </p>
                       </div>
+
+                      {ev.link && (
+                        <div className="mt-4 pt-1">
+                          <a 
+                            href={ev.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-3 bg-[#006685] hover:bg-slate-900 text-white font-mono text-[11px] font-bold rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer group/btn"
+                          >
+                            <Ticket size={13} className="text-highlighter group-hover/btn:scale-110 transition-transform" />
+                            <span>S'inscrire (Eventbrite)</span>
+                            <ExternalLink size={12} className="opacity-80" />
+                          </a>
+                        </div>
+                      )}
 
                       <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-semibold text-[#006685]">
                         <span className="flex items-center gap-1">
