@@ -215,7 +215,7 @@ export default function App() {
       editionNumber: 2,
       date: 'Août 2026',
       dateUpper: 'AOÛT 2026',
-      fullDate: '5 Août 2026',
+      fullDate: '10 Août 2026',
       referenceNumber: 'SC-NL-2026-N2',
     }
   ];
@@ -243,7 +243,7 @@ export default function App() {
                 ...ed,
                 date: 'Août 2026',
                 dateUpper: 'AOÛT 2026',
-                fullDate: '5 Août 2026',
+                fullDate: '10 Août 2026',
                 referenceNumber: 'SC-NL-2026-N2',
               };
             }
@@ -278,7 +278,7 @@ export default function App() {
               ...found,
               date: 'Août 2026',
               dateUpper: 'AOÛT 2026',
-              fullDate: '5 Août 2026',
+              fullDate: '10 Août 2026',
               referenceNumber: 'SC-NL-2026-N2',
             };
           }
@@ -770,13 +770,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
   const generateHtmlEmail = () => {
     const content = getEditionContent(activeEdition.editionNumber);
-    const isDevOrSandbox = !window.location.origin || 
-      window.location.origin.includes('localhost') || 
-      window.location.origin.includes('ais-dev') || 
-      window.location.origin.includes('ais-pre');
-    const origin = isDevOrSandbox
-      ? 'https://silicon-comte-newsletter.web.app'
-      : window.location.origin;
+    const origin = window.location.origin || 'https://www.siliconcomte.fr';
     const getAbsoluteUrl = (url: string) => {
       if (!url) return '';
       if (url.startsWith('http://') || url.startsWith('https://')) return url;
@@ -2477,7 +2471,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 // CRÉATEURS DE VALEUR // 
               </p>
               <h2 className="headline text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 mb-3 tracking-tight uppercase leading-none">
-                Pourquoi nous joindre&nbsp;?
+                Pourquoi nous rejoindre&nbsp;?
               </h2>
               <p className="text-lg md:text-xl font-light text-slate-550 mb-12 max-w-xl">
                 Bénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation et votre croissance régionale.
