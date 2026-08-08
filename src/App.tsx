@@ -750,7 +750,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
       mdContent += `\n---\n\n## Fête de l'Innovation 2026 (Grand Événement Territorial)\n\nVendredi 26 juin 2026, Espace Grammont Besançon. Inscriptions : https://fete-innovation.make-an-event.com\n`;
     }
 
-    mdContent += `\n---\n\n## Pourquoi nous joindre ?\n\n${content.membershipBullets.map((b, i) => `${i + 1}. ${b}`).join('\n')}\n`;
+    mdContent += `\n---\n\n## Pourquoi nous rejoindre ?\n\n${content.membershipBullets.map((b, i) => `${i + 1}. ${b}`).join('\n')}\n`;
 
     mdContent += `\n---\n\n## ${content.interviewTitle}\n**Invité : ${content.guestName} (${content.guestCompany})**\n*${content.guestBio}*\n\n> "${content.guestQuote}"\n\n${content.qas.map(qa => `- **${qa.question}**\n  - ${qa.answer}`).join('\n\n')}\n`;
 
@@ -941,9 +941,24 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
               ${content.recapParagraphs[2] ? `
               <!-- Outlook Banner -->
-              <div style="background-color: #006685; border-radius: 12px; padding: 16px 20px; color: #ffffff; font-size: 13.5px; font-weight: 600; font-family: sans-serif; text-align: center;">
-                ✨ ${content.recapParagraphs[2]}
-              </div>
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #006685; border-radius: 12px; margin-top: 20px;">
+                <tr>
+                  <td style="padding: 16px 20px; color: #ffffff; font-size: 13.5px; font-weight: 600; font-family: sans-serif; text-align: left;">
+                    ✨ ${content.recapParagraphs[2]}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 20px 16px 20px;" align="right">
+                    <table border="0" cellpadding="0" cellspacing="0" style="background-color: #0f172a; border-radius: 8px; border: 1px solid #fbd800;">
+                      <tr>
+                        <td style="padding: 6px 12px; color: #fbd800; font-size: 11px; font-weight: 800; font-family: monospace; text-transform: uppercase;">
+                          📅 Retrouvez toutes les dates de l'agenda ci-dessous 👇
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
               ` : ''}
             </td>
           </tr>
@@ -980,25 +995,149 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
             </td>
           </tr>
 
-          <!-- CA NEWS -->
+          <!-- CA NEWS / ANNUAIRE & NOTRE COMMUNAUTÉ -->
           <tr>
             <td style="padding: 40px; background-color: #ffffff; border-top: 1px solid #e2e8f0;" class="mobile-padding">
+              <p style="color: #006685; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; margin: 0 0 6px 0;">
+                📣 ACTUALITÉS DE L'ÉCOSYSTÈME
+              </p>
               <h2 style="color: #006685; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif;">
                 ${content.caNewsTitle}
               </h2>
-              <p style="color: #334155; font-size: 14.5px; line-height: 1.65; font-family: sans-serif; margin-bottom: 15px;">
+              <p style="color: #334155; font-size: 14.5px; line-height: 1.65; font-family: sans-serif; margin-bottom: 20px;">
                 ${content.caNewsIntro}
               </p>
-              <ul style="color: #334155; font-size: 14px; line-height: 1.6; font-family: sans-serif; padding-left: 20px;">
+
+              <!-- Stats counter row -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
+                <tr>
+                  <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
+                    <div style="color: #fbd800; font-size: 18px; font-weight: 900; font-family: sans-serif;">120+</div>
+                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Acteurs Référencés</div>
+                  </td>
+                  <td width="2%">&nbsp;</td>
+                  <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
+                    <div style="color: #34d399; font-size: 18px; font-weight: 900; font-family: sans-serif;">SEO +</div>
+                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Backlinks Web</div>
+                  </td>
+                  <td width="2%">&nbsp;</td>
+                  <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
+                    <div style="color: #38bdf8; font-size: 18px; font-weight: 900; font-family: sans-serif;">100% IA</div>
+                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Fiches Auto</div>
+                  </td>
+                </tr>
+              </table>
+
+              <ul style="color: #334155; font-size: 14px; line-height: 1.6; font-family: sans-serif; padding-left: 20px; margin-bottom: 25px;">
                 <li style="margin-bottom: 10px;">${content.caNewsBullet1}</li>
                 <li style="margin-bottom: 10px;">${content.caNewsBullet2}</li>
               </ul>
+
+              <!-- Data Storytelling box -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0f172a; border-radius: 16px; border: 1px solid #1e293b; padding: 20px;">
+                <tr>
+                  <td>
+                    <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 6px 0;">
+                      📊 DATA STORYTELLING // OBSERVATOIRE DES COMPÉTENCES
+                    </p>
+                    <h3 style="color: #ffffff; font-size: 16px; font-weight: 800; margin: 0 0 10px 0; font-family: sans-serif;">
+                      Cartographie de l'Annuaire (2ème Trimestre)
+                    </h3>
+                    <p style="color: #94a3b8; font-size: 12.5px; line-height: 1.5; margin: 0 0 15px 0; font-family: sans-serif;">
+                      Répartition des compétences prioritaires sur l'annuaire régional :
+                    </p>
+                    
+                    <!-- Distribution bars -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 8px;">
+                      <tr>
+                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">🤖 IA / ML (42%)</td>
+                        <td width="68%">
+                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
+                            <div style="background-color: #fbd800; height: 12px; width: 42%;"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 8px;">
+                      <tr>
+                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">💻 DEV WEB (28%)</td>
+                        <td width="68%">
+                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
+                            <div style="background-color: #38bdf8; height: 12px; width: 28%;"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 8px;">
+                      <tr>
+                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">🎨 DESIGN (18%)</td>
+                        <td width="68%">
+                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
+                            <div style="background-color: #006685; height: 12px; width: 18%;"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">📈 MARKETING (12%)</td>
+                        <td width="68%">
+                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
+                            <div style="background-color: #64748b; height: 12px; width: 12%;"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- POURQUOI NOUS REJOINDRE / VALORISER L'ADHÉSION -->
+          <tr>
+            <td style="padding: 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0;" class="mobile-padding">
+              <p style="color: #006685; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; margin: 0 0 6px 0;">
+                // CRÉATEURS DE VALEUR
+              </p>
+              <h2 style="color: #0f172a; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 12px; font-family: sans-serif;">
+                Pourquoi nous rejoindre ?
+              </h2>
+              <p style="color: #64748b; font-size: 13.5px; line-height: 1.5; margin: 0 0 25px 0; font-family: sans-serif;">
+                Bénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation et votre croissance régionale :
+              </p>
+
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                ${[
+                  { num: '01', title: 'Badge Adhérent exclusif', desc: 'Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.' },
+                  { num: '02', title: 'Référencement (backlinks) dans l\'annuaire', desc: 'Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté.' },
+                  { num: '03', title: 'Accueillir un Digital Apéro', desc: 'Une occasion unique de recevoir l\'ensemble de l\'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.' },
+                  { num: '04', title: 'Pot de Rentrée réservé', desc: 'Accès exclusif et privé à nos grands rassemblements informels de networking de début de saison.' },
+                  { num: '05', title: 'Interview & Visibilité Exclusive', desc: 'Mettez en avant votre expertise, votre parcours et votre entreprise grâce à un entretien dédié publié dans nos newsletters.' }
+                ].map(item => `
+                  <tr>
+                    <td style="padding-bottom: 16px;">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                          <td width="36" valign="top" style="background-color: #fbd800; color: #090d16; border-radius: 50%; text-align: center; width: 36px; height: 36px; font-weight: 900; font-size: 13px; font-family: sans-serif; line-height: 36px;">
+                            ${item.num}
+                          </td>
+                          <td valign="top" style="padding-left: 15px; font-family: sans-serif;">
+                            <div style="font-size: 14.5px; font-weight: 800; color: #0f172a; margin-bottom: 3px;">${item.title}</div>
+                            <div style="font-size: 13px; color: #475569; line-height: 1.5;">${item.desc}</div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                `).join('')}
+              </table>
             </td>
           </tr>
 
           <!-- INTERVIEW -->
           <tr>
-            <td style="padding: 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0;" class="mobile-padding">
+            <td style="padding: 40px; background-color: #ffffff; border-top: 1px solid #e2e8f0;" class="mobile-padding">
               <h2 style="color: #0f172a; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 5px; font-family: sans-serif;">
                 ${content.interviewTitle}
               </h2>
@@ -1006,7 +1145,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 ${content.interviewSubtitle}
               </p>
 
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 25px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 25px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px;">
                 <tr>
                   <td width="100" valign="top">
                     <img src="${getAbsoluteUrl(content.guestImage)}" alt="${content.guestName}" width="90" height="90" style="border-radius: 50%; object-fit: cover;" />
@@ -1041,25 +1180,66 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
           <!-- AGENDA -->
           <tr>
             <td style="padding: 40px; background-color: #ffffff; border-top: 1px solid #e2e8f0;" class="mobile-padding">
-              <h2 style="color: #006685; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif;">
-                AGENDA DES RENCONTRES
+              <p style="color: #006685; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; margin: 0 0 6px 0;">
+                📅 AGENDA DES RENCONTRES
+              </p>
+              <h2 style="color: #0f172a; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif; text-transform: uppercase;">
+                Événements à ne pas manquer
               </h2>
+
+              ${activeEdition.editionNumber !== 1 ? `
+              <!-- Featured Apéros IA Spotlight Banner -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #090d16; border-radius: 16px; border-left: 4px solid #fbd800; margin-bottom: 25px; padding: 20px;">
+                <tr>
+                  <td>
+                    <span style="background-color: #fbd800; color: #090d16; font-size: 10px; font-weight: 900; font-family: monospace; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">
+                      🤖 LE RENDEZ-VOUS IA RÉCURRENT
+                    </span>
+                    <h3 style="color: #ffffff; font-size: 18px; font-weight: 900; margin: 10px 0 6px 0; font-family: sans-serif;">
+                      Les Apéros IA <span style="color: #fbd800;">Silicon Comté</span>
+                    </h3>
+                    <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5; margin: 0 0 10px 0; font-family: sans-serif;">
+                      ${content.agendaIntro}
+                    </p>
+                    <p style="color: #fbd800; font-size: 11.5px; font-weight: bold; margin: 0; font-family: monospace;">
+                      📍 Brasserie Ninkasi Besançon • Chaque 2ème Mardi à 18h30
+                    </p>
+                  </td>
+                </tr>
+              </table>
+              ` : `
               <p style="color: #64748b; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px; font-family: sans-serif;">
                 ${content.agendaIntro}
               </p>
+              `}
 
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                ${content.agendaEvents.map(ev => `
+                ${content.agendaEvents.map((ev, idx) => `
                   <tr>
-                    <td style="padding-bottom: 15px;">
-                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <td style="padding-bottom: 20px;">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;">
                         <tr>
-                          <td width="110" valign="top" style="background-color: #006685; color: #ffffff; border-radius: 6px; text-align: center; padding: 6px 10px; font-weight: bold; font-size: 10px; font-family: monospace;">
-                            ${ev.date}
+                          <td width="110" valign="top" style="padding-right: 15px;">
+                            <div style="background-color: #006685; color: #ffffff; border-radius: 8px; text-align: center; padding: 8px 6px; font-weight: bold; font-size: 11px; font-family: monospace; line-height: 1.3;">
+                              ${ev.date}
+                            </div>
                           </td>
-                          <td valign="top" style="padding-left: 15px; font-size: 13.5px; line-height: 1.5; color: #334155; font-family: sans-serif;">
-                            <strong style="color: #0f172a;">${ev.title} :</strong> ${ev.desc}
-                            ${ev.link ? `<div style="margin-top: 8px;"><a href="${ev.link}" target="_blank" style="display: inline-block; padding: 6px 14px; background-color: #006685; color: #ffffff; font-size: 11px; font-weight: bold; font-family: sans-serif; text-decoration: none; border-radius: 6px;">🎟️ S'inscrire sur Eventbrite</a></div>` : ''}
+                          <td valign="top" style="font-family: sans-serif;">
+                            <div style="margin-bottom: 6px;">
+                              <span style="background-color: #0f172a; color: #fbd800; font-size: 9.5px; font-weight: 800; font-family: monospace; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+                                ${ev.tag || (activeEdition.editionNumber === 1 ? 'ÉVÉNEMENT' : `APÉRO IA #${idx + 2}`)}
+                              </span>
+                            </div>
+                            <h4 style="color: #0f172a; font-size: 15px; font-weight: 800; margin: 0 0 6px 0;">
+                              ${ev.title}
+                            </h4>
+                            <p style="color: #475569; font-size: 13px; line-height: 1.5; margin: 0 0 10px 0;">
+                              ${ev.desc}
+                            </p>
+                            <div style="color: #006685; font-size: 11px; font-weight: bold; margin-bottom: 8px;">
+                              📍 ${ev.location || (activeEdition.editionNumber === 1 ? 'Besançon' : 'Brasserie Ninkasi')}
+                            </div>
+                            ${ev.link ? `<div><a href="${ev.link}" target="_blank" style="display: inline-block; padding: 8px 16px; background-color: #006685; color: #ffffff; font-size: 11px; font-weight: bold; font-family: sans-serif; text-decoration: none; border-radius: 6px;">🎟️ S'inscrire (Eventbrite)</a></div>` : ''}
                           </td>
                         </tr>
                       </table>
@@ -1070,18 +1250,50 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
             </td>
           </tr>
 
-          <!-- CTA -->
+          <!-- CTA & FOOTER -->
           <tr>
-            <td style="padding: 45px 40px; background-color: #0c111d; border-top: 4px solid #fbd800; text-align: center;" class="mobile-padding">
-              <h2 style="color: #ffffff; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif;">
-                Rejoignez l'impulsion de l'innovation
-              </h2>
-              <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.5; margin-top: 0; margin-bottom: 25px; font-family: sans-serif;">
-                Devenez acteur du dynamisme numérique en Franche-Comté ! Adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences et d'intégrer un réseau solidaire.
-              </p>
-              <a href="https://www.siliconcomte.fr" target="_blank" style="display: inline-block; padding: 14px 28px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; text-transform: uppercase; border-radius: 8px;">
-                S'inscrire / Renouveler l'adhésion
-              </a>
+            <td style="padding: 45px 40px; background-color: #0c111d; border-top: 4px solid #fbd800;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="text-align: center;">
+                <tr>
+                  <td>
+                    <h2 style="color: #ffffff; font-size: 24px; font-weight: 900; margin-top: 0; margin-bottom: 12px; font-family: sans-serif; text-transform: uppercase; line-height: 1.2;">
+                      Rejoignez l'impulsion de l'innovation <br><span style="color: #fbd800;">technologique régionale.</span>
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.6; margin-top: 0; margin-bottom: 25px; font-family: sans-serif; max-width: 500px; margin-left: auto; margin-right: auto;">
+                      Devenez acteur du dynamisme numérique en Franche-Comté ! Adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences, de booster votre visibilité et de rejoindre un réseau solidaire.
+                    </p>
+                    <a href="https://www.siliconcomte.fr" target="_blank" style="display: inline-block; padding: 14px 28px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 12px; font-weight: 900; text-decoration: none; text-transform: uppercase; border-radius: 8px; letter-spacing: 1px;">
+                      S'INSCRIRE / RENOUVELER L'ADHÉSION →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Siège Social & Network Info Box -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 35px; border-top: 1px solid #1e293b; padding-top: 25px;">
+                <tr>
+                  <td width="48%" valign="top" style="background-color: #161e2e; border-radius: 12px; padding: 16px; border: 1px solid #1e293b;">
+                    <p style="color: #006685; font-size: 10px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin: 0 0 8px 0; letter-spacing: 1px;">
+                      📍 SIÈGE SOCIAL
+                    </p>
+                    <p style="color: #cbd5e1; font-size: 11.5px; line-height: 1.5; font-family: sans-serif; margin: 0;">
+                      <strong>ASSOCIATION SILICON COMTÉ</strong><br>
+                      48 GRANDE RUE<br>
+                      25000 BESANÇON
+                    </p>
+                  </td>
+                  <td width="4%">&nbsp;</td>
+                  <td width="48%" valign="top" style="background-color: #161e2e; border-radius: 12px; padding: 16px; border: 1px solid #1e293b;">
+                    <p style="color: #fbd800; font-size: 10px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin: 0 0 8px 0; letter-spacing: 1px;">
+                      🌐 RÉSEAUX & PLATEFORMES
+                    </p>
+                    <p style="color: #cbd5e1; font-size: 11.5px; line-height: 1.6; font-family: sans-serif; margin: 0;">
+                      • <a href="https://www.siliconcomte.fr" target="_blank" style="color: #fbd800; text-decoration: none; font-weight: bold;">siliconcomte.fr</a><br>
+                      • <a href="https://www.linkedin.com/company/silicon-comte/" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: bold;">Page Officielle LinkedIn</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
@@ -2388,12 +2600,16 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                   // ENTRETIEN EXCLUSIF
                 </span>
                 
-                <h2 className="headline text-4xl md:text-5xl text-slate-950 font-black tracking-tight uppercase mb-8 leading-none">
+                <h2 className="headline text-4xl md:text-5xl text-slate-950 font-black tracking-tight uppercase mb-6 leading-none">
                   {content.interviewTitle.split(':')[0]}<br />
                   <span className={`${isGenerating ? 'text-[#006685]' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#006685] to-cyan-600'} font-extrabold`}>
                     {content.interviewTitle.split(':')[1] || "L'Entretien"}
                   </span>
                 </h2>
+
+                <p className="text-slate-600 font-normal text-sm leading-relaxed mb-6 bg-cyan-50/80 border border-cyan-100 p-4 rounded-2xl text-left">
+                  {content.interviewSubtitle}
+                </p>
 
                 {/* Profile Widget Card */}
                 <div className="bg-slate-50/40 border border-slate-200/60 rounded-[2.5rem] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col items-center lg:items-start text-center lg:text-left w-full">
