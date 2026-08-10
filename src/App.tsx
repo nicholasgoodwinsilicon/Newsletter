@@ -117,7 +117,7 @@ function getEditionContent(editionNumber: number): EditionContent {
     recapTitle: "Retour sur nos récents événements",
     recapParagraphs: [
       "Tout d'abord, notre Digital Apéro dédié à la généralisation de la facturation électronique (qui entrera en vigueur dès le 1er septembre prochain). Un grand merci à Clément EYNAC (référent à la DGFiP du Doubs) pour son intervention cruciale d'une heure au Callahan, qui a permis à nos chefs d'entreprise, agences et éditeurs de logiciels de comprendre comment transformer cette obligation légale en levier de croissance.",
-      "Hier à peine, nous avons également lancé notre tout premier Apéro IA chez Ninkasi autour de « La recette du prompting ». Un moment convivial et passionnant où nous avons pu constater que le prompt n'est pas une science exacte ou de la pâtisserie, mais bien une recette traditionnelle : chacun a la sienne, mais au final, c'est le résultat partagé qui compte !",
+      "Nous avons également lancé notre tout premier Apéro IA chez Ninkasi autour de « La recette du prompting ». Un moment convivial et passionnant où nous avons pu constater que le prompt n'est pas une science exacte ou de la pâtisserie, mais bien une recette traditionnelle : chacun a la sienne, mais au final, c'est le résultat partagé qui compte !",
       "Face à ce succès, nous pérennisons ce format. Découvrez dès maintenant le programme de vos prochains rendez-vous !"
     ],
     agendaIntro: "Ne manquez pas notre nouveau rendez-vous récurrent ! Les Apéros IA se tiennent désormais chaque 2ème mardi du mois dans l'ambiance conviviale de la Brasserie Ninkasi à Besançon. Venez échanger, débattre et vous inspirer :",
