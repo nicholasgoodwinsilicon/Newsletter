@@ -1006,17 +1006,17 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
                 <tr>
                   <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
-                    <div style="color: #fbd800; font-size: 18px; font-weight: 900; font-family: sans-serif;">120+</div>
+                    <div style="color: #fbd800; font-size: 14px; font-weight: 900; font-family: sans-serif; text-transform: uppercase;">Nombreux</div>
                     <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Acteurs Référencés</div>
                   </td>
                   <td width="2%">&nbsp;</td>
                   <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
-                    <div style="color: #34d399; font-size: 18px; font-weight: 900; font-family: sans-serif;">SEO +</div>
+                    <div style="color: #34d399; font-size: 14px; font-weight: 900; font-family: sans-serif;">SEO +</div>
                     <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Backlinks Web</div>
                   </td>
                   <td width="2%">&nbsp;</td>
                   <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
-                    <div style="color: #38bdf8; font-size: 18px; font-weight: 900; font-family: sans-serif;">100% IA</div>
+                    <div style="color: #38bdf8; font-size: 14px; font-weight: 900; font-family: sans-serif;">100% IA</div>
                     <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Fiches Auto</div>
                   </td>
                 </tr>
@@ -1027,58 +1027,38 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 <li style="margin-bottom: 10px;">${content.caNewsBullet2}</li>
               </ul>
 
-              <!-- Data Storytelling box -->
+              <!-- Simulated Search Tool box -->
               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0f172a; border-radius: 16px; border: 1px solid #1e293b; padding: 20px;">
                 <tr>
                   <td>
-                    <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 6px 0;">
-                      📊 DATA STORYTELLING // OBSERVATOIRE DES COMPÉTENCES
-                    </p>
-                    <h3 style="color: #ffffff; font-size: 16px; font-weight: 800; margin: 0 0 10px 0; font-family: sans-serif;">
-                      Cartographie de l'Annuaire (2ème Trimestre)
-                    </h3>
-                    <p style="color: #94a3b8; font-size: 12.5px; line-height: 1.5; margin: 0 0 15px 0; font-family: sans-serif;">
-                      Répartition des compétences prioritaires sur l'annuaire régional :
-                    </p>
-                    
-                    <!-- Distribution bars -->
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 8px;">
+                    <!-- Search Input Bar -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #090d16; border-radius: 10px; border: 1px solid #1e293b; margin-bottom: 12px;">
                       <tr>
-                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">🤖 IA / ML (42%)</td>
-                        <td width="68%">
-                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
-                            <div style="background-color: #fbd800; height: 12px; width: 42%;"></div>
-                          </div>
+                        <td style="padding: 10px 14px; color: #fbd800; font-size: 13px; font-family: monospace;">
+                          🔍 <span style="color: #cbd5e1; font-family: sans-serif; font-size: 12.5px;">Trouver un expert, agence, startup...</span>
                         </td>
                       </tr>
                     </table>
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 8px;">
+
+                    <!-- 5 Keyword Tags -->
+                    <div style="margin-bottom: 18px;">
+                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#IA &amp; Data</span>
+                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#Dev Software</span>
+                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#Cyber</span>
+                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#UX &amp; Design</span>
+                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 6px;">#SEO</span>
+                    </div>
+
+                    <!-- Explorer l'Annuaire Button -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #1e293b; padding-top: 16px;">
                       <tr>
-                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">💻 DEV WEB (28%)</td>
-                        <td width="68%">
-                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
-                            <div style="background-color: #38bdf8; height: 12px; width: 28%;"></div>
-                          </div>
+                        <td style="color: #34d399; font-size: 11px; font-family: monospace; font-weight: bold;">
+                          ✓ Propulsé par le réseau Silicon Comté
                         </td>
-                      </tr>
-                    </table>
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 8px;">
-                      <tr>
-                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">🎨 DESIGN (18%)</td>
-                        <td width="68%">
-                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
-                            <div style="background-color: #006685; height: 12px; width: 18%;"></div>
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="32%" style="color: #ffffff; font-size: 11px; font-weight: bold; font-family: monospace;">📈 MARKETING (12%)</td>
-                        <td width="68%">
-                          <div style="background-color: #334155; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
-                            <div style="background-color: #64748b; height: 12px; width: 12%;"></div>
-                          </div>
+                        <td align="right">
+                          <a href="https://siliconcomte.fr/annuaire-ecosysteme-silicon-comte" target="_blank" style="display: inline-block; padding: 10px 18px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 11px; font-weight: 900; text-decoration: none; text-transform: uppercase; border-radius: 8px; letter-spacing: 0.5px;">
+                            EXPLORER L'ANNUAIRE →
+                          </a>
                         </td>
                       </tr>
                     </table>
@@ -1981,7 +1961,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 pt-6 border-t border-slate-850">
                       <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
-                        <span className="text-highlighter font-black font-display text-xl block">120+</span>
+                        <span className="text-highlighter font-black font-display text-base md:text-lg block uppercase tracking-tight">Nombreux</span>
                         <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Acteurs Référencés</span>
                       </div>
                       <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
@@ -2001,7 +1981,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                       Propulsé par le réseau Silicon Comté
                     </span>
                     <a 
-                      href="https://www.siliconcomte.fr" 
+                      href="https://siliconcomte.fr/annuaire-ecosysteme-silicon-comte" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="w-full sm:w-auto px-6 py-3 bg-highlighter text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg"
