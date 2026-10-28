@@ -5,18 +5,23 @@ import {
   CheckCircle2, Database, Network, Megaphone, Brain, Cpu, MessageSquare, 
   Calendar, Mic, ArrowUpRight, Check, Award, Compass, HelpCircle, Terminal,
   FileDown, Loader2, FileText, MapPin, Ticket, Printer, Mail, Eye, EyeOff,
-  Menu, X, Plus, Linkedin, Globe, Users, Search, Building2, ExternalLink, UserPlus
+  Menu, X, Plus, Linkedin, Globe, Users, Search, Building2, ExternalLink, UserPlus,
+  ShieldCheck, Star, Layers, Camera
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import annuaireCleanNetwork from './assets/images/annuaire_network_gen_1785492666868.jpg';
 import dgfipLogoImg from './assets/images/dgfip.jpg';
 import ninkasiLogoImg from './assets/images/ninkasi.jpg';
+import tableDesCopainsLogo from './assets/images/la_table_des_copains.png';
+import tableDesCopainsBadge from './assets/images/la_table_des_copains_badge.png';
 import antoineBouetImg from './assets/images/antoine_bouet.jpg';
 import brunoRoyImg from './assets/images/BrunoRoy.jpg';
 import nicholasGoodwinImg from './assets/images/nicholas_goodwin.jpg';
 import logoSiliconComte from './assets/images/logo-siliconcomte.jpg';
 import illustrationHome from './assets/images/illustration-home-new.png';
+
+const quarksLogoSvg = '/assets/aistudio/Logo_Quarks_Safety_B_309842fb.svg';
 
 interface Edition {
   id: number;
@@ -27,18 +32,57 @@ interface Edition {
   referenceNumber: string;
 }
 
+interface MemberNewsItem {
+  id: string;
+  tag: string;
+  tagColor?: string;
+  title: string;
+  company: string;
+  dateOrSubtitle?: string;
+  content: string;
+  link?: string;
+  linkLabel?: string;
+  secondaryLink?: string;
+  secondaryLinkLabel?: string;
+  internalLink?: string;
+  internalLinkLabel?: string;
+  badge?: string;
+}
+
+interface RecapEventItem {
+  id?: string;
+  tag: string;
+  tagColor?: string;
+  title: string;
+  date: string;
+  location: string;
+  locationUrl?: string;
+  speakerOrRole?: string;
+  desc: string;
+  link?: string;
+  linkLabel?: string;
+  image?: string;
+}
+
 interface EditionContent {
   presidentTitle: string;
   presidentQuote: string;
   presidentParagraphs: string[];
   recapTitle?: string;
   recapParagraphs?: string[];
+  recapEvents?: RecapEventItem[];
   agendaIntro: string;
   agendaEvents: { date: string; title: string; desc: string; tag?: string; tagColor?: string; location?: string; link?: string }[];
   caNewsTitle: string;
   caNewsIntro: string;
   caNewsBullet1: string;
   caNewsBullet2: string;
+  memberNewsTitle: string;
+  memberNewsEyebrow: string;
+  memberNewsIntro: string;
+  memberNewsSubmissionEmail: string;
+  memberNewsItems: MemberNewsItem[];
+  interviewEyebrow?: string;
   interviewTitle: string;
   interviewSubtitle: string;
   guestName: string;
@@ -46,14 +90,93 @@ interface EditionContent {
   guestRoleTag: string;
   guestBio: string;
   guestQuote: string;
-  guestImage: string;
-  qas: { question: string; answer: string }[];
+  guestImage?: string;
+  companyLogo?: string;
+  guestFounders?: string;
+  guestMetier?: string;
+  guestMetrics?: { value: string; label: string }[];
+  guestDeployments?: string;
+  guestCertifications?: string;
+  guestEcosystemRole?: string;
+  qas: { question: string; answer: string; tag?: string }[];
   membershipBullets: string[];
 }
+
+const defaultMemberNews = {
+  memberNewsTitle: "Actualités des adhérents",
+  memberNewsEyebrow: "RUBRIQUE PERMANENTE // VIE DU RÉSEAU",
+  memberNewsIntro: "Mise en place d'une rubrique permanente au sein de la newsletter afin de diffuser les informations relatives aux membres, telles que les événements, les projets et les recrutements.",
+  memberNewsSubmissionEmail: "actu@siliconcomte.fr",
+  memberNewsItems: [
+    {
+      id: "quarks-safety-10ans",
+      tag: "ÉVÉNEMENT & SUCCÈS SAAS",
+      tagColor: "bg-amber-400/10 text-[#fbd800] border border-[#fbd800]/30",
+      company: "Quarks Safety (Quarks Group)",
+      title: "Quarks fête ses 10 ans : De l'artisanat logiciel au SaaS mondial",
+      dateOrSubtitle: "Besançon • 10 ans d'expertise SaaS • +380 000 substances",
+      content: "Membre pionnier et engagé de Silicon Comté, l'éditeur deep-tech Quarks (Quarks Safety, Quarks Group) célèbre dix années d'expertise dans la digitalisation de la conformité, de la toxicologie et de la prévention des risques chimiques (+380 000 substances, certifié ISO 27001). Aujourd'hui déployée en toute autonomie en France, aux États-Unis, au Royaume-Uni et en Australie, l'entreprise bisontine illustre avec force qu'il est possible d'éditer du logiciel de pointe et de rayonner à l'international depuis notre région.",
+      internalLink: "#focus-adherent",
+      internalLinkLabel: "📖 Voir l'entretien décryptage complet avec Xavier Labourier ci-après",
+      link: "https://www.quarks-safety.com/",
+      linkLabel: "Visiter quarks-safety.com",
+      badge: "Membre Pionnier 10 Ans"
+    },
+    {
+      id: "accessprod-accessibilite",
+      tag: "CONFÉRENCE & RETOUR D'EXPÉRIENCE",
+      tagColor: "bg-cyan-400/10 text-cyan-400 border border-cyan-400/30",
+      company: "AccessProd",
+      title: "AccessProd : « L'accessibilité numérique, une opportunité business »",
+      dateOrSubtitle: "Jeudi 24 septembre • Événement dédié • Retours d'expérience d'agences",
+      content: "AccessProd a organisé son premier événement dédié à l’accessibilité numérique le jeudi 24 septembre, intitulé « L’accessibilité numérique, une opportunité business ». Au programme, des cas concrets et des retours d’expérience d’agences, permettant de comprendre comment l’accessibilité numérique peut contribuer à remporter de nouveaux projets et appels d’offres. Une vision à long terme, soutenue par des données chiffrées et des témoignages d’utilisateurs.",
+      link: "https://www.accessprod.com/",
+      linkLabel: "Découvrir AccessProd (accessprod.com)",
+      badge: "Accessibilité & RGAA"
+    },
+    {
+      id: "le-numerique-visite-evenement",
+      tag: "IMMOBILIER TECH & PÔLE D'EXCELLENCE",
+      tagColor: "bg-purple-400/10 text-purple-300 border border-purple-400/30",
+      company: "Le Numérique — Grand Besançon",
+      title: "Le Numérique se dévoile en vidéo… et bientôt en vrai",
+      dateOrSubtitle: "Mardi 3 novembre 2026 • Présentation & Visite 3D • Planoise",
+      content: "Futur pôle d'excellence numérique de Besançon situé à Planoise (livraison mi-2027), Le Numérique se dévoile à travers une modélisation 3D immersive mettant en lumière ses bureaux modulables, ses plateaux collaboratifs et ses espaces partagés connectés (label R2S). Pour aller plus loin, une matinée de présentation de l'offre locative et d'animation est organisée le mardi 3 novembre 2026 (accueil à 10h30, présentation à 11h, buffet d'échanges à 12h).\n\nLa vidéo de découverte du bâtiment ainsi que les inscriptions à la matinée de présentation sont accessibles directement sur LinkedIn.",
+      link: "https://www.linkedin.com",
+      linkLabel: "Consulter sur LinkedIn",
+      badge: "Mardi 3 Nov. 2026"
+    },
+    {
+      id: "french-tech-night-partenaires",
+      tag: "ÉVÉNEMENT ÉCOSYSTÈME // BFC",
+      tagColor: "bg-rose-400/10 text-rose-300 border border-rose-400/30",
+      company: "La French Tech BFC & Partenaires",
+      title: "La French Tech Night, c’est aussi grâce à nos partenaires 🤝",
+      dateOrSubtitle: "17 novembre 2026 • SupMicroTech – Besançon",
+      content: "La French Tech Night, c’est aussi grâce à nos partenaires. 🤝\n\nPour cette édition 2026, nous pouvons compter sur des partenaires engagés qui contribuent, chacun à leur manière, au développement de l’innovation et de l’entrepreneuriat en Bourgogne-Franche-Comté.\nPour ce deuxième volet, découvrez WAI by BNP Paribas, GUIU IP et Le Village by CA qui remettront chacun un prix lors de la soirée.\n\n🎟️ Envie de participer à la French Tech Night ?\nRéservez votre place dès maintenant : https://lnkd.in/eW74hWEE\n\n📅 17 novembre 2026\n📍 SupMicroTech – Besançon",
+      link: "https://lnkd.in/eW74hWEE",
+      linkLabel: "🎟️ Réserver votre place",
+      badge: "17 Nov. 2026"
+    },
+    {
+      id: "recrutements-projets-reseau",
+      tag: "RECRUTEMENTS & PROJETS",
+      tagColor: "bg-emerald-400/10 text-emerald-400 border border-emerald-400/30",
+      company: "Membres de l'Écosystème",
+      title: "Projets, recrutements & partenariats : faites rayonner votre actualité",
+      dateOrSubtitle: "Rubrique permanente ouverte à l'ensemble des adhérents",
+      content: "Vous recrutez des profils technologiques (développeurs, consultants data, chefs de projet, designers UX) ou vous recherchez des partenaires régionaux pour répondre à un appel d'offres en groupement ? Silicon Comté mobilise son réseau pour amplifier vos recherches et propulser vos réussites territoriales.",
+      link: "mailto:actu@siliconcomte.fr?subject=Actualit%C3%A9%20Adh%C3%A9rent%20-%20Newsletter%20Silicon%20Comt%C3%A9",
+      linkLabel: "Transmettre une annonce à actu@siliconcomte.fr",
+      badge: "Canal : actu@siliconcomte.fr"
+    }
+  ]
+};
 
 function getEditionContent(editionNumber: number): EditionContent {
   if (editionNumber === 1) {
     return {
+      ...defaultMemberNews,
       presidentTitle: "Le Mot du Président",
       presidentQuote: "Apprenons à nous connaître pour mieux nous valoriser !",
       presidentParagraphs: [
@@ -108,67 +231,194 @@ function getEditionContent(editionNumber: number): EditionContent {
     };
   }
 
+  if (editionNumber === 2) {
+    return {
+      ...defaultMemberNews,
+      presidentTitle: "Le Mot du Président",
+      presidentQuote: "Construisons ensemble l'avenir numérique de notre région !",
+      presidentParagraphs: [
+        "Chers membres et passionnés du numérique, après le formidable succès de notre Fête de l'Innovation en juin dernier, notre dynamique est plus forte que jamais ! Depuis notre dernière édition, l'écosystème a continué de vibrer au rythme du partage d'expertises concrètes. Nous tenons à vous remercier chaleureusement pour votre présence massive à nos derniers rendez-vous majeurs."
+      ],
+      recapTitle: "Retour sur nos récents événements",
+      recapParagraphs: [
+        "Tout d'abord, notre Digital Apéro dédié à la généralisation de la facturation électronique (qui entrera en vigueur dès le 1er septembre prochain). Un grand merci à Clément EYNAC (référent à la DGFiP du Doubs) pour son intervention cruciale d'une heure au Callahan, qui a permis à nos chefs d'entreprise, agences et éditeurs de logiciels de comprendre comment transformer cette obligation légale en levier de croissance.",
+        "Nous avons également lancé notre tout premier Apéro IA chez Ninkasi autour de « La recette du prompting ». Un moment convivial et passionnant où nous avons pu constater que le prompt n'est pas une science exacte ou de la pâtisserie, mais bien une recette traditionnelle : chacun a la sienne, mais au final, c'est le résultat partagé qui compte !",
+        "Face à ce succès, nous pérennisons ce format. Découvrez dès maintenant le programme de vos prochains rendez-vous !"
+      ],
+      agendaIntro: "Ne manquez pas notre nouveau rendez-vous récurrent ! Les Apéros IA se tiennent désormais chaque 2ème mardi du mois dans l'ambiance conviviale de la Brasserie Ninkasi à Besançon. Venez échanger, débattre et vous inspirer :",
+      agendaEvents: [
+        { 
+          date: "1 SEPTEMBRE 2026", 
+          title: "La rédaction web", 
+          desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »", 
+          tag: "APÉRO IA #02", 
+          location: "Ninkasi",
+          link: "https://www.eventbrite.fr/e/billets-apero-ia-mardi-1er-septembre-18h30-ninkasi-besancon-la-redaction-web-1997140168004"
+        },
+        { date: "13 OCTOBRE 2026", title: "L'IA et l'écologie", desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? »", tag: "APÉRO IA #03", location: "La Table des Copains" },
+        { date: "10 NOVEMBRE 2026", title: "IA et sécurité / confidentialité des données", desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. »", tag: "APÉRO IA #04", location: "La Table des Copains" },
+        { date: "8 DÉCEMBRE 2026", title: "Les agents IA", desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! »", tag: "APÉRO IA #05", location: "La Table des Copains" }
+      ],
+      caNewsTitle: "ANNUAIRE & NOTRE COMMUNAUTÉ",
+      caNewsIntro: "Faites rayonner vos compétences ! L'Annuaire des Compétences est le nouveau cœur battant de notre écosystème numérique. Propulsé par l'IA pour automatiser sa création, cet outil est une vitrine unique pour booster votre visibilité régionale.",
+      caNewsBullet1: "👉 Créez votre fiche Annuaire : Vous n'avez pas encore votre fiche ? Ne restez pas dans l'ombre ! Que vous soyez membre ou non, créez dès maintenant votre profil sur notre site pour booster vos backlinks et vos opportunités d'affaires.",
+      caNewsBullet2: "📱 Restons connectés : Pour ne rien rater des actualités de l'écosystème, des partages de projets et des coulisses de l'association, suivez absolument notre page LinkedIn.",
+      interviewTitle: "FOCUS ADHÉRENT : L'Entretien",
+      interviewSubtitle: "Bienvenue à Bruno Roy ! Chaque mois, nous donnons la parole à ceux qui font la richesse de notre réseau. Ce mois-ci, nous partons à la rencontre de Bruno Roy, nouvel adhérent de Silicon Comté.",
+      guestName: "Bruno Roy",
+      guestCompany: "GAME ON CONSULTING",
+      guestRoleTag: "Conseil Business & Go-To-Market",
+      guestBio: "Consultant indépendant basé à Besançon",
+      guestQuote: "Vendre mieux, vendre plus, avec méthode : pour que la croissance cesse de dépendre du hasard.",
+      guestImage: brunoRoyImg,
+      qas: [
+        {
+          question: "Silicon Comté : Bruno, pouvez-vous nous présenter votre parcours ?",
+          answer: "Bruno Roy : J’accompagne des dirigeants de TPE / PME sur ce qui impacte vraiment leur croissance : leur stratégie commerciale, leur marketing et leur organisation. Mon parcours mêle grande entreprise et structures à taille humaine, chez Orange France, Hexaom, Vivialys ou encore Cactus, après une formation à l'EM Normandie et un passage par Le Wagon en growth marketing. En parallèle, j'enseigne au CNAM Bourgogne-Franche-Comté et à l'ECM, ce qui m'oblige à garder des méthodes claires et transmissibles. Ma promesse tient en une phrase : vendre mieux, vendre plus, avec méthode. Beaucoup de PME ont un bon produit et un marché réel, mais un processus marketing et commercial construit au fil de l'eau. Mon travail consiste à le structurer pour que la croissance cesse de dépendre du hasard."
+        },
+        {
+          question: "Silicon Comté : Vous venez tout juste de rejoindre Silicon Comté. Qu’est-ce qui vous a poussé à rejoindre l'association ?",
+          answer: "Bruno Roy : Le métier d'indépendant expose à un vrai risque d'isolement, et je ne parle pas seulement du quotidien. On finit par raisonner en circuit fermé, avec ses propres réflexes et ses propres angles morts. Silicon Comté m'a paru être exactement l'endroit où me confronter à d'autres façons de faire. Il y a aussi une raison plus simple : je travaille pour des entreprises du territoire, et je voulais mieux connaître les acteurs qui le composent. Enfin, la dynamique portée par l'association depuis quelques mois est visible, et j'avais envie d'en faire partie dès à présent."
+        },
+        {
+          question: "Silicon Comté : Vous participez à nos événements depuis peu. Que venez-vous y chercher en tant qu’indépendant ?",
+          answer: "Bruno Roy : Trois choses, dans cet ordre. D'abord des rencontres qui n'auraient pas eu lieu autrement, parce que les meilleures opportunités ne viennent pas toujours d'une démarche frontale. Ensuite de la matière : entendre un dirigeant expliquer comment il a réglé un problème dans son activité vaut souvent mieux qu'un rapport sectoriel ou qu’un livre blanc. Et enfin, une forme de recul. Quand on accompagne des entreprises ou des apprenants au quotidien, il est agréable de se retrouver dans une salle où l'on écoute plus qu'on ne parle. Je viens aussi avec l'idée d'être utile : si mon regard sur un sujet peut faire gagner du temps à quelqu'un autour d'un verre, c'est déjà une bonne soirée."
+        },
+        {
+          question: "Silicon Comté : Vous portez le regard d'un nouvel arrivant sur notre écosystème. Qu'est-ce qu'il vous inspire ?",
+          answer: "Bruno Roy : Ce qui frappe en arrivant, c'est la densité de compétences rapportée à la taille du territoire. Il y a ici des entreprises et des indépendants dont le niveau technique n'a rien à envier aux grandes métropoles. Ce qui frappe ensuite, c'est que cette qualité reste souvent sous les radars, y compris auprès des PME régionales qui auraient tout intérêt à travailler avec elles. Autrement dit, le sujet n'est pas la compétence, il est la mise en visibilité et la mise en relation. C'est précisément le but de l'association. Mon second constat est plus personnel. Les structures que je croise ici ont, comme mes clients, une vraie expertise et pas toujours les moyens de s’offrir une grande visibilité. Il y a là un chantier collectif intéressant, et j'aimerais y contribuer."
+        }
+      ],
+      membershipBullets: [
+        "Obtenir son badge adhérent officiel et être propulsé en haut de liste de l'annuaire.",
+        "Bénéficier de backlinks de qualité vers votre site internet.",
+        "Avoir l'opportunité exclusive d'accueillir ou animer un 'Digital Apéro'.",
+        "Accéder à nos événements exclusifs comme le Pot de rentrée de septembre en centre-ville."
+      ]
+    };
+  }
+
+  // Edition 3 (Flagship Feature: Quarks fête ses 10 ans)
   return {
+    ...defaultMemberNews,
     presidentTitle: "Le Mot du Président",
-    presidentQuote: "Construisons ensemble l'avenir numérique de notre région !",
+    presidentQuote: "Célébrer la réussite de nos pionniers pour inspirer tout notre écosystème !",
     presidentParagraphs: [
-      "Chers membres et passionnés du numérique, après le formidable succès de notre Fête de l'Innovation en juin dernier, notre dynamique est plus forte que jamais ! Depuis notre dernière édition, l'écosystème a continué de vibrer au rythme du partage d'expertises concrètes. Nous tenons à vous remercier chaleureusement pour votre présence massive à nos derniers rendez-vous majeurs."
+      "L'innovation numérique en Franche-Comté n'est pas une promesse abstraite : elle s'incarne chaque jour dans la ténacité et l'audace de nos entrepreneurs régionaux. Ce mois-ci, nous avons l'immense fierté de célébrer les 10 ans de Quarks (Quarks Safety / Quarks Group), membre pionnier et engagé de la première heure de Silicon Comté.",
+      "Leur trajectoire remarquable — d'un atelier de développement logiciel bisontin à une suite SaaS deep-tech adoptée par des leaders mondiaux et déployée en parfaite autonomie aux États-Unis, au Royaume-Uni et en Australie — prouve avec éclat qu'il est possible de concevoir du logiciel de pointe et de rayonner à l'international depuis notre région.",
+      "Alors que notre communauté associative grandit et que les enjeux de « compliance by design » et d'intelligence artificielle s'accélèrent, le parcours de Quarks réaffirme notre mission : briser l'isolement entrepreneurial, cultiver la force du collectif et propulser nos expertises territoriales."
     ],
     recapTitle: "Retour sur nos récents événements",
     recapParagraphs: [
-      "Tout d'abord, notre Digital Apéro dédié à la généralisation de la facturation électronique (qui entrera en vigueur dès le 1er septembre prochain). Un grand merci à Clément EYNAC (référent à la DGFiP du Doubs) pour son intervention cruciale d'une heure au Callahan, qui a permis à nos chefs d'entreprise, agences et éditeurs de logiciels de comprendre comment transformer cette obligation légale en levier de croissance.",
-      "Nous avons également lancé notre tout premier Apéro IA chez Ninkasi autour de « La recette du prompting ». Un moment convivial et passionnant où nous avons pu constater que le prompt n'est pas une science exacte ou de la pâtisserie, mais bien une recette traditionnelle : chacun a la sienne, mais au final, c'est le résultat partagé qui compte !",
-      "Face à ce succès, nous pérennisons ce format. Découvrez dès maintenant le programme de vos prochains rendez-vous !"
+      "Nos ateliers Apéro IA ont réuni de nombreux professionnels autour de deux thématiques majeures : « La rédaction web » le 1er septembre (au Ninkasi) et « Les agents IA » le 13 octobre (au restaurant La Table des Copains, anciennement Ninkasi). Des retours d'expérience stimulants confirmant l'engouement de nos membres pour des formats interactifs et directement applicables.",
+      "L'écosystème numérique franc-comtois affirme sa cohésion : les synergies nées lors de nos rendez-vous continuent de porter leurs fruits au travers de partenariats technologiques et d'opportunités d'affaires concrètes.",
+      "Découvrez sans attendre le calendrier de nos prochains rendez-vous de fin d'année !"
     ],
-    agendaIntro: "Ne manquez pas notre nouveau rendez-vous récurrent ! Les Apéros IA se tiennent désormais chaque 2ème mardi du mois dans l'ambiance conviviale de la Brasserie Ninkasi à Besançon. Venez échanger, débattre et vous inspirer :",
+    recapEvents: [
+      {
+        id: "recap-redaction-web",
+        tag: "APÉRO IA #02",
+        tagColor: "bg-cyan-400/20 text-cyan-300 border border-cyan-400/40",
+        title: "La rédaction web",
+        date: "Mardi 1er septembre 2026",
+        location: "Brasserie Ninkasi",
+        speakerOrRole: "Atelier Pratique IA",
+        desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable ». Un atelier très suivi où nos membres ont exploré la synergie entre la génération assistée par IA et la sensibilité éditoriale humaine.",
+        link: "https://siliconcomte.fr/evenements-agenda/apero-ia-la-redaction-web-mardi-1er-septembre-besancon",
+        linkLabel: "Voir l'événement sur siliconcomte.fr",
+        image: ninkasiLogoImg
+      },
+      {
+        id: "recap-agents-ia",
+        tag: "APÉRO IA #03",
+        tagColor: "bg-amber-400/20 text-[#fbd800] border border-[#fbd800]/40",
+        title: "Les agents IA",
+        date: "Mardi 13 octobre 2026",
+        location: "La Table des Copains",
+        locationUrl: "https://tabledescopains.fr/",
+        speakerOrRole: "Atelier Pratique IA • Systèmes Autonomes",
+        desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! » Une plongée concrète dans les workflows agentiques, accueillie au restaurant La Table des Copains (anciennement Ninkasi).",
+        link: "https://siliconcomte.fr/evenements-agenda/apero-ia-les-agents-ia-mardi-13-octobre-besancon",
+        linkLabel: "Voir l'événement sur siliconcomte.fr",
+        image: tableDesCopainsLogo
+      }
+    ],
+    agendaIntro: "Ne manquez pas notre rendez-vous récurrent ! Les Apéros IA se tiennent chaque 2ème mardi du mois dans l'ambiance conviviale du restaurant La Table des Copains (anciennement Ninkasi — tabledescopains.fr) à Besançon, aux côtés de nos Digital Apéros territoriaux :",
     agendaEvents: [
       { 
-        date: "1 SEPTEMBRE 2026", 
-        title: "La rédaction web", 
-        desc: "« Comment faire 95% du travail avec l'IA et finir tout seul comme un humain responsable »", 
-        tag: "APÉRO IA #02", 
-        location: "Ninkasi",
-        link: "https://www.eventbrite.fr/e/billets-apero-ia-mardi-1er-septembre-18h30-ninkasi-besancon-la-redaction-web-1997140168004"
+        date: "10 NOVEMBRE 2026", 
+        title: "IA et sécurité / confidentialité des données", 
+        desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. » Bonnes pratiques de chiffrement et gouvernance des données d'entreprise.", 
+        tag: "APÉRO IA #04", 
+        location: "La Table des Copains" 
       },
-      { date: "13 OCTOBRE 2026", title: "L'IA et l'écologie", desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? »", tag: "APÉRO IA #03", location: "Ninkasi" },
-      { date: "10 NOVEMBRE 2026", title: "IA et sécurité / confidentialité des données", desc: "« Ça fait longtemps qu'on fait n'importe quoi, mais grâce à l'IA on prend conscience que c'est important. »", tag: "APÉRO IA #04", location: "Ninkasi" },
-      { date: "8 DÉCEMBRE 2026", title: "Les agents IA", desc: "« La 2ème révolution industrielle en 3 ans : le boulot des IA classiques en danger ! »", tag: "APÉRO IA #05", location: "Ninkasi" }
+      { 
+        date: "8 DÉCEMBRE 2026", 
+        title: "L'IA et l'écologie", 
+        desc: "« La goutte d'eau qui fait déborder le vase ! La faute à la dernière goutte d'eau ? » Débat et retours d'expérience sur l'empreinte environnementale, la sobriété et les défis énergétiques des modèles d'IA.", 
+        tag: "APÉRO IA #05", 
+        location: "La Table des Copains" 
+      },
+      { 
+        date: "19 JANVIER 2027", 
+        title: "Digital Apéro Tech BFC & Vœux", 
+        desc: "Grand rendez-vous de début d'année pour rassembler les décideurs, célébrer les réussites régionales et bâtir les partenariats stratégiques de la nouvelle saison.", 
+        tag: "DIGITAL APÉRO", 
+        location: "Besançon Centre-Ville" 
+      }
     ],
     caNewsTitle: "ANNUAIRE & NOTRE COMMUNAUTÉ",
     caNewsIntro: "Faites rayonner vos compétences ! L'Annuaire des Compétences est le nouveau cœur battant de notre écosystème numérique. Propulsé par l'IA pour automatiser sa création, cet outil est une vitrine unique pour booster votre visibilité régionale.",
     caNewsBullet1: "👉 Créez votre fiche Annuaire : Vous n'avez pas encore votre fiche ? Ne restez pas dans l'ombre ! Que vous soyez membre ou non, créez dès maintenant votre profil sur notre site pour booster vos backlinks et vos opportunités d'affaires.",
     caNewsBullet2: "📱 Restons connectés : Pour ne rien rater des actualités de l'écosystème, des partages de projets et des coulisses de l'association, suivez absolument notre page LinkedIn.",
-    interviewTitle: "FOCUS ADHÉRENT : L'Entretien",
-    interviewSubtitle: "Bienvenue à Bruno Roy ! Chaque mois, nous donnons la parole à ceux qui font la richesse de notre réseau. Ce mois-ci, nous partons à la rencontre de Bruno Roy, nouvel adhérent de Silicon Comté.",
-    guestName: "Bruno Roy",
-    guestCompany: "GAME ON CONSULTING",
-    guestRoleTag: "Conseil Business & Go-To-Market",
-    guestBio: "Consultant indépendant basé à Besançon",
-    guestQuote: "Vendre mieux, vendre plus, avec méthode : pour que la croissance cesse de dépendre du hasard.",
-    guestImage: brunoRoyImg,
+    interviewEyebrow: "FOCUS ADHÉRENT | L'ENTRETIEN DÉCRYPTAGE",
+    interviewTitle: "Quarks fête ses 10 ans : De l'artisanat logiciel au SaaS mondial, cultiver la « compliance by design » depuis Besançon",
+    interviewSubtitle: "À l'occasion du 10ème anniversaire de Quarks, retour d'expérience avec Xavier Labourier sur une décennie d'innovation deep-tech et d'engagement au sein du collectif régional.",
+    guestName: "Xavier Labourier",
+    guestCompany: "Quarks (Quarks Safety, Quarks Group)",
+    guestRoleTag: "Cofondateur & Dirigeant • 10 ans d'expertise SaaS",
+    guestBio: "Cofondateur de Quarks aux côtés de Dimitri Dragoumis à Besançon. Éditeur deep-tech SaaS spécialisé dans la conformité réglementaire, la toxicologie et la prévention des risques chimiques et professionnels.",
+    guestQuote: "« Il est tout à fait possible d’éditer du logiciel de pointe et de rayonner à l’international depuis Besançon. Mais pour réussir, il ne faut surtout pas rester seul : il faut être entouré et faire corps avec son écosystème. » — Xavier Labourier, cofondateur de Quarks",
+    guestImage: quarksLogoSvg,
+    companyLogo: quarksLogoSvg,
+    guestFounders: "Dimitri Dragoumis & Xavier Labourier",
+    guestMetier: "Digitalisation de la conformité, sécurité et prévention des risques chimiques et professionnels",
+    guestMetrics: [
+      { value: "+380 000", label: "Substances chimiques" },
+      { value: "700", label: "Familles chimiques" },
+      { value: "100", label: "Réglementations intégrées" },
+      { value: "ISO 27001", label: "Sécurité certifiée" }
+    ],
+    guestDeployments: "Déploiements autonomes en France, aux USA, au Royaume-Uni et en Australie",
+    guestCertifications: "Certifié ISO 27001",
+    guestEcosystemRole: "Membre pionnier et engagé de Silicon Comté",
     qas: [
       {
-        question: "Silicon Comté : Bruno, pouvez-vous nous présenter votre parcours ?",
-        answer: "Bruno Roy : J’accompagne des dirigeants de TPE / PME sur ce qui impacte vraiment leur croissance : leur stratégie commerciale, leur marketing et leur organisation. Mon parcours mêle grande entreprise et structures à taille humaine, chez Orange France, Hexaom, Vivialys ou encore Cactus, après une formation à l'EM Normandie et un passage par Le Wagon en growth marketing. En parallèle, j'enseigne au CNAM Bourgogne-Franche-Comté et à l'ECM, ce qui m'oblige à garder des méthodes claires et transmissibles. Ma promesse tient en une phrase : vendre mieux, vendre plus, avec méthode. Beaucoup de PME ont un bon produit et un marché réel, mais un processus marketing et commercial construit au fil de l'eau. Mon travail consiste à le structurer pour que la croissance cesse de dépendre du hasard."
+        tag: "Q1 // RÉTROSPECTIVE 10 ANS",
+        question: "Silicon Comté : Quarks célèbre ses 10 ans. De vos débuts de développeur indépendant jusqu'à devenir un éditeur SaaS déployé aux États-Unis, en Australie et au Royaume-Uni, quelles ont été les étapes charnières de cette aventure ?",
+        answer: "Xavier Labourier : Tout est parti il y a dix ans de la rencontre avec des experts de la réglementation chimique. À l'époque, j'étais développeur indépendant, habitué à concevoir des outils sur mesure. Le déclic a été d'opérer un pivot stratégique vers le métier d'éditeur logiciel : cesser de chercher à satisfaire 100 % des demandes spécifiques de chacun pour concevoir un produit standardisé, robuste, capable de couvrir parfaitement les 80 % de besoins fondamentaux du marché.\n\nGérer les risques chimiques représente une complexité colossale : plus de 380 000 substances, 700 familles chimiques, une centaine de réglementations internationales et des milliers de fiches de données de sécurité au format PDF. Notre mission a été d'absorber toute cette complexité sous une ergonomie fluide et intuitive. Aujourd'hui, voir notre solution adoptée par de grands acteurs industriels et déployée en parfaite autonomie à l'autre bout du monde depuis Besançon est une immense fierté."
       },
       {
-        question: "Silicon Comté : Vous venez tout juste de rejoindre Silicon Comté. Qu’est-ce qui vous a poussé à rejoindre l'association ?",
-        answer: "Bruno Roy : Le métier d'indépendant expose à un vrai risque d'isolement, et je ne parle pas seulement du quotidien. On finit par raisonner en circuit fermé, avec ses propres réflexes et ses propres angles morts. Silicon Comté m'a paru être exactement l'endroit où me confronter à d'autres façons de faire. Il y a aussi une raison plus simple : je travaille pour des entreprises du territoire, et je voulais mieux connaître les acteurs qui le composent. Enfin, la dynamique portée par l'association depuis quelques mois est visible, et j'avais envie d'en faire partie dès à présent."
+        tag: "Q2 // ANCRAGE SILICON COMTÉ",
+        question: "Silicon Comté : Quarks est membre de la première heure de Silicon Comté. Quel regard portez-vous sur l’évolution de la tech franc-comtoise et qu'apporte ce réseau à un éditeur local ?",
+        answer: "Xavier Labourier : Lorsqu'on développe des technologies exigeantes en province, le premier risque mortel est l'isolement. Rejoindre Silicon Comté dès sa création a permis de briser cette solitude. L'association prouve qu'il n'est nullement nécessaire d'être implanté à Paris ou dans la Silicon Valley pour bâtir des solutions logicielles d'envergure internationale.\n\nCe réseau de pairs apporte des partages d'expériences concrets, des synergies d'affaires, mais surtout une dynamique humaine irremplaçable. C’est tout le pouvoir de l’intelligence collective : en confrontant nos visions lors d'un Digital Apéro ou de la Fête de l’Innovation, on progresse beaucoup plus vite. L'écosystème régional a acquis une maturité et une visibilité remarquables grâce à cette solidarité."
       },
       {
-        question: "Silicon Comté : Vous participez à nos événements depuis peu. Que venez-vous y chercher en tant qu’indépendant ?",
-        answer: "Bruno Roy : Trois choses, dans cet ordre. D'abord des rencontres qui n'auraient pas eu lieu autrement, parce que les meilleures opportunités ne viennent pas toujours d'une démarche frontale. Ensuite de la matière : entendre un dirigeant expliquer comment il a réglé un problème dans son activité vaut souvent mieux qu'un rapport sectoriel ou qu’un livre blanc. Et enfin, une forme de recul. Quand on accompagne des entreprises ou des apprenants au quotidien, il est agréable de se retrouver dans une salle où l'on écoute plus qu'on ne parle. Je viens aussi avec l'idée d'être utile : si mon regard sur un sujet peut faire gagner du temps à quelqu'un autour d'un verre, c'est déjà une bonne soirée."
+        tag: "Q3 // TECHNOLOGIE & IA",
+        question: "Silicon Comté : Vous prônez le concept de « compliance by design ». Comment cette approche transforme-t-elle le quotidien des entreprises et comment appréhendez-vous l'arrivée massive de l'intelligence artificielle ?",
+        answer: "Xavier Labourier : Dans l'industrie, la conformité a longtemps été vécue comme un pensum administratif : des tableurs Excel complétés dans l'urgence pour satisfaire un audit ponctuel. Notre philosophie est d'instaurer la compliance by design : la conformité est intégrée directement dans le système d'information opérationnel. Dès qu'un atelier commande un produit ou qu'un laboratoire cosmétique formule un nouveau soin, le système calcule instantanément la toxicité et oriente les équipes vers des choix protecteurs. Nous déchargeons ainsi les services HSE de la paperasse pour leur redonner du temps de présence humaine sur le terrain.\n\nConcernant l'intelligence artificielle, elle bouleverse nos métiers. Elle permet d'accélérer la production logicielle de manière spectaculaire, mais elle détruit aussi les modèles économiques traditionnels. Chez Quarks, nous la voyons comme un formidable accélérateur, à condition de conserver une boussole : la finalité humaine et environnementale. La technologie n'a de sens que si elle protège concrètement la santé des opérateurs et préserve la planète."
       },
       {
-        question: "Silicon Comté : Vous portez le regard d'un nouvel arrivant sur notre écosystème. Qu'est-ce qu'il vous inspire ?",
-        answer: "Bruno Roy : Ce qui frappe en arrivant, c'est la densité de compétences rapportée à la taille du territoire. Il y a ici des entreprises et des indépendants dont le niveau technique n'a rien à envier aux grandes métropoles. Ce qui frappe ensuite, c'est que cette qualité reste souvent sous les radars, y compris auprès des PME régionales qui auraient tout intérêt à travailler avec elles. Autrement dit, le sujet n'est pas la compétence, il est la mise en visibilité et la mise en relation. C'est précisément le but de l'association. Mon second constat est plus personnel. Les structures que je croise ici ont, comme mes clients, une vraie expertise et pas toujours les moyens de s’offrir une grande visibilité. Il y a là un chantier collectif intéressant, et j'aimerais y contribuer."
+        tag: "Q4 // CONSEIL AUX PAIRS & HORIZONS",
+        question: "Silicon Comté : Alors que Quarks ouvre une nouvelle décennie, quelles sont vos priorités et quel conseil transmettrez-vous aux fondateurs et fondatrices de notre région ?",
+        answer: "Xavier Labourier : Notre priorité est d'accentuer la prévention prédictive en amont, notamment en accompagnant les laboratoires de formulation pour concevoir des produits vertueux dès l'éprouvette.\n\nAux entrepreneurs et créateurs qui se lancent en Franche-Comté, je partage trois convictions simples :\n1. Donnez du sens à votre mission : Coder pour coder n'a plus de valeur à l'ère des algorithmes génératifs ; portez un projet dont l'impact sociétal ou environnemental est concret.\n2. Ne restez jamais isolés : Participez aux rencontres locales, écoutez vos pairs, confrontez vos doutes.\n3. Cultivez la force du collectif : C'est en faisant bloc au sein de notre écosystème que nous irons plus loin, avec le plaisir d'innover et de partager des moments conviviaux ensemble."
       }
     ],
     membershipBullets: [
       "Obtenir son badge adhérent officiel et être propulsé en haut de liste de l'annuaire.",
       "Bénéficier de backlinks de qualité vers votre site internet.",
       "Avoir l'opportunité exclusive d'accueillir ou animer un 'Digital Apéro'.",
-      "Accéder à nos événements exclusifs comme le Pot de rentrée de septembre en centre-ville."
+      "Accéder à nos événements exclusifs comme les Apéros IA et les rencontres BtoB."
     ]
   };
 }
@@ -200,6 +450,28 @@ const getNextEditionDate = (lastDate: string) => {
   };
 };
 
+const safeStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      if (typeof window !== 'undefined' && 'localStorage' in window) {
+        return window.localStorage.getItem(key);
+      }
+    } catch {
+      // Storage access is blocked or restricted in sandbox/iframe
+    }
+    return null;
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      if (typeof window !== 'undefined' && 'localStorage' in window) {
+        window.localStorage.setItem(key, value);
+      }
+    } catch {
+      // Storage access blocked or restricted in sandbox/iframe
+    }
+  },
+};
+
 export default function App() {
   const DEFAULT_EDITIONS: Edition[] = [
     {
@@ -217,95 +489,105 @@ export default function App() {
       dateUpper: 'AOÛT 2026',
       fullDate: '10 Août 2026',
       referenceNumber: 'SC-NL-2026-N2',
+    },
+    {
+      id: 3,
+      editionNumber: 3,
+      date: 'Novembre 2026',
+      dateUpper: 'NOVEMBRE 2026',
+      fullDate: '10 Novembre 2026',
+      referenceNumber: 'SC-NL-2026-N3',
     }
   ];
 
   const [editions, setEditions] = React.useState<Edition[]>(() => {
-    const saved = localStorage.getItem('silicon_comte_editions');
-    if (saved) {
-      try {
+    try {
+      const saved = safeStorage.getItem('silicon_comte_editions');
+      if (saved) {
         const parsed = JSON.parse(saved);
-        // Clean out any stale higher edition numbers (>2)
-        const validEditions = parsed.filter((ed: Edition) => ed.editionNumber <= 2);
-        if (validEditions.length > 0) {
-          return validEditions.map((ed: Edition) => {
-            if (ed.editionNumber === 1) {
-              return {
-                ...ed,
-                date: 'Juin 2026',
-                dateUpper: 'JUIN 2026',
-                fullDate: '10 Juin 2026',
-                referenceNumber: 'SC-NL-2026-N1',
-              };
-            }
-            if (ed.editionNumber === 2) {
-              return {
-                ...ed,
-                date: 'Août 2026',
-                dateUpper: 'AOÛT 2026',
-                fullDate: '10 Août 2026',
-                referenceNumber: 'SC-NL-2026-N2',
-              };
-            }
-            return ed;
-          });
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const hasEd3 = parsed.some((ed: Edition) => ed.editionNumber === 3);
+          if (hasEd3) {
+            return parsed.map((ed: Edition) => {
+              if (ed.editionNumber === 3) {
+                return {
+                  ...ed,
+                  date: 'Novembre 2026',
+                  dateUpper: 'NOVEMBRE 2026',
+                  fullDate: '10 Novembre 2026',
+                };
+              }
+              return ed;
+            });
+          }
         }
-      } catch (e) {
-        // ignore and fallback
       }
+    } catch {
+      // ignore and fallback to DEFAULT_EDITIONS
     }
     return DEFAULT_EDITIONS;
   });
 
   const [activeEdition, setActiveEdition] = React.useState<Edition>(() => {
-    const savedActiveId = localStorage.getItem('silicon_comte_active_edition_id');
-    if (savedActiveId && editions) {
-      const activeIdNum = parseInt(savedActiveId, 10);
-      if (activeIdNum <= 2) {
+    try {
+      const savedActiveId = safeStorage.getItem('silicon_comte_active_edition_id');
+      if (savedActiveId && editions) {
+        const activeIdNum = parseInt(savedActiveId, 10);
         const found = editions.find(e => e.id === activeIdNum || e.editionNumber === activeIdNum);
         if (found) {
-          if (found.editionNumber === 1) {
+          if (found.editionNumber === 3) {
             return {
               ...found,
-              date: 'Juin 2026',
-              dateUpper: 'JUIN 2026',
-              fullDate: '10 Juin 2026',
-              referenceNumber: 'SC-NL-2026-N1',
-            };
-          }
-          if (found.editionNumber === 2) {
-            return {
-              ...found,
-              date: 'Août 2026',
-              dateUpper: 'AOÛT 2026',
-              fullDate: '10 Août 2026',
-              referenceNumber: 'SC-NL-2026-N2',
+              date: 'Novembre 2026',
+              dateUpper: 'NOVEMBRE 2026',
+              fullDate: '10 Novembre 2026',
             };
           }
           return found;
         }
       }
+    } catch {
+      // ignore
     }
-    return editions.find(e => e.editionNumber === 1) || DEFAULT_EDITIONS[0];
+    const ed3 = (editions && editions.find(e => e.editionNumber === 3)) || DEFAULT_EDITIONS[2];
+    return ed3.editionNumber === 3 ? {
+      ...ed3,
+      date: 'Novembre 2026',
+      dateUpper: 'NOVEMBRE 2026',
+      fullDate: '10 Novembre 2026',
+    } : ed3;
   });
 
   React.useEffect(() => {
-    if (activeEdition.editionNumber > 2) {
-      const ed1 = editions.find(e => e.editionNumber === 1) || DEFAULT_EDITIONS[0];
-      setActiveEdition(ed1);
-    }
-    if (editions.some(e => e.editionNumber > 2)) {
-      setEditions(editions.filter(e => e.editionNumber <= 2));
-    }
+    setEditions(prev => prev.map(ed => ed.editionNumber === 3 ? {
+      ...ed,
+      date: 'Novembre 2026',
+      dateUpper: 'NOVEMBRE 2026',
+      fullDate: '10 Novembre 2026',
+    } : ed));
+    setActiveEdition(prev => prev.editionNumber === 3 ? {
+      ...prev,
+      date: 'Novembre 2026',
+      dateUpper: 'NOVEMBRE 2026',
+      fullDate: '10 Novembre 2026',
+    } : prev);
   }, []);
 
   React.useEffect(() => {
-    localStorage.setItem('silicon_comte_editions', JSON.stringify(editions));
+    try {
+      safeStorage.setItem('silicon_comte_editions', JSON.stringify(editions));
+    } catch {
+      // ignore
+    }
   }, [editions]);
 
   React.useEffect(() => {
-    if (activeEdition) {
-      localStorage.setItem('silicon_comte_active_edition_id', String(activeEdition.id));
+    try {
+      if (activeEdition) {
+        safeStorage.setItem('silicon_comte_active_edition_id', String(activeEdition.id));
+      }
+    } catch {
+      // ignore
     }
   }, [activeEdition]);
 
@@ -346,6 +628,23 @@ export default function App() {
   const [showFutureMaterial, setShowFutureMaterial] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [showHelloWorld, setShowHelloWorld] = React.useState(false);
+  const [copiedEmail, setCopiedEmail] = React.useState(false);
+
+  const copySubmissionEmail = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText('actu@siliconcomte.fr');
+    }
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
+  const scrollToInterview = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById('focus-adherent');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
   
   const toggleFutureMaterial = () => {
     const nextVal = !showFutureMaterial;
@@ -744,19 +1043,28 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
     mdContent += `\n---\n\n## ${content.presidentTitle} (Antoine Bouet)\n\n**"${content.presidentQuote}"**\n\n${content.presidentParagraphs.join('\n\n')}\n`;
 
-    mdContent += `\n---\n\n## ${content.caNewsTitle}\n\n${content.caNewsIntro}\n\n- ${content.caNewsBullet1}\n- ${content.caNewsBullet2}\n`;
+    mdContent += `\n---\n\n## ${content.memberNewsTitle || "Actualités des adhérents"} (Rubrique Permanente)\n\n*Canal de soumission : ${content.memberNewsSubmissionEmail || 'actu@siliconcomte.fr'}*\n\n${content.memberNewsIntro}\n\n`;
+    (content.memberNewsItems || defaultMemberNews.memberNewsItems).forEach(item => {
+      mdContent += `### [${item.tag}] ${item.title}\n**${item.company}**${item.dateOrSubtitle ? ` — *${item.dateOrSubtitle}*` : ''}\n\n${item.content}\n\n${item.internalLink ? `- Entretien dans cette édition : ${item.internalLinkLabel || item.internalLink}\n` : ''}${item.secondaryLink ? `- Vidéo / Lien complémentaire : [${item.secondaryLinkLabel || item.secondaryLink}](${item.secondaryLink})\n` : ''}${item.link ? `- Lien : [${item.linkLabel || item.link}](${item.link})\n` : ''}\n`;
+    });
 
     if (activeEdition.editionNumber === 1) {
       mdContent += `\n---\n\n## Fête de l'Innovation 2026 (Grand Événement Territorial)\n\nVendredi 26 juin 2026, Espace Grammont Besançon. Inscriptions : https://fete-innovation.make-an-event.com\n`;
     }
 
-    mdContent += `\n---\n\n## Pourquoi nous rejoindre ?\n\n${content.membershipBullets.map((b, i) => `${i + 1}. ${b}`).join('\n')}\n`;
-
-    mdContent += `\n---\n\n## ${content.interviewTitle}\n**Invité : ${content.guestName} (${content.guestCompany})**\n*${content.guestBio}*\n\n> "${content.guestQuote}"\n\n${content.qas.map(qa => `- **${qa.question}**\n  - ${qa.answer}`).join('\n\n')}\n`;
+    if (content.interviewEyebrow) {
+      mdContent += `\n---\n\n## ${content.interviewEyebrow}\n# ${content.interviewTitle}\n\n> "${content.guestQuote}"\n\n### ADHÉRENT : ${content.guestCompany}\n- **Fondateurs & Dirigeants :** ${content.guestFounders}\n- **Métier :** ${content.guestMetier}\n- **Chiffres clés :** ${content.guestMetrics?.map(m => `${m.value} ${m.label}`).join(' • ')}\n- **Déploiements :** ${content.guestDeployments}\n- **Rôle écosystème :** ${content.guestEcosystemRole}\n\n${content.qas.map(qa => `### ${qa.tag ? `[${qa.tag}] ` : ''}${qa.question}\n\n${qa.answer}`).join('\n\n')}\n`;
+    } else {
+      mdContent += `\n---\n\n## ${content.interviewTitle}\n**Invité : ${content.guestName} (${content.guestCompany})**\n*${content.guestBio}*\n\n> "${content.guestQuote}"\n\n${content.qas.map(qa => `- **${qa.question}**\n  - ${qa.answer}`).join('\n\n')}\n`;
+    }
 
     mdContent += `\n---\n\n## Agenda des Rencontres\n\n${content.agendaIntro}\n\n${content.agendaEvents.map(ev => `- **${ev.date} — ${ev.title}** : ${ev.desc}${ev.link ? ` ([S'inscrire sur Eventbrite](${ev.link}))` : ''}`).join('\n')}\n`;
 
-    mdContent += `\n---\n\n## Rejoignez l'impulsion de l'innovation\n\nDevenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une entreprise, un indépendant, une startup ou un étudiant, adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences, de booster votre visibilité et de rejoindre un réseau solidaire et innovant.\n\n[S'INSCRIRE / RENOUVELER L'ADHÉSION](https://www.siliconcomte.fr)\n\n---\n© 2026 SILICON COMTÉ. TOUS DROITS RÉSERVÉS.\n`;
+    mdContent += `\n---\n\n## ${content.caNewsTitle} (Vie de l'Association & Hub Tech BFC)\n\n${content.caNewsIntro}\n\n- ${content.caNewsBullet1}\n- ${content.caNewsBullet2}\n- Observatoire & Annuaire officiel : https://siliconcomte.fr/annuaire-ecosysteme-silicon-comte\n`;
+
+    mdContent += `\n---\n\n## Pourquoi nous rejoindre ?\n\nBénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation et votre croissance régionale :\n\n- 01. **Badge Adhérent exclusif** : Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.\n- 02. **Référencement (backlinks) dans l'annuaire** : Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté.\n- 03. **Accueillir un Digital Apéro** : Une occasion unique de recevoir l'ensemble de l'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.\n- 04. **Pot de Rentrée réservé** : Accès exclusif et privé à nos grands rassemblements informels de networking de début de saison.\n- 05. **Interview & Visibilité Exclusive** : Mettez en avant votre expertise, votre parcours et votre entreprise grâce à un entretien dédié publié dans nos newsletters.\n`;
+
+    mdContent += `\n---\n\n## Rejoignez l'impulsion de l'innovation technologique régionale\n\nDevenez acteur du dynamisme numérique en Franche-Comté ! Que vous soyez une entreprise, un indépendant, une startup ou un étudiant, adhérer à Silicon Comté vous permet de participer à nos rencontres, de figurer dans l'annuaire des compétences, de booster votre visibilité et de rejoindre un réseau solidaire et innovant.\n\n[S'INSCRIRE / RENOUVELER L'ADHÉSION](https://www.siliconcomte.fr)\n\n---\n© 2026 SILICON COMTÉ. TOUS DROITS RÉSERVÉS.\n`;
 
     const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -875,63 +1183,62 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 ${content.recapTitle}
               </h2>
 
-              <!-- Event 1 Card: DGFiP -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1e293b; border-radius: 16px; margin-bottom: 20px; border: 1px solid #334155;">
-                <tr>
-                  <td style="padding: 24px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="110" valign="top" style="padding-right: 18px;">
-                          <img src="${getAbsoluteUrl(dgfipLogoImg)}" alt="DGFiP Logo" width="96" height="54" style="width: 96px; height: 54px; border-radius: 12px; border: 2px solid #006685; display: block; object-fit: contain; background-color: #ffffff; padding: 4px; box-sizing: border-box;" referrerPolicy="no-referrer" />
-                        </td>
-                        <td valign="top">
-                          <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 4px 0;">
-                            DIGITAL APÉRO • DGFIP
-                          </p>
-                          <h3 style="color: #ffffff; font-size: 16px; font-weight: 800; margin: 0 0 6px 0; font-family: sans-serif;">
-                            Généralisation de la Facturation Électronique
-                          </h3>
-                          <p style="color: #006685; font-size: 11px; font-weight: 700; margin: 0 0 10px 0; font-family: sans-serif;">
-                            📍 Le Callahan • 👤 Clément EYNAC (DGFiP du Doubs)
-                          </p>
-                          <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                            ${content.recapParagraphs[0]}
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Event 2 Card: Ninkasi -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1e293b; border-radius: 16px; margin-bottom: 20px; border: 1px solid #334155;">
-                <tr>
-                  <td style="padding: 24px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tr>
-                        <td width="72" valign="top" style="padding-right: 18px;">
-                          <img src="${getAbsoluteUrl(ninkasiLogoImg)}" alt="Ninkasi Logo" width="96" height="54" style="width: 96px; height: 54px; border-radius: 12px; border: 2px solid #fbd800; display: block; object-fit: contain; background-color: #ffffff; padding: 4px; box-sizing: border-box;" referrerPolicy="no-referrer" />
-                        </td>
-                        <td valign="top">
-                          <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 4px 0;">
-                            APÉRO IA #01 • NINKASI
-                          </p>
-                          <h3 style="color: #ffffff; font-size: 16px; font-weight: 800; margin: 0 0 6px 0; font-family: sans-serif;">
-                            La Recette du Prompting
-                          </h3>
-                          <p style="color: #fbd800; font-size: 11px; font-weight: 700; margin: 0 0 10px 0; font-family: sans-serif;">
-                            📍 Brasserie Ninkasi • 🤖 Atelier Pratique
-                          </p>
-                          <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.6; margin: 0; font-family: sans-serif;">
-                            ${content.recapParagraphs[1]}
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
+              <!-- Event Cards -->
+              ${(content.recapEvents && content.recapEvents.length > 0 ? content.recapEvents : [
+                {
+                  tag: 'DIGITAL APÉRO • DGFIP',
+                  title: 'Généralisation de la Facturation Électronique',
+                  date: 'Échéance 1er Sept.',
+                  location: 'Le Callahan • 👤 Clément EYNAC (DGFiP du Doubs)',
+                  desc: content.recapParagraphs[0],
+                  image: dgfipLogoImg
+                },
+                {
+                  tag: 'APÉRO IA #01 • NINKASI',
+                  title: 'La Recette du Prompting',
+                  date: 'Juillet 2026',
+                  location: 'Brasserie Ninkasi • 🤖 Atelier Pratique',
+                  desc: content.recapParagraphs[1],
+                  image: ninkasiLogoImg
+                }
+              ]).map(ev => `
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1e293b; border-radius: 16px; margin-bottom: 20px; border: 1px solid #334155;">
+                  <tr>
+                    <td style="padding: 24px;">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                          ${ev.image ? `
+                          <td width="100" valign="top" style="padding-right: 18px;">
+                            <img src="${getAbsoluteUrl(ev.image)}" alt="${ev.title}" width="96" height="54" style="width: 96px; height: 54px; border-radius: 12px; border: 2px solid #fbd800; display: block; object-fit: contain; background-color: #ffffff; padding: 4px; box-sizing: border-box;" referrerPolicy="no-referrer" />
+                          </td>
+                          ` : ''}
+                          <td valign="top">
+                            <p style="color: #fbd800; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin: 0 0 4px 0;">
+                              ${ev.tag}
+                            </p>
+                            <h3 style="color: #ffffff; font-size: 16px; font-weight: 800; margin: 0 0 6px 0; font-family: sans-serif;">
+                              ${ev.title}
+                            </h3>
+                            <p style="color: #38bdf8; font-size: 11px; font-weight: 700; margin: 0 0 10px 0; font-family: sans-serif;">
+                              📍 ${ev.location} • 📅 ${ev.date}
+                            </p>
+                            <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.6; margin: 0 0 12px 0; font-family: sans-serif;">
+                              ${ev.desc}
+                            </p>
+                            ${ev.link ? `
+                            <div>
+                              <a href="${ev.link}" target="_blank" style="display: inline-block; padding: 6px 14px; background-color: #0f172a; color: #fbd800; border: 1px solid #334155; font-size: 11px; font-weight: 700; font-family: sans-serif; text-decoration: none; border-radius: 6px;">
+                                ${ev.linkLabel || "Voir l'événement sur siliconcomte.fr"} →
+                              </a>
+                            </div>
+                            ` : ''}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              `).join('')}
 
               ${content.recapParagraphs[2] ? `
               <!-- Outlook Banner -->
@@ -989,75 +1296,47 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
             </td>
           </tr>
 
-          <!-- CA NEWS / ANNUAIRE & NOTRE COMMUNAUTÉ -->
+          <!-- ACTUALITÉS DES ADHÉRENTS (RUBRIQUE PERMANENTE) -->
           <tr>
-            <td style="padding: 40px; background-color: #ffffff; border-top: 1px solid #e2e8f0;" class="mobile-padding">
-              <p style="color: #006685; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; margin: 0 0 6px 0;">
-                📣 ACTUALITÉS DE L'ÉCOSYSTÈME
-              </p>
-              <h2 style="color: #006685; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 15px; font-family: sans-serif;">
-                ${content.caNewsTitle}
-              </h2>
-              <p style="color: #334155; font-size: 14.5px; line-height: 1.65; font-family: sans-serif; margin-bottom: 20px;">
-                ${content.caNewsIntro}
-              </p>
-
-              <!-- Stats counter row -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
+            <td style="padding: 40px; background-color: #0c1427; border-top: 3px solid #fbd800;" class="mobile-padding">
+              
+              <!-- 1. HEADER RUBRIQUE -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 22px;">
                 <tr>
-                  <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
-                    <div style="color: #fbd800; font-size: 14px; font-weight: 900; font-family: sans-serif; text-transform: uppercase;">Nombreux</div>
-                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Acteurs Référencés</div>
-                  </td>
-                  <td width="2%">&nbsp;</td>
-                  <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
-                    <div style="color: #34d399; font-size: 14px; font-weight: 900; font-family: sans-serif;">SEO +</div>
-                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Backlinks Web</div>
-                  </td>
-                  <td width="2%">&nbsp;</td>
-                  <td width="32%" style="background-color: #0f172a; border-radius: 12px; padding: 12px; text-align: center;">
-                    <div style="color: #38bdf8; font-size: 14px; font-weight: 900; font-family: sans-serif;">100% IA</div>
-                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 2px;">Fiches Auto</div>
+                  <td>
+                    <span style="display: inline-block; background-color: #fbd800; color: #090d16; font-size: 10px; font-weight: 900; font-family: monospace; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">
+                      📢 ${content.memberNewsEyebrow || "RUBRIQUE PERMANENTE // VIE DU RÉSEAU"}
+                    </span>
+                    <h2 style="color: #ffffff; font-size: 24px; font-weight: 900; line-height: 1.25; margin: 0 0 10px 0; font-family: sans-serif; text-transform: uppercase; letter-spacing: -0.5px;">
+                      ${content.memberNewsTitle || "Actualités des adhérents"}
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.55; margin: 0; font-family: sans-serif;">
+                      ${content.memberNewsIntro || "Événements, projets et recrutements : le pouls des initiatives de nos membres en Bourgogne-Franche-Comté."}
+                    </p>
                   </td>
                 </tr>
               </table>
 
-              <ul style="color: #334155; font-size: 14px; line-height: 1.6; font-family: sans-serif; padding-left: 20px; margin-bottom: 25px;">
-                <li style="margin-bottom: 10px;">${content.caNewsBullet1}</li>
-                <li style="margin-bottom: 10px;">${content.caNewsBullet2}</li>
-              </ul>
-
-              <!-- Simulated Search Tool box -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0f172a; border-radius: 16px; border: 1px solid #1e293b; padding: 20px;">
+              <!-- 2. CANAL DE SOUMISSION OFFICIEL -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border-left: 4px solid #fbd800; border-radius: 12px; margin-bottom: 28px; border: 1px solid #1e293b; border-left-width: 4px; border-left-color: #fbd800;">
                 <tr>
-                  <td>
-                    <!-- Search Input Bar -->
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #090d16; border-radius: 10px; border: 1px solid #1e293b; margin-bottom: 12px;">
+                  <td style="padding: 20px 22px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
-                        <td style="padding: 10px 14px; color: #fbd800; font-size: 13px; font-family: monospace;">
-                          🔍 <span style="color: #cbd5e1; font-family: sans-serif; font-size: 12.5px;">Trouver un expert, agence, startup...</span>
+                        <td valign="middle">
+                          <div style="color: #fbd800; font-size: 10px; font-weight: 900; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
+                            ✉️ CANAL DE SOUMISSION : ${content.memberNewsSubmissionEmail || 'actu@siliconcomte.fr'}
+                          </div>
+                          <div style="color: #ffffff; font-size: 15px; font-weight: 800; font-family: sans-serif; margin-bottom: 4px;">
+                            Une actualité à relayer ? Faites entendre votre voix !
+                          </div>
+                          <div style="color: #cbd5e1; font-size: 12.5px; line-height: 1.5; font-family: sans-serif;">
+                            Événements, projets innovants ou recrutements tech : écrivez à <strong style="color: #fbd800;">${content.memberNewsSubmissionEmail || 'actu@siliconcomte.fr'}</strong> pour paraître dans la prochaine newsletter.
+                          </div>
                         </td>
-                      </tr>
-                    </table>
-
-                    <!-- 5 Keyword Tags -->
-                    <div style="margin-bottom: 18px;">
-                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#IA &amp; Data</span>
-                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#Dev Software</span>
-                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#Cyber</span>
-                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 6px;">#UX &amp; Design</span>
-                      <span style="display: inline-block; background-color: #1e293b; color: #e2e8f0; font-size: 10.5px; font-family: monospace; font-weight: 600; padding: 5px 10px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 6px;">#SEO</span>
-                    </div>
-
-                    <!-- Explorer l'Annuaire Button -->
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #1e293b; padding-top: 16px;">
-                      <tr>
-                        <td style="color: #34d399; font-size: 11px; font-family: monospace; font-weight: bold;">
-                          ✓ Propulsé par le réseau Silicon Comté
-                        </td>
-                        <td align="right">
-                          <a href="https://siliconcomte.fr/annuaire-ecosysteme-silicon-comte" target="_blank" style="display: inline-block; padding: 10px 18px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 11px; font-weight: 900; text-decoration: none; text-transform: uppercase; border-radius: 8px; letter-spacing: 0.5px;">
-                            EXPLORER L'ANNUAIRE →
+                        <td width="160" valign="middle" align="right" style="padding-left: 15px;">
+                          <a href="mailto:${content.memberNewsSubmissionEmail || 'actu@siliconcomte.fr'}?subject=Actualit%C3%A9%20Adh%C3%A9rent%20-%20Newsletter%20Silicon%20Comt%C3%A9" style="display: inline-block; background-color: #fbd800; color: #090d16; font-size: 11px; font-weight: 900; font-family: sans-serif; text-decoration: none; padding: 10px 16px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">
+                            ENVOYER UNE ACTU →
                           </a>
                         </td>
                       </tr>
@@ -1065,40 +1344,73 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                   </td>
                 </tr>
               </table>
-            </td>
-          </tr>
 
-          <!-- POURQUOI NOUS REJOINDRE / VALORISER L'ADHÉSION -->
-          <tr>
-            <td style="padding: 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0;" class="mobile-padding">
-              <p style="color: #006685; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; margin: 0 0 6px 0;">
-                // CRÉATEURS DE VALEUR
-              </p>
-              <h2 style="color: #0f172a; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 12px; font-family: sans-serif;">
-                Pourquoi nous rejoindre ?
-              </h2>
-              <p style="color: #64748b; font-size: 13.5px; line-height: 1.5; margin: 0 0 25px 0; font-family: sans-serif;">
-                Bénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation et votre croissance régionale :
-              </p>
-
+              <!-- 3. CARTES D'ACTUALITÉS DES MEMBRES -->
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                ${[
-                  { num: '01', title: 'Badge Adhérent exclusif', desc: 'Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.' },
-                  { num: '02', title: 'Référencement (backlinks) dans l\'annuaire', desc: 'Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté.' },
-                  { num: '03', title: 'Accueillir un Digital Apéro', desc: 'Une occasion unique de recevoir l\'ensemble de l\'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.' },
-                  { num: '04', title: 'Pot de Rentrée réservé', desc: 'Accès exclusif et privé à nos grands rassemblements informels de networking de début de saison.' },
-                  { num: '05', title: 'Interview & Visibilité Exclusive', desc: 'Mettez en avant votre expertise, votre parcours et votre entreprise grâce à un entretien dédié publié dans nos newsletters.' }
-                ].map(item => `
+                ${(content.memberNewsItems || defaultMemberNews.memberNewsItems).map(item => `
                   <tr>
-                    <td style="padding-bottom: 16px;">
-                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <td style="padding-bottom: 22px;">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border: 1px solid #1e293b; border-radius: 14px; padding: 22px;">
                         <tr>
-                          <td width="36" valign="top" style="background-color: #fbd800; color: #090d16; border-radius: 50%; text-align: center; width: 36px; height: 36px; font-weight: 900; font-size: 13px; font-family: sans-serif; line-height: 36px;">
-                            ${item.num}
-                          </td>
-                          <td valign="top" style="padding-left: 15px; font-family: sans-serif;">
-                            <div style="font-size: 14.5px; font-weight: 800; color: #0f172a; margin-bottom: 3px;">${item.title}</div>
-                            <div style="font-size: 13px; color: #475569; line-height: 1.5;">${item.desc}</div>
+                          <td>
+                            <!-- Top meta row -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 12px;">
+                              <tr>
+                                <td align="left">
+                                  <span style="display: inline-block; background-color: #090d16; color: #fbd800; font-size: 9.5px; font-weight: 900; font-family: monospace; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; border: 1px solid #334155;">
+                                    ${item.tag}
+                                  </span>
+                                </td>
+                                ${item.badge ? `
+                                <td align="right">
+                                  <span style="display: inline-block; color: #94a3b8; font-size: 9.5px; font-weight: 800; font-family: monospace; text-transform: uppercase;">
+                                    ${item.badge}
+                                  </span>
+                                </td>
+                                ` : ''}
+                              </tr>
+                            </table>
+
+                            <!-- Company & Subtitle -->
+                            <div style="color: #fbd800; font-size: 12px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-bottom: 4px;">
+                              ${item.company} ${item.dateOrSubtitle ? `<span style="color: #64748b;">• ${item.dateOrSubtitle}</span>` : ''}
+                            </div>
+
+                            <!-- News Headline -->
+                            <h3 style="color: #ffffff; font-size: 17px; font-weight: 800; line-height: 1.35; margin: 0 0 12px 0; font-family: sans-serif;">
+                              ${item.title}
+                            </h3>
+
+                            <!-- News Content -->
+                            <div style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin: 0 0 16px 0; font-family: sans-serif;">
+                              ${item.content.replace(/\n/g, '<br>')}
+                            </div>
+
+                            <!-- Actions Row -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #1e293b; padding-top: 14px;">
+                              <tr>
+                                <td>
+                                  ${item.internalLink ? `
+                                    <div style="margin-bottom: 8px;">
+                                      <a href="${item.internalLink}" style="color: #fbd800; font-size: 11.5px; font-weight: 800; font-family: sans-serif; text-decoration: underline;">
+                                        ${item.internalLinkLabel || "👉 Voir l'entretien complet ci-après"}
+                                      </a>
+                                    </div>
+                                  ` : ''}
+                                  ${item.secondaryLink ? `
+                                    <a href="${item.secondaryLink}" target="_blank" style="display: inline-block; background-color: #0f172a; color: #38bdf8; font-size: 11px; font-weight: 700; font-family: sans-serif; text-decoration: none; padding: 7px 14px; border-radius: 6px; border: 1px solid #0284c7; margin-right: 8px; margin-bottom: 6px;">
+                                      ${item.secondaryLinkLabel || "Voir la vidéo"} →
+                                    </a>
+                                  ` : ''}
+                                  ${item.link ? `
+                                    <a href="${item.link}" target="_blank" style="display: inline-block; background-color: #1e293b; color: #f8fafc; font-size: 11px; font-weight: 700; font-family: sans-serif; text-decoration: none; padding: 7px 14px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 6px;">
+                                      ${item.linkLabel || "En savoir plus"} →
+                                    </a>
+                                  ` : ''}
+                                </td>
+                              </tr>
+                            </table>
+
                           </td>
                         </tr>
                       </table>
@@ -1106,10 +1418,205 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                   </tr>
                 `).join('')}
               </table>
+
             </td>
           </tr>
 
-          <!-- INTERVIEW -->
+          ${content.interviewEyebrow ? `
+          <!-- FOCUS ADHÉRENT / QUARKS 10 ANS (DARK LUXURY THEME) -->
+          <tr>
+            <td style="padding: 40px; background-color: #0b0f19; border-top: 3px solid #fbd800;" class="mobile-padding">
+              
+              <!-- 1. SECTION HEADER -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 22px;">
+                <tr>
+                  <td>
+                    <span style="display: inline-block; background-color: #fbd800; color: #090d16; font-size: 10.5px; font-weight: 900; font-family: monospace; padding: 4px 12px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">
+                      ${content.interviewEyebrow}
+                    </span>
+                    <h2 style="color: #ffffff; font-size: 24px; font-weight: 900; line-height: 1.25; margin: 12px 0 10px 0; font-family: sans-serif; text-transform: uppercase; letter-spacing: -0.5px;">
+                      ${content.interviewTitle}
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.5; margin: 0; font-family: sans-serif;">
+                      ${content.interviewSubtitle}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 2. CALLOUT QUOTE -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border-left: 4px solid #fbd800; border-radius: 12px; margin-bottom: 28px; border: 1px solid #1e293b; border-left-width: 4px; border-left-color: #fbd800;">
+                <tr>
+                  <td style="padding: 22px 24px;">
+                    <p style="color: #fbd800; font-size: 15px; font-style: italic; font-weight: 600; line-height: 1.6; margin: 0 0 10px 0; font-family: Georgia, serif;">
+                      "${content.guestQuote}"
+                    </p>
+                    <p style="color: #cbd5e1; font-size: 11.5px; font-weight: 800; font-family: sans-serif; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                      — Xavier Labourier, cofondateur de Quarks
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 3. ADHERENT IDENTITY BADGE (CARD) -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border: 1px solid #1e293b; border-radius: 18px; margin-bottom: 35px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                <tr>
+                  <td style="padding: 24px;">
+                    
+                    <!-- Top Bar: Logo & Silicon Comté Member Seal -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 18px; border-bottom: 1px solid #1e293b; padding-bottom: 16px;">
+                      <tr>
+                        <td valign="middle" align="left">
+                          <img src="${getAbsoluteUrl(quarksLogoSvg)}" alt="Quarks Safety Logo" width="170" style="display: block; width: 170px; max-width: 100%; height: auto;" />
+                        </td>
+                        <td valign="middle" align="right">
+                          <table border="0" cellpadding="0" cellspacing="0" style="background-color: #0f172a; border-radius: 8px; border: 1px solid #fbd800;">
+                            <tr>
+                              <td style="padding: 6px 12px; color: #fbd800; font-size: 9.5px; font-weight: 900; font-family: monospace; text-transform: uppercase; letter-spacing: 1px;">
+                                ⭐ MEMBRE PIONNIER DEPUIS 10 ANS
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Identity & Photo Placeholder -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
+                      <tr>
+                        <td width="100" valign="top" style="padding-right: 18px;">
+                          <!-- Xavier Labourier Photo -->
+                          ${content.guestImage && content.guestImage !== quarksLogoSvg ? `
+                          <img src="${getAbsoluteUrl(content.guestImage)}" alt="Xavier Labourier" width="100" height="100" style="border-radius: 14px; object-fit: cover; border: 2px solid #fbd800; display: block;" />
+                          ` : `
+                          <table border="0" cellpadding="0" cellspacing="0" width="100" height="100" style="background-color: #0f172a; border: 2px solid #fbd800; border-radius: 14px; text-align: center;">
+                            <tr>
+                              <td align="center" valign="middle" style="padding: 10px 6px;">
+                                <div style="font-size: 26px; line-height: 1; margin-bottom: 4px;">👤</div>
+                                <div style="color: #fbd800; font-family: monospace; font-size: 11px; font-weight: 900; letter-spacing: 1px;">XL</div>
+                                <div style="color: #94a3b8; font-family: sans-serif; font-size: 8px; text-transform: uppercase; font-weight: 700; margin-top: 3px;">Portrait à paraître</div>
+                              </td>
+                            </tr>
+                          </table>
+                          `}
+                        </td>
+                        <td valign="top" style="font-family: sans-serif;">
+                          <div style="color: #ffffff; font-size: 17.5px; font-weight: 900; text-transform: uppercase; margin-bottom: 4px; letter-spacing: -0.3px;">
+                            ${content.guestCompany}
+                          </div>
+                          <div style="color: #fbd800; font-size: 11.5px; font-weight: 800; font-family: monospace; margin-bottom: 8px;">
+                            10 ans d'expertise SaaS (Besançon)
+                          </div>
+                          <div style="color: #cbd5e1; font-size: 12.5px; line-height: 1.45; margin-bottom: 6px;">
+                            <strong style="color: #ffffff;">Fondateurs &amp; Dirigeants :</strong> ${content.guestFounders}
+                          </div>
+                          <div style="color: #94a3b8; font-size: 12px; line-height: 1.45;">
+                            <strong style="color: #cbd5e1;">Métier :</strong> ${content.guestMetier}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Key Metrics Grid -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 16px;">
+                      <tr>
+                        <td width="23.5%" style="background-color: #090d16; border-radius: 10px; padding: 12px 6px; text-align: center; border: 1px solid #1e293b;">
+                          <div style="color: #fbd800; font-size: 14px; font-weight: 900; font-family: sans-serif;">+380 000</div>
+                          <div style="color: #94a3b8; font-size: 8px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 3px;">Substances</div>
+                        </td>
+                        <td width="2%">&nbsp;</td>
+                        <td width="23.5%" style="background-color: #090d16; border-radius: 10px; padding: 12px 6px; text-align: center; border: 1px solid #1e293b;">
+                          <div style="color: #38bdf8; font-size: 14px; font-weight: 900; font-family: sans-serif;">700</div>
+                          <div style="color: #94a3b8; font-size: 8px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 3px;">Familles Chimiques</div>
+                        </td>
+                        <td width="2%">&nbsp;</td>
+                        <td width="23.5%" style="background-color: #090d16; border-radius: 10px; padding: 12px 6px; text-align: center; border: 1px solid #1e293b;">
+                          <div style="color: #34d399; font-size: 14px; font-weight: 900; font-family: sans-serif;">100</div>
+                          <div style="color: #94a3b8; font-size: 8px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 3px;">Réglementations</div>
+                        </td>
+                        <td width="2%">&nbsp;</td>
+                        <td width="23.5%" style="background-color: #090d16; border-radius: 10px; padding: 12px 6px; text-align: center; border: 1px solid #1e293b;">
+                          <div style="color: #fbbf24; font-size: 13px; font-weight: 900; font-family: sans-serif;">ISO 27001</div>
+                          <div style="color: #94a3b8; font-size: 8px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 3px;">Sécurité Certifiée</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Deployments & Role Footer -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #090d16; border-radius: 10px; padding: 12px 16px; border: 1px solid #1e293b;">
+                      <tr>
+                        <td style="color: #cbd5e1; font-size: 11.5px; font-family: sans-serif; line-height: 1.6;">
+                          🌐 <strong>Déploiements autonomes :</strong> ${content.guestDeployments}<br>
+                          🤝 <strong>Rôle écosystème :</strong> ${content.guestEcosystemRole}
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 4. BODY Q&A (4 STRUCTURED BLOCKS) -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                ${content.qas.map((qa, qIndex) => {
+                  const match = qa.answer.match(/^([^:]+:\s*)([\s\S]*)$/);
+                  const speaker = match ? match[1].trim() : 'Xavier Labourier :';
+                  const rawAnswer = match ? match[2].trim() : qa.answer.trim();
+                  const paragraphs = rawAnswer.split('\n\n').filter(Boolean);
+
+                  return `
+                  <tr>
+                    <td style="padding-bottom: 28px;">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border: 1px solid #1e293b; border-radius: 14px; padding: 20px;">
+                        <tr>
+                          <td>
+                            <!-- Eyebrow Tag -->
+                            <div style="color: #fbd800; font-size: 10px; font-weight: 900; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                              ${qa.tag || `QUESTION N°${qIndex + 1}`}
+                            </div>
+                            
+                            <!-- Question Title -->
+                            <h3 style="color: #ffffff; font-size: 15.5px; font-weight: 800; line-height: 1.4; margin: 0 0 16px 0; font-family: sans-serif;">
+                              ${qa.question}
+                            </h3>
+
+                            <!-- Answer Container -->
+                            <div style="background-color: #090d16; border-radius: 10px; border: 1px solid #1e293b; padding: 16px 18px;">
+                              <div style="margin-bottom: 10px;">
+                                <span style="display: inline-block; background-color: #fbd800; color: #090d16; font-size: 10px; font-weight: 900; font-family: monospace; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                  👤 ${speaker}
+                                </span>
+                              </div>
+                              
+                              ${paragraphs.map(para => {
+                                // If this paragraph contains the 3 convictions
+                                if (para.includes('1. Donnez du sens') || para.includes('1.')) {
+                                  const lines = para.split('\n');
+                                  return lines.map(line => {
+                                    if (line.match(/^[1-3]\.\s/)) {
+                                      return `
+                                      <div style="background-color: #111827; border-left: 3px solid #fbd800; border-radius: 6px; padding: 10px 14px; margin: 8px 0; color: #e2e8f0; font-size: 13.5px; line-height: 1.5; font-family: sans-serif;">
+                                        <strong style="color: #fbd800;">${line.substring(0, 2)}</strong> ${line.substring(3)}
+                                      </div>`;
+                                    }
+                                    return `<p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.6; margin: 0 0 10px 0; font-family: sans-serif;">${line}</p>`;
+                                  }).join('');
+                                }
+                                return `<p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.6; margin: 0 0 12px 0; font-family: sans-serif;">${para}</p>`;
+                              }).join('')}
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>`;
+                }).join('')}
+              </table>
+
+            </td>
+          </tr>
+          ` : `
+          <!-- STANDARD INTERVIEW (EDITIONS 1 & 2) -->
           <tr>
             <td style="padding: 40px; background-color: #ffffff; border-top: 1px solid #e2e8f0;" class="mobile-padding">
               <h2 style="color: #0f172a; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 5px; font-family: sans-serif;">
@@ -1122,7 +1629,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 25px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px;">
                 <tr>
                   <td width="100" valign="top">
-                    <img src="${getAbsoluteUrl(content.guestImage)}" alt="${content.guestName}" width="90" height="90" style="border-radius: 50%; object-fit: cover;" />
+                    <img src="${getAbsoluteUrl(content.guestImage || '')}" alt="${content.guestName}" width="90" height="90" style="border-radius: 50%; object-fit: cover;" />
                   </td>
                   <td valign="top" style="padding-left: 15px; font-family: sans-serif;">
                     <div style="font-size: 18px; font-weight: 900; color: #0f172a;">${content.guestName}</div>
@@ -1150,6 +1657,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               }).join('')}
             </td>
           </tr>
+          `}
 
           <!-- AGENDA -->
           <tr>
@@ -1165,7 +1673,10 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               <!-- Featured Apéros IA Spotlight Banner -->
               <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #090d16; border-radius: 16px; border-left: 4px solid #fbd800; margin-bottom: 25px; padding: 20px;">
                 <tr>
-                  <td>
+                  <td width="130" valign="top" style="padding-right: 18px;" class="column">
+                    <img src="${getAbsoluteUrl(activeEdition.editionNumber >= 3 ? tableDesCopainsLogo : ninkasiLogoImg)}" alt="${activeEdition.editionNumber >= 3 ? 'La Table des Copains' : 'Brasserie Ninkasi'}" width="120" style="display: block; border-radius: 10px; border: 2px solid #fbd800; background-color: ${activeEdition.editionNumber >= 3 ? '#0f172a' : '#ffffff'}; padding: 6px; max-width: 120px; height: auto;" />
+                  </td>
+                  <td valign="top" class="column">
                     <span style="background-color: #fbd800; color: #090d16; font-size: 10px; font-weight: 900; font-family: monospace; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">
                       🤖 LE RENDEZ-VOUS IA RÉCURRENT
                     </span>
@@ -1176,7 +1687,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                       ${content.agendaIntro}
                     </p>
                     <p style="color: #fbd800; font-size: 11.5px; font-weight: bold; margin: 0; font-family: monospace;">
-                      📍 Brasserie Ninkasi Besançon • Chaque 2ème Mardi à 18h30
+                      📍 ${activeEdition.editionNumber >= 3 ? 'La Table des Copains (anciennement Ninkasi — tabledescopains.fr) Besançon' : 'Brasserie Ninkasi Besançon'} • Chaque 2ème Mardi à 18h30
                     </p>
                   </td>
                 </tr>
@@ -1211,7 +1722,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                               ${ev.desc}
                             </p>
                             <div style="color: #006685; font-size: 11px; font-weight: bold; margin-bottom: 8px;">
-                              📍 ${ev.location || (activeEdition.editionNumber === 1 ? 'Besançon' : 'Brasserie Ninkasi')}
+                              📍 ${ev.location || (activeEdition.editionNumber === 1 ? 'Besançon' : activeEdition.editionNumber >= 3 ? 'La Table des Copains' : 'Brasserie Ninkasi')}
                             </div>
                             ${ev.link ? `<div><a href="${ev.link}" target="_blank" style="display: inline-block; padding: 8px 16px; background-color: #006685; color: #ffffff; font-size: 11px; font-weight: bold; font-family: sans-serif; text-decoration: none; border-radius: 6px;">🎟️ S'inscrire (Eventbrite)</a></div>` : ''}
                           </td>
@@ -1220,6 +1731,122 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                     </td>
                   </tr>
                 `).join('')}
+              </table>
+            </td>
+          </tr>
+
+          <!-- ANNUAIRE & NOTRE COMMUNAUTÉ (HUB TECH BFC & OBSERVATOIRE) -->
+          <tr>
+            <td style="padding: 40px; background-color: #0b0f19; border-top: 3px solid #006685;" class="mobile-padding">
+              <span style="display: inline-block; background-color: #0f172a; color: #38bdf8; font-size: 10px; font-weight: 900; font-family: monospace; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; border: 1px solid #1e293b;">
+                🌐 OBSERVATOIRE DE L'INNOVATION // BOURGOGNE-FRANCHE-COMTÉ
+              </span>
+              <h2 style="color: #ffffff; font-size: 24px; font-weight: 900; line-height: 1.25; margin: 0 0 12px 0; font-family: sans-serif; text-transform: uppercase; letter-spacing: -0.5px;">
+                ${content.caNewsTitle || "ANNUAIRE & NOTRE COMMUNAUTÉ"}
+              </h2>
+              <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.6; margin: 0 0 22px 0; font-family: sans-serif;">
+                ${content.caNewsIntro}
+              </p>
+
+              <!-- Stats KPI Grid -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 22px;">
+                <tr>
+                  <td width="32%" style="background-color: #111827; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1px solid #1e293b;">
+                    <div style="color: #fbd800; font-size: 15px; font-weight: 900; font-family: sans-serif;">RÉSEAU ACTIF</div>
+                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 3px;">Acteurs BFC Référencés</div>
+                  </td>
+                  <td width="2%">&nbsp;</td>
+                  <td width="32%" style="background-color: #111827; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1px solid #1e293b;">
+                    <div style="color: #34d399; font-size: 15px; font-weight: 900; font-family: sans-serif;">SEO &amp; SIRET</div>
+                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 3px;">Backlinks &amp; API Certifiée</div>
+                  </td>
+                  <td width="2%">&nbsp;</td>
+                  <td width="32%" style="background-color: #111827; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1px solid #1e293b;">
+                    <div style="color: #38bdf8; font-size: 15px; font-weight: 900; font-family: sans-serif;">100% IA</div>
+                    <div style="color: #94a3b8; font-size: 9px; font-weight: 800; font-family: monospace; text-transform: uppercase; margin-top: 3px;">Indexation Automatisée</div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Search Preview & Tags -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border-radius: 14px; border: 1px solid #1e293b; padding: 18px; margin-bottom: 22px;">
+                <tr>
+                  <td>
+                    <div style="color: #cbd5e1; font-size: 12px; font-family: monospace; margin-bottom: 10px;">
+                      🔍 <strong style="color: #ffffff;">Exemples d'expertises indexées :</strong>
+                    </div>
+                    <div>
+                      <span style="display: inline-block; background-color: #090d16; color: #fbd800; font-size: 10px; font-family: monospace; font-weight: 700; padding: 4px 8px; border-radius: 5px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 5px;">#IA &amp; Data</span>
+                      <span style="display: inline-block; background-color: #090d16; color: #38bdf8; font-size: 10px; font-family: monospace; font-weight: 700; padding: 4px 8px; border-radius: 5px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 5px;">#DeepTech SaaS</span>
+                      <span style="display: inline-block; background-color: #090d16; color: #34d399; font-size: 10px; font-family: monospace; font-weight: 700; padding: 4px 8px; border-radius: 5px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 5px;">#Cybersécurité</span>
+                      <span style="display: inline-block; background-color: #090d16; color: #fbbf24; font-size: 10px; font-family: monospace; font-weight: 700; padding: 4px 8px; border-radius: 5px; border: 1px solid #334155; margin-right: 4px; margin-bottom: 5px;">#Accessibilité RGAA</span>
+                      <span style="display: inline-block; background-color: #090d16; color: #e2e8f0; font-size: 10px; font-family: monospace; font-weight: 700; padding: 4px 8px; border-radius: 5px; border: 1px solid #334155; margin-bottom: 5px;">#UX &amp; Design</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA Button -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="left">
+                    <a href="https://siliconcomte.fr/annuaire-ecosysteme-silicon-comte" target="_blank" style="display: inline-block; padding: 12px 22px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 11.5px; font-weight: 900; text-decoration: none; text-transform: uppercase; border-radius: 8px; letter-spacing: 0.5px;">
+                      EXPLORER L'ANNUAIRE OFFICIEL →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- POURQUOI NOUS REJOINDRE ? (LES 5 PILIERS D'ACCÉLÉRATION) -->
+          <tr>
+            <td style="padding: 40px; background-color: #0c1427; border-top: 3px solid #fbd800;" class="mobile-padding">
+              <span style="display: inline-block; background-color: #fbd800; color: #090d16; font-size: 10px; font-weight: 900; font-family: monospace; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">
+                ⭐ ADHÉSION 2026/2027 // CRÉATEURS DE VALEUR
+              </span>
+              <h2 style="color: #ffffff; font-size: 24px; font-weight: 900; margin-top: 0; margin-bottom: 12px; font-family: sans-serif; text-transform: uppercase; letter-spacing: -0.5px;">
+                Pourquoi nous rejoindre ?
+              </h2>
+              <p style="color: #94a3b8; font-size: 13.5px; line-height: 1.55; margin: 0 0 25px 0; font-family: sans-serif;">
+                Bénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation et votre croissance régionale :
+              </p>
+
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                ${[
+                  { num: '01', title: 'Badge Adhérent exclusif', desc: 'Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.' },
+                  { num: '02', title: 'Référencement (backlinks) dans l\'annuaire', desc: 'Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté, indexé pour rassurer vos prospects.' },
+                  { num: '03', title: 'Accueillir un Digital Apéro', desc: 'Une occasion unique de recevoir l\'ensemble de l\'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.' },
+                  { num: '04', title: 'Pot de Rentrée réservé & Apéros IA', desc: 'Accès exclusif et privé à nos grands rassemblements informels de networking et aux ateliers IA mensuels.' },
+                  { num: '05', title: 'Interview & Visibilité Exclusive', desc: 'Mettez en avant votre expertise, votre parcours et votre entreprise grâce à un entretien dédié (comme Quarks dans cette édition).' }
+                ].map(item => `
+                  <tr>
+                    <td style="padding-bottom: 14px;">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #111827; border: 1px solid #1e293b; border-radius: 10px; padding: 14px;">
+                        <tr>
+                          <td width="36" valign="top" style="background-color: #fbd800; color: #090d16; border-radius: 8px; text-align: center; width: 36px; height: 36px; font-weight: 900; font-size: 13px; font-family: sans-serif; line-height: 36px;">
+                            ${item.num}
+                          </td>
+                          <td valign="top" style="padding-left: 15px; font-family: sans-serif;">
+                            <div style="font-size: 14px; font-weight: 800; color: #ffffff; margin-bottom: 3px;">${item.title}</div>
+                            <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.5;">${item.desc}</div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                `).join('')}
+              </table>
+
+              <!-- Membership Badge Note -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 15px;">
+                <tr>
+                  <td align="left">
+                    <a href="https://www.siliconcomte.fr" target="_blank" style="display: inline-block; padding: 12px 24px; background-color: #fbd800; color: #090d16; font-family: sans-serif; font-size: 11.5px; font-weight: 900; text-decoration: none; text-transform: uppercase; border-radius: 8px; letter-spacing: 0.5px;">
+                      S'INSCRIRE / RENOUVELER L'ADHÉSION →
+                    </a>
+                  </td>
+                </tr>
               </table>
             </td>
           </tr>
@@ -1301,7 +1928,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
   };
 
   // Animation helper to disable motion and force final visible state during PDF generation
-  const anim = (initial: any, final: any, transition?: any, key: 'animate' | 'whileInView' = 'animate') => {
+  const anim = (initial: any, final: any, transition?: any, key: 'animate' | 'whileInView' = 'animate'): any => {
     if (isGenerating) {
       const completed: any = {};
       const keys = new Set([...Object.keys(initial), ...Object.keys(final)]);
@@ -1332,7 +1959,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
   };
 
   // Animation Presets
-  const fadeInUp = isGenerating ? {
+  const fadeInUp: any = isGenerating ? {
     initial: { opacity: 1, y: 0 },
     animate: { opacity: 1, y: 0 },
     variants: {
@@ -1352,7 +1979,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
     transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
   };
 
-  const staggerContainer = isGenerating ? {
+  const staggerContainer: any = isGenerating ? {
     initial: {},
     animate: {},
     transition: { duration: 0 }
@@ -1557,9 +2184,14 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
               
               {/* Inner content */}
               <span className="absolute top-4 left-5 font-mono text-[9px] text-[#fbd800]/50 tracking-widest">NUMÉRO CERTIFIÉ //</span>
-              <Calendar size={44} className="text-highlighter mb-5 opacity-90 drop-shadow-[0_0_15px_rgba(251,216,0,0.4)]" />
-              <p className="font-mono text-center text-slate-400 text-[10px] tracking-widest uppercase font-bold">Édition de</p>
-              <p className="text-4xl font-extrabold font-display text-white mt-1 tracking-tight">{activeEdition.date}</p>
+              <Calendar size={44} className="text-highlighter mb-4 opacity-90 drop-shadow-[0_0_15px_rgba(251,216,0,0.4)] mx-auto" />
+              <div className="flex flex-col items-center justify-center text-center w-full px-4">
+                <p className="font-mono text-center text-slate-400 text-[10px] tracking-widest uppercase font-bold">ÉDITION DE</p>
+                <div className="text-3xl sm:text-4xl font-extrabold font-display text-white mt-1 tracking-tight text-center leading-tight flex flex-col items-center">
+                  <span className="block text-center">{activeEdition.date.split(' ')[0]}</span>
+                  <span className="block text-center text-2xl sm:text-3xl font-extrabold text-slate-100">{activeEdition.date.split(' ')[1] || '2026'}</span>
+                </div>
+              </div>
               
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 h-6 flex justify-center items-center gap-1.5 text-[9px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-3 rounded-full w-max border border-emerald-500/20 leading-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
@@ -1586,87 +2218,108 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
               {/* Event Cards Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                {/* Event 1: DGFiP */}
-                <div className="bg-slate-950/90 rounded-3xl p-8 border border-slate-800/90 shadow-xl hover:border-[#006685] transition-all duration-300 flex flex-col justify-between group">
-                  <div>
-                    <div className="flex items-start justify-between gap-4 mb-6">
-                      <div className="flex items-center gap-4">
-                        <img 
-                          src={dgfipLogoImg} 
-                          alt="DGFiP Logo" 
-                          className="h-14 w-28 rounded-2xl object-contain border-2 border-[#006685] bg-white p-1.5 shadow-md shrink-0"
-                          referrerPolicy="no-referrer"
-                        />
-                        <div>
-                          <span className="px-3 py-1 bg-[#006685]/20 text-[#006685] text-xs font-mono font-bold uppercase rounded-full border border-[#006685]/40 inline-block mb-1">
-                            Digital Apéro
-                          </span>
-                          <h3 className="text-xl font-bold text-white group-hover:text-highlighter transition-colors">
-                            Facturation Électronique
-                          </h3>
+                {(content.recapEvents && content.recapEvents.length > 0 ? content.recapEvents : [
+                  {
+                    tag: "DIGITAL APÉRO",
+                    tagColor: "bg-[#006685]/20 text-[#006685] border-[#006685]/40",
+                    title: "Facturation Électronique",
+                    speakerOrRole: "Clément EYNAC (DGFiP)",
+                    location: "Le Callahan",
+                    date: "Échéance 1er Sept.",
+                    desc: content.recapParagraphs[0],
+                    image: dgfipLogoImg
+                  },
+                  {
+                    tag: "APÉRO IA #01",
+                    tagColor: "bg-highlighter/10 text-highlighter border-highlighter/30",
+                    title: "La Recette du Prompting",
+                    speakerOrRole: "Atelier Pratique IA",
+                    location: "Brasserie Ninkasi",
+                    date: "Juillet 2026",
+                    desc: content.recapParagraphs[1],
+                    image: ninkasiLogoImg
+                  }
+                ]).map((ev, idx) => (
+                  <div 
+                    key={ev.id || idx}
+                    className="bg-slate-950/90 rounded-3xl p-8 border border-slate-800/90 shadow-xl hover:border-highlighter transition-all duration-300 flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-4 mb-6">
+                        <div className="flex items-center gap-4">
+                          {ev.image ? (
+                            <img 
+                              src={ev.image} 
+                              alt={ev.title} 
+                              className={`h-14 w-28 rounded-2xl object-contain border-2 border-highlighter p-1.5 shadow-md shrink-0 ${ev.image === tableDesCopainsLogo ? 'bg-[#141414]' : 'bg-white'}`}
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="h-14 w-14 rounded-2xl bg-slate-900 border-2 border-highlighter flex items-center justify-center shrink-0 text-highlighter font-mono font-bold text-lg">
+                              #{idx + 1}
+                            </div>
+                          )}
+                          <div>
+                            <span className={`px-3 py-1 ${ev.tagColor || 'bg-highlighter/10 text-highlighter border-highlighter/30'} text-xs font-mono font-bold uppercase rounded-full border inline-block mb-1`}>
+                              {ev.tag}
+                            </span>
+                            <h3 className="text-xl font-bold text-white group-hover:text-highlighter transition-colors">
+                              {ev.title}
+                            </h3>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex flex-wrap gap-2 mb-6 text-xs font-medium text-slate-300">
-                      <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5">
-                        <User size={14} className="text-[#006685]" />
-                        Clément EYNAC (DGFiP)
-                      </span>
-                      <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5">
-                        <MapPin size={14} className="text-highlighter" />
-                        Le Callahan
-                      </span>
-                      <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-highlighter">
-                        <Calendar size={14} />
-                        Échéance 1er Sept.
-                      </span>
-                    </div>
-
-                    <p className="text-slate-300 font-light text-base leading-relaxed">
-                      {content.recapParagraphs[0]}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Event 2: Ninkasi */}
-                <div className="bg-slate-950/90 rounded-3xl p-8 border border-slate-800/90 shadow-xl hover:border-highlighter transition-all duration-300 flex flex-col justify-between group">
-                  <div>
-                    <div className="flex items-start justify-between gap-4 mb-6">
-                      <div className="flex items-center gap-4">
-                        <img 
-                          src={ninkasiLogoImg} 
-                          alt="Ninkasi Logo" 
-                          className="h-14 w-28 rounded-2xl object-contain border-2 border-highlighter bg-white p-1.5 shadow-md shrink-0"
-                          referrerPolicy="no-referrer"
-                        />
-                        <div>
-                          <span className="px-3 py-1 bg-highlighter/10 text-highlighter text-xs font-mono font-bold uppercase rounded-full border border-highlighter/30 inline-block mb-1">
-                            Apéro IA #01
+                      <div className="flex flex-wrap gap-2 mb-6 text-xs font-medium text-slate-300">
+                        {ev.speakerOrRole && (
+                          <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5">
+                            <Sparkles size={14} className="text-amber-400" />
+                            {ev.speakerOrRole}
                           </span>
-                          <h3 className="text-xl font-bold text-white group-hover:text-highlighter transition-colors">
-                            La Recette du Prompting
-                          </h3>
-                        </div>
+                        )}
+                        <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5">
+                          <MapPin size={14} className="text-highlighter" />
+                          {ev.locationUrl ? (
+                            <a 
+                              href={ev.locationUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="hover:text-highlighter transition-colors flex items-center gap-1"
+                              title="Visiter tabledescopains.fr"
+                            >
+                              {ev.location}
+                              <ExternalLink size={10} className="text-slate-400" />
+                            </a>
+                          ) : (
+                            ev.location
+                          )}
+                        </span>
+                        <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 text-highlighter">
+                          <Calendar size={14} />
+                          {ev.date}
+                        </span>
                       </div>
+
+                      <p className="text-slate-300 font-light text-base leading-relaxed mb-6">
+                        {ev.desc}
+                      </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 mb-6 text-xs font-medium text-slate-300">
-                      <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5">
-                        <MapPin size={14} className="text-highlighter" />
-                        Brasserie Ninkasi
-                      </span>
-                      <span className="bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5">
-                        <Sparkles size={14} className="text-amber-400" />
-                        Atelier Pratique IA
-                      </span>
-                    </div>
-
-                    <p className="text-slate-300 font-light text-base leading-relaxed">
-                      {content.recapParagraphs[1]}
-                    </p>
+                    {ev.link && (
+                      <div className="pt-4 border-t border-slate-800/80">
+                        <a
+                          href={ev.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-[#006685] text-xs font-mono font-bold text-slate-200 hover:text-white border border-slate-700 hover:border-[#006685] transition-all shadow-sm group/btn"
+                        >
+                          <span>{ev.linkLabel || "Voir l'événement sur siliconcomte.fr"}</span>
+                          <ExternalLink size={12} className="group-hover/btn:translate-x-0.5 transition-transform" />
+                        </a>
+                      </div>
+                    )}
                   </div>
-                </div>
+                ))}
               </div>
 
               {/* Outlook Banner */}
@@ -1756,244 +2409,200 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
         </div>
       </section>
 
-      {/* 4. SECTION 2: ACTUALITÉS DU CONSEIL D'ADMINISTRATION - ANNUAIRE & COMMUNAUTÉ (Visual Showcase) */}
-      <section className="py-24 md:py-32 bg-slate-50 relative border-y border-slate-200/60 overflow-hidden">
-        {/* Background Grid Accent */}
-        <div className="absolute inset-0 opacity-[0.025] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none"></div>
+      {/* 4. SECTION: ACTUALITÉS DES ADHÉRENTS (RUBRIQUE PERMANENTE) */}
+      <section id="actualites-adherents" className="py-24 md:py-32 bg-[#0c1427] text-white relative border-b border-slate-800/80 overflow-hidden">
+        {/* Subtle background glow */}
+        {!isGenerating && (
+          <>
+            <div className="absolute top-0 right-10 w-[500px] h-[500px] bg-[#fbd800]/5 rounded-full blur-[140px] pointer-events-none"></div>
+            <div className="absolute bottom-0 left-10 w-[500px] h-[500px] bg-[#006685]/10 rounded-full blur-[140px] pointer-events-none"></div>
+          </>
+        )}
 
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
           
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
-            <motion.div {...fadeInUp}>
-              <p className="font-mono text-[#006685] font-extrabold tracking-widest uppercase mb-3 text-xs md:text-sm flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                Actualités de l'écosystème
-              </p>
-              <h2 className="headline text-4xl md:text-5xl !normal-case text-slate-950 font-black tracking-tight">
-                {content.caNewsTitle}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14 gap-6">
+            <motion.div {...fadeInUp} className="max-w-3xl">
+              <span className="font-mono text-[#fbd800] text-xs uppercase tracking-widest font-extrabold bg-[#fbd800]/10 px-4 py-1.5 rounded-full border border-[#fbd800]/30 inline-flex items-center gap-2 mb-4 shadow-sm">
+                <Megaphone size={14} className="text-[#fbd800]" />
+                {content.memberNewsEyebrow || "RUBRIQUE PERMANENTE // VIE DU RÉSEAU"}
+              </span>
+              <h2 className="headline text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase leading-[1.1]">
+                {content.memberNewsTitle || "Actualités des adhérents"}
               </h2>
+              <p className="text-slate-300 font-light mt-4 text-base md:text-lg leading-relaxed">
+                {content.memberNewsIntro || "Événements, projets et recrutements : le pouls des initiatives de nos membres en Bourgogne-Franche-Comté."}
+              </p>
             </motion.div>
 
-            {/* Ecosystem Live Badge Header */}
+            {/* Live Indicator Badge */}
             <motion.div 
-              {...anim({ rotate: -2, scale: 0.95 }, { rotate: 0, scale: 1 }, undefined, 'whileInView')}
-              viewport={{ once: true }}
-              className="hidden md:flex items-center justify-center w-12 h-12 bg-white rounded-2xl shadow-md border border-slate-200/80 text-[#006685]"
+              {...fadeInUp}
+              className="bg-slate-900/90 border border-slate-700/80 px-4.5 py-2.5 rounded-2xl flex items-center gap-3 backdrop-blur-md shadow-lg shrink-0"
             >
-              <Megaphone size={22} className="stroke-[2.5]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span className="font-mono text-xs text-slate-300 font-bold uppercase tracking-wider">
+                Réseau Actif • BFC Tech
+              </span>
             </motion.div>
           </div>
-          
-          {/* Main Visual Showcase Grid */}
-          <div className="space-y-10 max-w-5xl mx-auto">
-            {activeEdition.editionNumber === 1 ? (
-              <>
-                {/* 1. RELAIS INFO // VOL. 03 (Dark Navy Card with 2-Column Layout) */}
-                <motion.div 
-                  {...fadeInUp}
-                  className="bg-[#0c1427] rounded-[2.5rem] border border-slate-800 p-8 md:p-12 text-white shadow-2xl relative overflow-hidden flex flex-col justify-between"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
-                    {/* Left Column: Icon + Tag + Title */}
-                    <div className="md:col-span-5 space-y-5">
-                      <div className="w-14 h-14 rounded-2xl bg-slate-900/90 border border-slate-800 text-[#fbd800] flex items-center justify-center shrink-0 shadow-inner">
-                        <Megaphone size={26} className="stroke-[2]" />
-                      </div>
-                      <div>
-                        <span className="font-mono text-xs font-black text-[#fbd800] tracking-widest uppercase block mb-3">
-                          RELAIS INFO // VOL. 03
-                        </span>
-                        <h3 className="text-2xl md:text-3xl font-display font-black text-white tracking-tight leading-snug">
-                          Nouvelle Dynamique de Communication : Des outils repensés pour vous connecter
-                        </h3>
-                      </div>
-                    </div>
 
-                    {/* Right Column: Narrative Body Paragraphs */}
-                    <div className="md:col-span-7 space-y-5 text-slate-300 font-normal text-sm md:text-base leading-relaxed pt-1 md:pt-0">
-                      <p>
-                        Afin de fluidifier nos échanges, nous concentrons nos efforts là où notre écosystème est le plus actif : notre page LinkedIn officielle pour la visibilité externe.
-                      </p>
-                      <p>
-                        En parallèle, préparez-vous pour le lancement officiel de notre nouveau Blog destiné à relayer la richesse des témoignages et expertises de haut vol de nos membres.
-                      </p>
-                    </div>
-                  </div>
+          {/* Submission Channel Callout Box */}
+          <motion.div 
+            {...fadeInUp}
+            className="mb-14 bg-gradient-to-r from-slate-900 via-[#0f172a] to-slate-900 border-2 border-[#fbd800]/40 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#fbd800]/15 border border-[#fbd800]/40 flex items-center justify-center text-[#fbd800] shrink-0 mt-0.5">
+                <Mail size={22} className="stroke-[2.5]" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-mono text-[10px] text-[#fbd800] font-black uppercase tracking-widest bg-[#fbd800]/10 px-2.5 py-0.5 rounded border border-[#fbd800]/20">
+                    CANAL OFFICIEL DE SOUMISSION
+                  </span>
+                  <span className="text-xs text-slate-400 font-mono">
+                    Permanent • Ouvert à tous les membres
+                  </span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-display font-black text-white tracking-tight">
+                  Vous avez une actualité à relayer ? Faites entendre votre voix !
+                </h3>
+                <p className="text-slate-300 text-xs md:text-sm font-normal max-w-2xl leading-relaxed">
+                  Événements, projets majeurs, recrutements ou récompenses : transmettez vos informations à la commission éditoriale via <span className="text-[#fbd800] font-mono font-bold">{content.memberNewsSubmissionEmail || 'actu@siliconcomte.fr'}</span> pour être publié dans la prochaine édition.
+                </p>
+              </div>
+            </div>
 
-                  {/* Card Footer Divider & Link */}
-                  <div className="border-t border-slate-800/80 pt-6 mt-10 flex items-center justify-between">
-                    <a 
-                      href="https://www.linkedin.com/company/silicon-comte/" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="font-mono text-xs font-black tracking-widest text-[#fbd800] uppercase hover:underline flex items-center gap-2"
-                    >
-                      PAGE LINKEDIN OFFICIELLE
-                    </a>
-                    <Check size={18} className="text-[#fbd800]" />
-                  </div>
-                </motion.div>
-
-                {/* 2. PROJET MAJEUR // VOL. 01 (White Card with 2-Column Layout) */}
-                <motion.div 
-                  {...fadeInUp}
-                  className="bg-white rounded-[2.5rem] border border-slate-200/90 p-8 md:p-12 text-slate-900 shadow-xl relative overflow-hidden flex flex-col justify-between"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
-                    {/* Left Column: Icon + Tag + Title */}
-                    <div className="md:col-span-5 space-y-5">
-                      <div className="w-14 h-14 rounded-2xl bg-cyan-50 border border-cyan-100 text-[#006685] flex items-center justify-center shrink-0 shadow-xs">
-                        <Database size={26} className="stroke-[2]" />
-                      </div>
-                      <div>
-                        <span className="font-mono text-xs font-black text-[#006685] tracking-widest uppercase block mb-3">
-                          PROJET MAJEUR // VOL. 01
-                        </span>
-                        <h3 className="text-2xl md:text-3xl font-display font-black text-slate-950 tracking-tight leading-snug">
-                          Annuaire des Compétences : Le nouveau cœur battant de notre écosystème
-                        </h3>
-                      </div>
-                    </div>
-
-                    {/* Right Column: Narrative Body Paragraphs */}
-                    <div className="md:col-span-7 space-y-5 text-[#1e293b] font-normal text-sm md:text-base leading-relaxed pt-1 md:pt-0">
-                      <p className="text-[#1e293b] font-normal leading-relaxed">
-                        Identifié comme <strong className="font-bold text-slate-950">l'outil prioritaire pour fédérer notre communauté</strong>, notre Annuaire des Compétences fait peau neuve pour devenir un véritable observatoire du numérique local. Ouvert à tous les acteurs du numérique de la région — qu'il s'agisse d'entreprises, d'indépendants ou d'étudiants —, ce projet incarne parfaitement le moteur de nos actions : "se connaître pour se faire connaître".
-                      </p>
-                      <p className="text-[#1e293b] font-normal leading-relaxed">
-                        Pour garantir une plateforme moderne, <strong className="font-bold text-slate-950">sa création et sa gestion sont désormais automatisées</strong>. Afin d'offrir une clarté maximale et d'aller droit à l'essentiel, nous avons fait le choix qualitatif d'imposer une limite stricte de <strong className="font-bold text-slate-950">deux compétences phares par profil</strong>. Fini les listes interminables, place à l'expertise ciblée !
-                      </p>
-                      <p className="text-[#1e293b] font-normal leading-relaxed">
-                        De plus, la fiabilité des données est notre priorité : nous avons instauré une modération avec validation régulière, couplée à une <strong className="font-bold text-slate-950">vérification API via le numéro SIRET</strong> pour certifier un ancrage réel et sérieux en Franche-Comté.
-                      </p>
-                      <p className="text-[#1e293b] font-normal leading-relaxed">
-                        Au-delà d'un simple répertoire, cet annuaire est une mine d'or pour comprendre notre territoire. Il nous permettra de faire du <em className="italic font-semibold text-slate-950">data storytelling</em>, en transformant les données collectées en infographies visuelles pour illustrer les grandes tendances.
-                      </p>
-                      <p className="text-[#1e293b] font-normal leading-relaxed">
-                        Enfin, bien que l'outil soit ouvert aux non-adhérents, <strong className="font-bold text-slate-950">nos membres bénéficient d'avantages exclusifs</strong> : l'ajout d'un "badge adhérent" sur leur profil et, surtout, l'intégration d'un <em className="italic font-semibold text-slate-950">backlink</em> pointant vers leur site, un atout précieux pour booster leur propre référencement en ligne.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Card Footer Divider & Link */}
-                  <div className="border-t border-slate-100 pt-6 mt-10 flex items-center justify-between">
-                    <span className="font-mono text-xs font-black tracking-widest text-[#006685] uppercase">
-                      VÉRIFIÉ SIRET API
-                    </span>
-                    <Check size={18} className="text-[#006685]" />
-                  </div>
-                </motion.div>
-              </>
-            ) : (
-              /* Hero Feature Card for other editions */
-              <motion.div 
-                {...fadeInUp}
-                className="bg-slate-950 rounded-[2.5rem] border border-slate-800 shadow-2xl overflow-hidden text-white grid grid-cols-1 lg:grid-cols-12 gap-0 group"
+            <div className="flex items-center gap-3 w-full md:w-auto shrink-0 flex-wrap sm:flex-nowrap">
+              <a 
+                href={`mailto:${content.memberNewsSubmissionEmail || 'actu@siliconcomte.fr'}?subject=Actualit%C3%A9%20Adh%C3%A9rent%20-%20Newsletter%20Silicon%20Comt%C3%A9`}
+                className="flex-1 sm:flex-none px-5 py-3 rounded-xl bg-[#fbd800] text-slate-950 font-black font-mono text-xs uppercase tracking-wider hover:bg-white active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 whitespace-nowrap"
               >
-                {/* Left Column: Official Silicon Comté Regional Showcase */}
-                <div className="lg:col-span-5 relative min-h-[340px] lg:min-h-[460px] overflow-hidden bg-slate-900 flex flex-col justify-between p-6 md:p-8">
-                  <img 
-                    src={annuaireCleanNetwork} 
-                    alt="Écosystème Numérique Silicon Comté Franche-Comté" 
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-950/20 z-10"></div>
-                  
-                  <div className="relative z-20 flex justify-between items-center gap-2">
-                    <div className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-lg flex items-center gap-2">
-                      <img src={logoSiliconComte} alt="Silicon Comté" className="h-5 w-auto object-contain" />
-                      <span className="text-[#006685] text-[10px] font-mono font-black uppercase tracking-wider border-l border-slate-200 pl-2">
-                        BFC RÉSEAU
-                      </span>
-                    </div>
-                    <span className="px-3 py-1.5 bg-highlighter text-slate-950 font-mono font-black text-[10px] uppercase rounded-full shadow-md flex items-center gap-1.5">
-                      ⚡ IA PROPULSÉ
+                <Mail size={15} />
+                {content.memberNewsSubmissionEmail || 'actu@siliconcomte.fr'}
+              </a>
+              <button 
+                onClick={copySubmissionEmail}
+                type="button"
+                className="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                title="Copier l'adresse email"
+              >
+                {copiedEmail ? (
+                  <>
+                    <Check size={14} className="text-emerald-400" />
+                    <span className="text-emerald-400">Copié !</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Copier</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Member News Cards Grid (2-Column Balanced Layout) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {(content.memberNewsItems || defaultMemberNews.memberNewsItems).map((item, idx, arr) => (
+              <motion.div
+                key={item.id || idx}
+                {...fadeInUp}
+                className={`bg-slate-900/90 border border-slate-800 hover:border-slate-700/80 rounded-3xl p-7 md:p-8 flex flex-col justify-between shadow-xl transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden ${idx === arr.length - 1 ? 'md:col-span-2' : ''}`}
+              >
+                {/* Accent top line */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent group-hover:via-[#fbd800] transition-all"></div>
+
+                <div>
+                  {/* Card Header: Tag & Company */}
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <span className={`font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md ${item.tagColor || 'bg-slate-800 text-slate-300'}`}>
+                      {item.tag}
                     </span>
+                    {item.badge && (
+                      <span className="font-mono text-[9.5px] font-bold text-slate-400 uppercase tracking-widest bg-slate-950 px-2.5 py-0.5 rounded border border-slate-800">
+                        {item.badge}
+                      </span>
+                    )}
                   </div>
 
-                  <div className="relative z-20 my-auto py-4">
-                    <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-2">
-                      <p className="text-xs font-semibold text-slate-200 leading-snug">
-                        « Favoriser le développement d'un écosystème numérique en Franche-Comté »
-                      </p>
-                      <p className="text-[11px] font-mono text-highlighter font-bold italic">
-                        Apprenons à nous connaître pour mieux nous valoriser !
-                      </p>
-                    </div>
+                  {/* Company & Date kicker */}
+                  <div className="mb-3">
+                    <span className="font-mono text-xs font-bold text-[#fbd800] uppercase tracking-wider block">
+                      {item.company}
+                    </span>
+                    {item.dateOrSubtitle && (
+                      <span className="text-[11px] text-slate-400 font-mono block mt-0.5">
+                        {item.dateOrSubtitle}
+                      </span>
+                    )}
                   </div>
 
-                  <div className="relative z-20">
-                    <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-3">
-                      <div className="flex items-center gap-2.5 bg-slate-950/90 border border-slate-800 rounded-xl px-3.5 py-2 text-slate-400 text-xs font-mono">
-                        <Search size={14} className="text-highlighter shrink-0" />
-                        <span className="text-slate-300 font-sans text-xs truncate">Trouver un expert, agence, startup...</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {['IA & Data', 'Dev Software', 'Cyber', 'UX & Design', 'SEO'].map((tag, i) => (
-                          <span key={i} className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 border border-slate-700/90 font-medium">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  {/* News Title */}
+                  <h3 className="text-xl font-display font-black text-white tracking-tight leading-snug mb-4 group-hover:text-[#fbd800] transition-colors">
+                    {item.title}
+                  </h3>
+
+                  {/* News Narrative with preserved whitespace */}
+                  <p className="text-slate-300 font-normal text-xs md:text-sm leading-relaxed mb-6 whitespace-pre-line">
+                    {item.content}
+                  </p>
                 </div>
 
-                {/* Right Column: Narrative Content */}
-                <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-between bg-slate-950 relative z-20">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="font-mono text-[11px] text-highlighter font-extrabold uppercase tracking-widest bg-highlighter/10 px-3 py-1 rounded-full border border-highlighter/20">
-                        INFO CA // ÉDITION #{activeEdition.editionNumber}
-                      </span>
-                    </div>
-
-                    <h3 className="text-3xl md:text-4xl font-display font-black text-white tracking-tight uppercase mb-6 leading-tight">
-                      Vie de l'association & <br />
-                      <span className="text-highlighter">Annuaire des Compétences</span>
-                    </h3>
-
-                    <p className="text-slate-300 font-light text-base md:text-lg leading-relaxed mb-8">
-                      {content.caNewsIntro}
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 pt-6 border-t border-slate-850">
-                      <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
-                        <span className="text-highlighter font-black font-display text-base md:text-lg block uppercase tracking-tight">Nombreux</span>
-                        <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Acteurs Référencés</span>
-                      </div>
-                      <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
-                        <span className="text-emerald-400 font-black font-display text-xl block">SEO +</span>
-                        <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Backlinks Web</span>
-                      </div>
-                      <div className="bg-slate-900/80 border border-slate-800 p-3.5 rounded-2xl text-center">
-                        <span className="text-cyan-400 font-black font-display text-xl block">100% IA</span>
-                        <span className="text-[11px] text-slate-400 uppercase font-mono font-bold block mt-0.5">Fiches Auto</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-850">
-                    <span className="text-xs text-slate-400 font-mono flex items-center gap-2">
-                      <CheckCircle2 size={14} className="text-emerald-400" />
-                      Propulsé par le réseau Silicon Comté
-                    </span>
-                    <a 
-                      href="https://siliconcomte.fr/annuaire-ecosysteme-silicon-comte" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto px-6 py-3 bg-highlighter text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg"
+                {/* Card Footer Actions */}
+                <div className="pt-5 border-t border-slate-800/80 space-y-3">
+                  {item.internalLink && (
+                    <a
+                      href={item.internalLink}
+                      onClick={item.internalLink === '#focus-adherent' ? scrollToInterview : undefined}
+                      className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#fbd800] hover:text-white transition-colors uppercase tracking-wider block"
                     >
-                      Explorer l'Annuaire <ArrowUpRight size={16} />
+                      <span>{item.internalLinkLabel || "Voir l'entretien complet ci-après →"}</span>
+                      <ArrowRight size={13} />
                     </a>
+                  )}
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    {item.secondaryLink && (
+                      <a
+                        href={item.secondaryLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono font-bold text-sky-300 border border-sky-400/30 transition-all shadow-sm"
+                      >
+                        <span>{item.secondaryLinkLabel || "Voir la vidéo 3D"}</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    )}
+
+                    {item.link && (
+                      <a
+                        href={item.link}
+                        target={item.link.startsWith('mailto:') ? '_self' : '_blank'}
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                          item.link.includes('lnkd.in') || item.link.includes('linkedin') || item.link.includes('eventbrite')
+                            ? 'bg-[#fbd800] text-slate-950 hover:bg-white shadow-md'
+                            : 'bg-slate-800/90 text-slate-200 hover:text-white border border-slate-700 hover:border-slate-600'
+                        }`}
+                      >
+                        <span>{item.linkLabel || "En savoir plus"}</span>
+                        {item.link.includes('linkedin') ? (
+                          <Linkedin size={12} />
+                        ) : item.link.startsWith('mailto:') ? (
+                          <Mail size={12} />
+                        ) : (
+                          <ExternalLink size={12} />
+                        )}
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>
-            )}
+            ))}
           </div>
-          
+
         </div>
       </section>
 
@@ -2440,234 +3049,363 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
       </section>
       </div>
 
-      {/* 5. SECTION 4: VALORISER L'ADHÉSION (MEMBERSHIP AND PHYSICAL BADGE DECK - CHAPTER 4) */}
-      <section className="py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto border-b border-slate-200/60">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
-          
-          {/* Left Side: Text description with custom number layouts */}
-          <div className="lg:col-span-7">
-            <motion.div {...fadeInUp}>
-              <p className="font-mono text-slate-400 text-xs tracking-widest font-extrabold uppercase mb-4">
-                // CRÉATEURS DE VALEUR // 
-              </p>
-              <h2 className="headline text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 mb-3 tracking-tight uppercase leading-none">
-                Pourquoi nous rejoindre&nbsp;?
+
+
+      {/* SECTION 5: MICRO-INTERVIEW WITH GUEST (CHAPTER 5) */}
+      {content.interviewEyebrow ? (
+        <section id="focus-adherent" className="py-24 md:py-36 bg-[#0B0F19] text-white relative z-10 border-b-8 border-highlighter overflow-hidden">
+          {/* Subtle ambient lighting */}
+          {!isGenerating && (
+            <>
+              <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-highlighter/10 rounded-full blur-[140px] pointer-events-none"></div>
+              <div className="absolute bottom-0 left-10 w-[500px] h-[500px] bg-[#006685]/15 rounded-full blur-[130px] pointer-events-none"></div>
+            </>
+          )}
+
+          <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            
+            {/* 1. SECTION HEADER */}
+            <motion.div {...fadeInUp} className="mb-12">
+              <span className="font-mono text-highlighter text-xs uppercase tracking-widest font-extrabold bg-highlighter/10 px-4.5 py-1.5 rounded-full border border-highlighter/30 inline-block mb-4 shadow-sm">
+                {content.interviewEyebrow}
+              </span>
+              <h2 className="headline text-3xl md:text-5xl lg:text-6xl font-black max-w-5xl tracking-tight leading-[1.1] uppercase text-white">
+                Quarks fête ses 10 ans&nbsp;:<br />
+                <span className={`${isGenerating ? 'text-highlighter' : 'text-transparent bg-clip-text bg-gradient-to-r from-highlighter via-yellow-400 to-amber-400'}`}>
+                  De l'artisanat logiciel au SaaS mondial
+                </span>
+                <span className="block text-xl md:text-2xl lg:text-3xl font-display font-medium text-slate-300 mt-2 normal-case tracking-normal">
+                  Cultiver la « compliance by design » depuis Besançon
+                </span>
               </h2>
-              <p className="text-lg md:text-xl font-light text-slate-550 mb-12 max-w-xl">
-                Bénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation et votre croissance régionale.
+              <p className="text-slate-400 font-light mt-4 text-base max-w-3xl leading-relaxed">
+                {content.interviewSubtitle}
               </p>
             </motion.div>
 
-            <div className="space-y-8">
-              {[ 
-                { num: '01', title: 'Badge Adhérent exclusif', desc: 'Sceau numérique officiel de labellisation à intégrer sur votre site et vos communications pour affirmer votre ancrage.' },
-                { num: '02', title: 'Référencement (backlinks) dans l\'annuaire', desc: 'Boostez votre SEO technique grâce à un lien web certifié provenant du site officiel Silicon Comté, indexé pour rassurer vos prospects.' },
-                { num: '03', title: 'Accueillir un Digital Apéro', desc: 'Une occasion unique de recevoir l\'ensemble de l\'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.' },
-                { num: '04', title: 'Pot de Rentrée réservé', desc: 'Accès exclusif et privé à nos grands rassemblements informels de networking de début de saison pour nouer des liens solides.' },
-                { num: '05', title: 'Interview & Visibilité Exclusive', desc: 'Mettez en avant votre expertise, votre parcours et votre entreprise grâce à un entretien dédié, à l\'image de celui ci-après, publié dans de futures newsletters.' }
-              ].map((item, i) => (
+            {/* 2. CALLOUT QUOTE BANNER */}
+            <motion.div 
+              {...fadeInUp}
+              className="bg-slate-900/80 border-l-4 border-highlighter border-t border-r border-b border-slate-800 rounded-3xl p-8 md:p-10 shadow-2xl mb-16 relative overflow-hidden"
+            >
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
+                <div className="space-y-3">
+                  <span className="font-serif text-5xl md:text-6xl text-highlighter/60 leading-none block -mb-4">“</span>
+                  <p className="font-serif italic text-lg md:text-2xl text-slate-100 font-normal leading-relaxed">
+                    « Il est tout à fait possible d’éditer du logiciel de pointe et de rayonner à l’international depuis Besançon. Mais pour réussir, il ne faut surtout pas rester seul : il faut être entouré et faire corps avec son écosystème. »
+                  </p>
+                  <p className="font-mono text-xs md:text-sm text-highlighter font-bold uppercase tracking-wider pt-2 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-highlighter"></span>
+                    — Xavier Labourier, cofondateur de Quarks
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* TWO-COLUMN GRID: IDENTITY BADGE + Q&A BLOCKS */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+              
+              {/* Left Column: Adherent Identity Badge Card */}
+              <div className="lg:col-span-4 lg:sticky lg:top-28">
                 <motion.div 
-                  key={i} 
-                  {...fadeInUp} 
-                  className="flex gap-6 items-start group relative"
+                  {...fadeInUp}
+                  className="bg-slate-900/90 border border-slate-800 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden space-y-6"
                 >
-                  <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-display text-lg font-black bg-highlighter text-slate-950 group-hover:scale-110 group-hover:bg-[#006685] group-hover:text-white transition-all duration-300 shadow-[0_6px_20px_rgba(251,216,0,0.35)]">
-                    {item.num}
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-extrabold font-sans text-slate-950 mb-1 group-hover:text-[#006685] transition-colors">
-                      {item.title}
-                    </h4>
-                    <p className="text-slate-600 font-light text-[15px] leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Right Side: Virtual Holo Badge with 3D feel & interactive reflection */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end w-full perspective-2000">
-             <motion.div 
-               {...anim({ opacity: 0, rotateY: 30, z: -100 }, { opacity: 1, rotateY: 10, z: 0 }, { duration: 1, ease: [0.16, 1, 0.3, 1] }, 'whileInView')}
-               viewport={{ once: true }}
-               whileHover={isGenerating ? undefined : { rotateY: -3, rotateX: 5, scale: 1.02 }}
-               className="relative w-full max-w-[390px] aspect-[1/1.3] bg-white rounded-[2.5rem] shadow-[0_40px_90px_rgba(10,30,50,0.15)] border border-slate-100 flex flex-col overflow-hidden transform cursor-pointer transition-all duration-700"
-             >
-                {/* Lanyard Clip Hole */}
-                <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-150 rounded-b-2xl shadow-inner z-20 flex justify-center items-center ${isGenerating ? '' : 'backdrop-blur-md'} border border-slate-200 border-t-0`}>
-                  <div className="w-12 h-2.5 rounded-full bg-slate-300 shadow-inner"></div>
-                </div>
-                
-                {/* Gradient Holo Top Ribbon */}
-                <div className="h-28 w-full bg-gradient-to-r from-highlighter via-yellow-400 to-[#e5c500] shrink-0 z-10 flex items-center justify-center pt-5 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20 bg-cover mix-blend-overlay" style={{ backgroundImage: `url(${illustrationHome})` }}></div>
-                  <span className={`h-8 inline-flex items-center justify-center font-display font-extrabold uppercase tracking-widest text-[#006685] text-[11px] relative z-10 ${isGenerating ? 'bg-white' : 'bg-white/40 backdrop-blur-md'} px-5 rounded-full border border-white/40 leading-none`}>
-                    Sceau Adhérent 2026/2027
-                  </span>
-                </div>
-                
-                {/* Badge Main Body */}
-                <div className="flex-1 p-8 text-center flex flex-col justify-between relative bg-gradient-to-b from-white to-slate-50/50">
-                   {/* Logo vector embedded subtle */}
-                   <div className="absolute inset-x-8 inset-y-16 opacity-[0.035] bg-center bg-no-repeat bg-contain pointer-events-none" style={{ backgroundImage: `url(${logoSiliconComte})` }}></div>
-                   
-                   <div className="pt-4">
-                     <h3 className="text-3xl font-display font-black text-slate-950 tracking-tight leading-none uppercase">
-                       SILICON COMTÉ
-                     </h3>
-                     <p className="font-mono text-[9px] text-[#006685] tracking-widest uppercase mt-2 font-bold">
-                       MEMBRE ACTIF CONNECTÉ BFC
-                     </p>
-                     
-                     <div className="w-16 h-1.5 bg-[#006685] mx-auto mt-6 rounded-full shadow-[0_2px_10px_rgba(0,102,133,0.2)]"></div>
-                   </div>
-                   
-                   {/* Barcode / Certification zone */}
-                   <div className="bg-slate-900 text-white rounded-2xl p-4.5 border border-slate-800 shadow-md text-center max-w-[280px] mx-auto">
-                     <p className="font-mono text-slate-500 text-[8px] uppercase tracking-widest mb-1.5">
-                       Identifiant National Unique
-                     </p>
-                     <p className="font-mono font-bold text-highlighter text-sm tracking-widest">
-                       #SC-2026-BFC-759X
-                     </p>
-                   </div>
-                   
-                   {/* Status zone footer inside ID badge */}
-                   <div className="flex justify-between items-center mt-4">
-                     <div className="h-7 inline-flex flex-col justify-center font-mono text-[9px] uppercase tracking-widest text-emerald-600 font-bold bg-emerald-50 px-3 rounded-full border border-emerald-100 shadow-sm leading-none">
-                       <span className="flex items-center gap-1.5">
-                         <CheckCircle2 size={11} className="text-emerald-500 shrink-0" />
-                         VÉLOX STATUS: ACTIVE
-                       </span>
-                     </div>
-                     <img 
-                       src={logoSiliconComte} 
-                       alt="Certification" 
-                       className="w-[70px] opacity-25 filter grayscale contrast-125" 
-                     />
-                   </div>
-                </div>
-             </motion.div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* SECTION 5: MICRO-INTERVIEW WITH GUEST (CHAPTER 5) */}
-      <section className="py-24 md:py-32 bg-white relative z-10 border-b border-slate-200/60 overflow-hidden">
-        {/* Decorative Grid or Abstract Background Accents */}
-        <div className="absolute inset-0 opacity-[0.015] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none"></div>
-        {!isGenerating && <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#006685]/5 rounded-full blur-[100px] pointer-events-none"></div>}
-
-        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-            
-            {/* Left Column: Premium Speaker Profile Card */}
-            <div className="lg:col-span-4 lg:sticky lg:top-28 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <motion.div {...fadeInUp} className="w-full">
-                
-                {/* Visual Section Badge */}
-                <span className="h-8 inline-flex items-center justify-center font-mono text-highlighter text-xs uppercase tracking-widest font-extrabold bg-slate-900 px-4.5 rounded-full border border-slate-800 shadow-md mb-6 leading-none">
-                  // ENTRETIEN EXCLUSIF
-                </span>
-                
-                <h2 className="headline text-4xl md:text-5xl text-slate-950 font-black tracking-tight uppercase mb-6 leading-none">
-                  {content.interviewTitle.split(':')[0]}<br />
-                  <span className={`${isGenerating ? 'text-[#006685]' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#006685] to-cyan-600'} font-extrabold`}>
-                    {content.interviewTitle.split(':')[1] || "L'Entretien"}
-                  </span>
-                </h2>
-
-                <p className="text-slate-600 font-normal text-sm leading-relaxed mb-6 bg-cyan-50/80 border border-cyan-100 p-4 rounded-2xl text-left">
-                  {content.interviewSubtitle}
-                </p>
-
-                {/* Profile Widget Card */}
-                <div className="bg-slate-50/40 border border-slate-200/60 rounded-[2.5rem] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col items-center lg:items-start text-center lg:text-left w-full">
-                  <div className="relative group mb-6">
-                    {!isGenerating && <div className="absolute -inset-1.5 bg-gradient-to-r from-highlighter to-[#006685] rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition duration-500"></div>}
-                    
-                    {/* Stylish Portrait Image Block */}
-                    <img 
-                      src={content.guestImage} 
-                      alt={content.guestName} 
-                      className="w-32 h-32 md:w-36 md:h-36 rounded-2xl object-cover shadow-md relative z-10 border-4 border-white select-none"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-
-                  <h3 className="font-display font-black text-2xl text-slate-950 uppercase tracking-tight">{content.guestName}</h3>
-                  
-                  <div className="flex flex-wrap gap-2 mt-3 justify-center lg:justify-start">
-                    <span className="h-6 inline-flex items-center justify-center text-[#006685] font-mono text-[10px] uppercase tracking-wider font-bold px-2.5 bg-white border border-slate-200/50 rounded-full shadow-sm leading-none">
-                      {content.guestRoleTag}
-                    </span>
-                  </div>
-
-                  <div className="mt-6 border-t border-slate-200/60 pt-6 w-full text-center lg:text-left">
-                    <p className="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold mb-2">Entité professionnelle</p>
-                    <p className="font-display font-extrabold text-slate-900 text-lg uppercase tracking-tight">{content.guestCompany}</p>
-                    <p className="text-slate-500 text-sm font-light mt-1.5 leading-relaxed">
-                      {content.guestBio}
-                    </p>
-                  </div>
-
-                  {/* Quoted highlight block */}
-                  <div className="mt-8 bg-slate-950 text-white rounded-2xl p-5 border border-slate-800 relative z-10 w-full text-left">
-                    <span className="absolute -top-3 left-4 text-4xl font-display font-black text-highlighter leading-none">“</span>
-                    <p className="font-sans font-medium text-slate-200 text-xs leading-relaxed italic pt-1 text-center lg:text-left">
-                      {content.guestQuote}
-                    </p>
-                  </div>
-                </div>
-
-              </motion.div>
-            </div>
-
-            {/* Right Column: Q&A Thread Container */}
-            <div className="lg:col-span-8 flex flex-col gap-10 md:gap-14">
-              {content.qas.map((qa, idx) => (
-                <motion.div key={idx} {...fadeInUp} className="flex flex-col gap-5 border-b border-slate-100 pb-10 last:border-b-0">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#006685]/10 shrink-0 flex items-center justify-center border border-[#006685]/20 mt-1">
-                      <MessageSquare size={18} className="text-[#006685]" />
+                  {/* Top Seal & Logo */}
+                  <div className="flex flex-col gap-4 border-b border-slate-800 pb-6">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="px-3 py-1 bg-highlighter/10 border border-highlighter/30 text-highlighter font-mono text-[10px] font-black uppercase rounded-full tracking-wider flex items-center gap-1.5">
+                        <Star size={12} className="fill-highlighter" />
+                        MEMBRE PIONNIER • 10 ANS
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+                        SILICON COMTÉ
+                      </span>
                     </div>
+
+                    {/* Quarks Logo Display */}
+                    <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex items-center justify-center">
+                      <img 
+                        src={quarksLogoSvg} 
+                        alt="Logo Quarks Safety" 
+                        className="h-10 md:h-12 w-auto object-contain" 
+                      />
+                    </div>
+                  </div>
+
+                  {/* Photo / Portrait Card for Xavier Labourier */}
+                  <div className="bg-slate-950/80 border-2 border-highlighter/40 rounded-2xl p-5 text-center relative group">
+                    {content.guestImage && content.guestImage !== quarksLogoSvg ? (
+                      <div className="relative mx-auto w-24 h-24 md:w-28 md:h-28 mb-3">
+                        <img 
+                          src={content.guestImage} 
+                          alt="Xavier Labourier" 
+                          className="w-full h-full rounded-2xl object-cover border-2 border-highlighter shadow-lg"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border-2 border-dashed border-highlighter/60 mx-auto flex flex-col items-center justify-center mb-3 shadow-inner relative group-hover:border-highlighter transition-colors">
+                        <User size={30} className="text-highlighter/90 mb-1" />
+                        <span className="font-mono text-xs font-black text-white tracking-widest">XL</span>
+                      </div>
+                    )}
+                    <div className="font-display font-black text-base text-white uppercase tracking-tight">
+                      Xavier Labourier
+                    </div>
+                    <div className="text-xs text-highlighter font-mono font-bold mt-0.5">
+                      Cofondateur &amp; Dirigeant
+                    </div>
+                    {(!content.guestImage || content.guestImage === quarksLogoSvg) && (
+                      <div className="text-[10px] text-slate-400 font-mono uppercase tracking-wider mt-2.5 bg-slate-900/90 py-1 px-3 rounded-full border border-slate-800 inline-flex items-center gap-1.5 shadow-sm">
+                        <Camera size={11} className="text-highlighter" />
+                        <span>Portrait officiel à paraître</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Details Card */}
+                  <div className="space-y-4 text-xs font-sans">
                     <div>
-                      <h4 className="text-lg md:text-xl font-display font-extrabold text-slate-950 leading-snug">
-                        {qa.question}
-                      </h4>
+                      <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Organisation</p>
+                      <p className="font-display font-black text-white text-base">Quarks (Quarks Safety, Quarks Group)</p>
+                      <p className="text-highlighter font-mono text-xs font-semibold">10 ans d'expertise SaaS (Besançon)</p>
+                    </div>
+
+                    <div className="border-t border-slate-800/80 pt-3">
+                      <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Fondateurs &amp; Dirigeants</p>
+                      <p className="text-slate-200 font-medium">{content.guestFounders}</p>
+                    </div>
+
+                    <div className="border-t border-slate-800/80 pt-3">
+                      <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Métier</p>
+                      <p className="text-slate-300 leading-relaxed">
+                        {content.guestMetier}
+                      </p>
                     </div>
                   </div>
-                  
-                  <div className="lg:pl-14 text-slate-700 leading-relaxed text-base md:text-[17px] whitespace-pre-line space-y-3">
-                    {(() => {
-                      const match = qa.answer.match(/^([^:]+:\s*)([\s\S]*)$/);
-                      if (match) {
-                        const speakerName = match[1].replace(' :', '').replace(':', '').trim();
-                        return (
-                          <p className="leading-relaxed">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 mr-2.5 mb-1.5 md:mb-0 rounded-xl bg-[#006685]/10 border border-[#006685]/20 text-[#006685] font-extrabold text-xs uppercase tracking-wider shadow-sm select-none align-middle">
-                              <User size={13} className="text-[#006685] shrink-0" />
-                              {speakerName} :
-                            </span>
-                            <span className="text-slate-800 font-normal">{match[2]}</span>
-                          </p>
-                        );
-                      }
-                      return <p className="text-slate-800 font-normal">{qa.answer}</p>;
-                    })()}
+
+                  {/* Key Metrics Grid */}
+                  <div className="border-t border-slate-800/80 pt-4">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-highlighter font-bold mb-3 flex items-center gap-1.5">
+                      <Layers size={13} className="text-highlighter" />
+                      Chiffres Clés Deep-Tech
+                    </p>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {content.guestMetrics?.map((m, idx) => (
+                        <div key={idx} className="bg-slate-950/70 p-3 rounded-xl border border-slate-800 text-center">
+                          <span className="font-display font-black text-highlighter text-base block">{m.value}</span>
+                          <span className="font-mono text-[9px] text-slate-400 uppercase tracking-wider block mt-0.5">{m.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footprint Badge */}
+                  <div className="bg-slate-950/90 p-4 rounded-xl border border-slate-800 text-xs text-slate-300 space-y-2">
+                    <p className="flex items-center gap-2">
+                      <Globe size={14} className="text-highlighter shrink-0" />
+                      <span><strong>Déploiements autonomes :</strong> {content.guestDeployments}</span>
+                    </p>
+                    <p className="flex items-center gap-2 pt-1 border-t border-slate-800/80 text-[11px] text-slate-400">
+                      <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
+                      <span><strong>Rôle écosystème :</strong> {content.guestEcosystemRole}</span>
+                    </p>
                   </div>
                 </motion.div>
-              ))}
+              </div>
+
+              {/* Right Column: 4 Structured Q&A Blocks */}
+              <div className="lg:col-span-8 space-y-10">
+                {content.qas.map((qa, idx) => {
+                  const match = qa.answer.match(/^([^:]+:\s*)([\s\S]*)$/);
+                  const speaker = match ? match[1].trim() : 'Xavier Labourier :';
+                  const rawAnswer = match ? match[2].trim() : qa.answer.trim();
+                  const paragraphs = rawAnswer.split('\n\n').filter(Boolean);
+
+                  return (
+                    <motion.div 
+                      key={idx} 
+                      {...fadeInUp} 
+                      className="bg-slate-900/60 border border-slate-800/90 rounded-[2.5rem] p-8 md:p-10 shadow-xl space-y-6 hover:border-highlighter/40 transition-all duration-300"
+                    >
+                      {/* Eyebrow Pill */}
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="font-mono text-highlighter text-xs font-bold uppercase tracking-widest bg-highlighter/10 px-3 py-1 rounded-full border border-highlighter/20">
+                          {qa.tag || `QUESTION N°${idx + 1}`}
+                        </span>
+                        <MessageSquare size={18} className="text-highlighter/60" />
+                      </div>
+
+                      {/* Question */}
+                      <h3 className="font-display font-extrabold text-xl md:text-2xl text-white leading-snug tracking-tight">
+                        {qa.question}
+                      </h3>
+
+                      {/* Answer Box */}
+                      <div className="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-6 md:p-8 space-y-4">
+                        <div className="mb-2">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-highlighter text-slate-950 font-black font-mono text-xs uppercase tracking-wider shadow-sm">
+                            <User size={13} className="text-slate-950" />
+                            {speaker}
+                          </span>
+                        </div>
+
+                        {paragraphs.map((para, pIdx) => {
+                          if (para.includes('1. Donnez du sens') || para.includes('1.')) {
+                            const lines = para.split('\n');
+                            return (
+                              <div key={pIdx} className="space-y-3 pt-2">
+                                {lines.map((line, lIdx) => {
+                                  if (line.match(/^[1-3]\.\s/)) {
+                                    return (
+                                      <div 
+                                        key={lIdx} 
+                                        className="bg-slate-900 border-l-4 border-highlighter rounded-xl p-4 md:p-5 border border-slate-800 text-slate-200 text-sm md:text-base leading-relaxed"
+                                      >
+                                        <strong className="text-highlighter font-mono font-bold text-base mr-2">{line.substring(0, 2)}</strong>
+                                        <span>{line.substring(3)}</span>
+                                      </div>
+                                    );
+                                  }
+                                  return (
+                                    <p key={lIdx} className="text-slate-300 text-sm md:text-base leading-relaxed">
+                                      {line}
+                                    </p>
+                                  );
+                                })}
+                              </div>
+                            );
+                          }
+                          return (
+                            <p key={pIdx} className="text-slate-300 text-sm md:text-base leading-relaxed">
+                              {para}
+                            </p>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
             </div>
 
           </div>
+        </section>
+      ) : (
+        <section id="focus-adherent" className="py-24 md:py-32 bg-white relative z-10 border-b border-slate-200/60 overflow-hidden">
+          {/* Decorative Grid or Abstract Background Accents */}
+          <div className="absolute inset-0 opacity-[0.015] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none"></div>
+          {!isGenerating && <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#006685]/5 rounded-full blur-[100px] pointer-events-none"></div>}
 
-        </div>
-      </section>
+          <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+              
+              {/* Left Column: Premium Speaker Profile Card */}
+              <div className="lg:col-span-4 lg:sticky lg:top-28 flex flex-col items-center lg:items-start text-center lg:text-left">
+                <motion.div {...fadeInUp} className="w-full">
+                  
+                  {/* Visual Section Badge */}
+                  <span className="h-8 inline-flex items-center justify-center font-mono text-highlighter text-xs uppercase tracking-widest font-extrabold bg-slate-900 px-4.5 rounded-full border border-slate-800 shadow-md mb-6 leading-none">
+                    // ENTRETIEN EXCLUSIF
+                  </span>
+                  
+                  <h2 className="headline text-4xl md:text-5xl text-slate-950 font-black tracking-tight uppercase mb-6 leading-none">
+                    {content.interviewTitle.split(':')[0]}<br />
+                    <span className={`${isGenerating ? 'text-[#006685]' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#006685] to-cyan-600'} font-extrabold`}>
+                      {content.interviewTitle.split(':')[1] || "L'Entretien"}
+                    </span>
+                  </h2>
+
+                  <p className="text-slate-600 font-normal text-sm leading-relaxed mb-6 bg-cyan-50/80 border border-cyan-100 p-4 rounded-2xl text-left">
+                    {content.interviewSubtitle}
+                  </p>
+
+                  {/* Profile Widget Card */}
+                  <div className="bg-slate-50/40 border border-slate-200/60 rounded-[2.5rem] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col items-center lg:items-start text-center lg:text-left w-full">
+                    <div className="relative group mb-6">
+                      {!isGenerating && <div className="absolute -inset-1.5 bg-gradient-to-r from-highlighter to-[#006685] rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition duration-500"></div>}
+                      
+                      {/* Stylish Portrait Image Block */}
+                      <img 
+                        src={content.guestImage || ''} 
+                        alt={content.guestName} 
+                        className="w-32 h-32 md:w-36 md:h-36 rounded-2xl object-cover shadow-md relative z-10 border-4 border-white select-none"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+
+                    <h3 className="font-display font-black text-2xl text-slate-950 uppercase tracking-tight">{content.guestName}</h3>
+                    
+                    <div className="flex flex-wrap gap-2 mt-3 justify-center lg:justify-start">
+                      <span className="h-6 inline-flex items-center justify-center text-[#006685] font-mono text-[10px] uppercase tracking-wider font-bold px-2.5 bg-white border border-slate-200/50 rounded-full shadow-sm leading-none">
+                        {content.guestRoleTag}
+                      </span>
+                    </div>
+
+                    <div className="mt-6 border-t border-slate-200/60 pt-6 w-full text-center lg:text-left">
+                      <p className="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold mb-2">Entité professionnelle</p>
+                      <p className="font-display font-extrabold text-slate-900 text-lg uppercase tracking-tight">{content.guestCompany}</p>
+                      <p className="text-slate-500 text-sm font-light mt-1.5 leading-relaxed">
+                        {content.guestBio}
+                      </p>
+                    </div>
+
+                    {/* Quoted highlight block */}
+                    <div className="mt-8 bg-slate-950 text-white rounded-2xl p-5 border border-slate-800 relative z-10 w-full text-left">
+                      <span className="absolute -top-3 left-4 text-4xl font-display font-black text-highlighter leading-none">“</span>
+                      <p className="font-sans font-medium text-slate-200 text-xs leading-relaxed italic pt-1 text-center lg:text-left">
+                        {content.guestQuote}
+                      </p>
+                    </div>
+                  </div>
+
+                </motion.div>
+              </div>
+
+              {/* Right Column: Q&A Thread Container */}
+              <div className="lg:col-span-8 flex flex-col gap-10 md:gap-14">
+                {content.qas.map((qa, idx) => (
+                  <motion.div key={idx} {...fadeInUp} className="flex flex-col gap-5 border-b border-slate-100 pb-10 last:border-b-0">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-[#006685]/10 shrink-0 flex items-center justify-center border border-[#006685]/20 mt-1">
+                        <MessageSquare size={18} className="text-[#006685]" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg md:text-xl font-display font-extrabold text-slate-950 leading-snug">
+                          {qa.question}
+                        </h4>
+                      </div>
+                    </div>
+                    
+                    <div className="lg:pl-14 text-slate-700 leading-relaxed text-base md:text-[17px] whitespace-pre-line space-y-3">
+                      {(() => {
+                        const match = qa.answer.match(/^([^:]+:\s*)([\s\S]*)$/);
+                        if (match) {
+                          const speakerName = match[1].replace(' :', '').replace(':', '').trim();
+                          return (
+                            <p className="leading-relaxed">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 mr-2.5 mb-1.5 md:mb-0 rounded-xl bg-[#006685]/10 border border-[#006685]/20 text-[#006685] font-extrabold text-xs uppercase tracking-wider shadow-sm select-none align-middle">
+                                <User size={13} className="text-[#006685] shrink-0" />
+                                {speakerName} :
+                              </span>
+                              <span className="text-slate-800 font-normal">{match[2]}</span>
+                            </p>
+                          );
+                        }
+                        return <p className="text-slate-800 font-normal">{qa.answer}</p>;
+                      })()}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      )}
 
       {/* 7. SECTION 6: AGENDA DES ÉVÉNEMENTS */}
       <section id="agenda" className="py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto bg-[#fcf9f8] border-b border-slate-200/60">
@@ -2691,9 +3429,9 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                 <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6">
                   <div className="relative shrink-0">
                     <img 
-                      src={ninkasiLogoImg} 
-                      alt="Ninkasi Brasserie" 
-                      className="h-16 w-32 md:h-20 md:w-40 rounded-2xl object-contain border-2 border-highlighter shadow-xl bg-white p-2"
+                      src={activeEdition.editionNumber >= 3 ? tableDesCopainsLogo : ninkasiLogoImg} 
+                      alt={activeEdition.editionNumber >= 3 ? "La Table des Copains (ex-Ninkasi)" : "Ninkasi Brasserie"} 
+                      className={`h-16 w-32 md:h-20 md:w-44 rounded-2xl object-contain border-2 border-highlighter shadow-xl p-2 ${activeEdition.editionNumber >= 3 ? 'bg-[#141414]' : 'bg-white'}`}
                       referrerPolicy="no-referrer"
                     />
                     <span className="absolute -bottom-2 -right-2 bg-highlighter text-slate-950 p-1.5 rounded-full shadow-md">
@@ -2705,8 +3443,22 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                       <span className="px-3 py-1 bg-highlighter text-slate-950 text-xs font-mono font-black uppercase rounded-full tracking-wider">
                         🤖 LE RENDEZ-VOUS IA RÉCURRENT
                       </span>
-                      <span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-mono font-bold uppercase rounded-full border border-slate-700 flex items-center gap-1">
-                        <MapPin size={12} className="text-highlighter" /> Brasserie Ninkasi Besançon
+                      <span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-mono font-bold uppercase rounded-full border border-slate-700 flex items-center gap-1.5">
+                        <MapPin size={12} className="text-highlighter" />
+                        {activeEdition.editionNumber >= 3 ? (
+                          <a 
+                            href="https://tabledescopains.fr/" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="hover:text-highlighter transition-colors flex items-center gap-1"
+                            title="Site web : tabledescopains.fr"
+                          >
+                            La Table des Copains (ex-Ninkasi)
+                            <ExternalLink size={10} className="text-slate-400" />
+                          </a>
+                        ) : (
+                          "Brasserie Ninkasi Besançon"
+                        )}
                       </span>
                     </div>
                     <h3 className="text-2xl md:text-3xl font-extrabold text-white font-display tracking-tight">
@@ -2738,7 +3490,7 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
            {/* Horizontal Timeline Connector Bar */}
            <div className="hidden lg:block absolute top-7 left-[10%] right-[10%] h-[3px] bg-slate-200/90 z-0"></div>
            
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+           <div className={`grid grid-cols-1 md:grid-cols-2 ${content.agendaEvents.length === 3 ? 'lg:grid-cols-3 max-w-5xl mx-auto' : 'lg:grid-cols-4'} gap-8 relative z-10`}>
              {content.agendaEvents.map((ev, idx) => {
                const parts = ev.date.split(' ');
                const day = parts[0] || '';
@@ -2801,7 +3553,21 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
 
                       <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-semibold text-[#006685]">
                         <span className="flex items-center gap-1">
-                          <MapPin size={12} /> {ev.location || (activeEdition.editionNumber === 1 ? 'Besançon' : 'Ninkasi')}
+                          <MapPin size={12} />
+                          {ev.location === 'La Table des Copains' ? (
+                            <a 
+                              href="https://tabledescopains.fr/" 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="hover:underline flex items-center gap-1 text-[#006685] hover:text-slate-900 transition-colors"
+                              title="Site web : tabledescopains.fr"
+                            >
+                              La Table des Copains
+                              <ExternalLink size={10} className="opacity-70" />
+                            </a>
+                          ) : (
+                            ev.location || (activeEdition.editionNumber === 1 ? 'Besançon' : activeEdition.editionNumber >= 3 ? 'La Table des Copains' : 'Ninkasi')
+                          )}
                         </span>
                         <span className="font-mono text-slate-400">{activeEdition.editionNumber === 1 ? 'Inscriptions' : '18h30'}</span>
                       </div>
@@ -2813,7 +3579,300 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
         </div>
       </section>
 
+      {/* 6. ANNUAIRE & NOTRE COMMUNAUTÉ (RESTYLED EXECUTIVE TECH HUB BFC) */}
+      <section id="annuaire-communaute" className="py-24 md:py-32 bg-[#0B0F19] text-white relative overflow-hidden border-t-4 border-slate-800 border-b border-slate-850">
+        {!isGenerating && (
+          <>
+            <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#006685]/15 rounded-full blur-[140px] pointer-events-none"></div>
+            <div className="absolute bottom-0 left-10 w-[500px] h-[500px] bg-highlighter/10 rounded-full blur-[130px] pointer-events-none"></div>
+          </>
+        )}
 
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+          {/* Section Header */}
+          <motion.div {...fadeInUp} className="mb-14">
+            <span className="font-mono text-highlighter text-xs uppercase tracking-widest font-extrabold bg-highlighter/10 px-4 py-1.5 rounded-full border border-highlighter/20 inline-block mb-4">
+              🌐 OBSERVATOIRE &amp; HUB TECH RÉGIONAL // BOURGOGNE-FRANCHE-COMTÉ
+            </span>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+              <div>
+                <h2 className="headline text-3xl md:text-5xl font-black tracking-tight leading-tight uppercase">
+                  ANNUAIRE &amp; NOTRE COMMUNAUTÉ
+                </h2>
+                <p className="text-slate-400 font-light text-base md:text-lg mt-3 max-w-2xl">
+                  {content.caNewsIntro || "Cartographier, connecter et propulser l'excellence technologique régionale avec un référencement certifié et des synergies concrètes."}
+                </p>
+              </div>
+
+              <a
+                href="https://siliconcomte.fr/annuaire-ecosysteme-silicon-comte"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-highlighter text-slate-950 px-6 py-3.5 rounded-xl font-bold font-mono text-xs md:text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(251,216,0,0.3)] shrink-0 self-start lg:self-auto cursor-pointer"
+              >
+                <span>Explorer l'annuaire officiel</span>
+                <ArrowUpRight size={16} />
+              </a>
+            </div>
+          </motion.div>
+
+          {/* 3 Executive Feature Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <motion.div
+              {...fadeInUp}
+              className="bg-slate-900/80 border border-slate-800 hover:border-slate-750 rounded-2xl p-7 flex flex-col justify-between shadow-xl transition-all group"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-highlighter/10 border border-highlighter/20 flex items-center justify-center text-highlighter mb-5 group-hover:bg-highlighter group-hover:text-slate-950 transition-colors">
+                  <Database size={22} />
+                </div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-[#fbd800] font-bold mb-2">
+                  01 // CARTOGRAPHIE &amp; IA
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">
+                  Indexation fine des compétences
+                </h3>
+                <p className="text-slate-400 text-xs md:text-sm leading-relaxed">
+                  {content.caNewsBullet1 || "L'IA trie et regroupe automatiquement les compétences phares de chaque profil adhérent pour générer des observatoires d'expertise locale."}
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-800 text-[11px] font-mono text-slate-500 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Cartographie dynamique en temps réel</span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              {...fadeInUp}
+              className="bg-slate-900/80 border border-slate-800 hover:border-slate-750 rounded-2xl p-7 flex flex-col justify-between shadow-xl transition-all group"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-[#006685]/20 border border-[#006685]/40 flex items-center justify-center text-sky-400 mb-5 group-hover:bg-[#006685] group-hover:text-white transition-colors">
+                  <ShieldCheck size={22} />
+                </div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-2">
+                  02 // VALIDATION SIRET &amp; SEO
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">
+                  Backlinks d'autorité &amp; Confiance
+                </h3>
+                <p className="text-slate-400 text-xs md:text-sm leading-relaxed">
+                  {content.caNewsBullet2 || "Vérification automatisée des entreprises et fiches publiques à forte valeur ajoutée pour doper le référencement naturel des membres."}
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-800 text-[11px] font-mono text-slate-500 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                <span>Audit API Entreprise &amp; DGFIP</span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              {...fadeInUp}
+              className="bg-slate-900/80 border border-slate-800 hover:border-slate-750 rounded-2xl p-7 flex flex-col justify-between shadow-xl transition-all group"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-5 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                  <Network size={22} />
+                </div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-2">
+                  03 // SYNERGIES TERRITORIALES
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">
+                  Mises en relation &amp; Projets
+                </h3>
+                <p className="text-slate-400 text-xs md:text-sm leading-relaxed">
+                  Favorisez les groupements d'entreprises locales pour répondre aux grands appels d'offres et monter des projets collaboratifs d'envergure.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-800 text-[11px] font-mono text-slate-500 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                <span>Consortiums &amp; Partenariats BFC</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Interactive Search Mockup & Live Category Cloud */}
+          <motion.div
+            {...fadeInUp}
+            className="bg-slate-950/70 border border-slate-800 rounded-2xl p-6 md:p-8 flex flex-col lg:flex-row items-center justify-between gap-6"
+          >
+            <div className="w-full lg:w-2/3">
+              <div className="flex items-center gap-2 text-xs font-mono text-slate-400 mb-3">
+                <Search size={14} className="text-highlighter" />
+                <span className="uppercase font-bold tracking-wider">Aperçu du moteur d'exploration</span>
+              </div>
+              <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 flex items-center gap-3 text-slate-400 text-xs md:text-sm font-mono">
+                <Search size={16} className="text-slate-500 shrink-0" />
+                <span className="truncate">Rechercher par expertise : Quarks, IA, Planoise, SaaS, Accessibilité...</span>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-3.5">
+                {['#DeepTech SaaS', '#Intelligence Artificielle', '#Cybersécurité ISO 27001', '#Accessibilité RGAA', '#Design & UX', '#Planoise Le Numérique'].map((pill, i) => (
+                  <span
+                    key={i}
+                    className="font-mono text-[10px] font-semibold text-slate-400 bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800"
+                  >
+                    {pill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="w-full lg:w-1/3 flex lg:flex-col justify-between lg:justify-center items-center lg:items-end gap-3 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-slate-800/80 lg:pl-6 text-right">
+              <div>
+                <div className="font-display font-black text-2xl text-highlighter">+120</div>
+                <div className="font-mono text-[10px] text-slate-400 uppercase tracking-wider">Acteurs référencés</div>
+              </div>
+              <div>
+                <div className="font-display font-black text-2xl text-white">100%</div>
+                <div className="font-mono text-[10px] text-slate-400 uppercase tracking-wider">SIRET &amp; Sièges BFC</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 7. POURQUOI NOUS REJOINDRE ? (DARK LUXURY RE-STYLING FOR EDITION 3) */}
+      <section id="pourquoi-rejoindre" className="py-24 md:py-36 bg-[#080C15] text-white relative overflow-hidden border-b-8 border-highlighter">
+        {!isGenerating && (
+          <>
+            <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-highlighter/5 rounded-full blur-[140px] pointer-events-none"></div>
+            <div className="absolute bottom-0 right-10 w-[500px] h-[500px] bg-[#006685]/10 rounded-full blur-[130px] pointer-events-none"></div>
+          </>
+        )}
+
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-center">
+            
+            {/* Left Column: 5 Golden Value Pillars */}
+            <div className="lg:col-span-7">
+              <motion.div {...fadeInUp}>
+                <span className="font-mono text-highlighter text-xs tracking-widest font-extrabold uppercase bg-highlighter/10 px-4 py-1.5 rounded-full border border-highlighter/20 inline-block mb-4">
+                  ⭐ ADHÉSION 2026/2027 // CRÉATEURS DE VALEUR
+                </span>
+                <h2 className="headline text-4xl md:text-5xl font-black text-white mb-4 tracking-tight uppercase leading-none">
+                  Pourquoi nous rejoindre&nbsp;?
+                </h2>
+                <p className="text-base md:text-lg font-light text-slate-400 mb-10 max-w-xl">
+                  Bénéficiez immédiatement de retombées directes sur votre visibilité, votre réputation et votre croissance régionale.
+                </p>
+              </motion.div>
+
+              <div className="space-y-4">
+                {[ 
+                  { num: '01', title: 'Badge Adhérent exclusif', desc: 'Sceau numérique officiel millésimé 2026/2027 à intégrer sur votre site et vos communications pour affirmer votre ancrage.' },
+                  { num: '02', title: 'Référencement & Backlinks d\'autorité', desc: 'Boostez votre SEO technique grâce à un lien web certifié provenant du domaine officiel Silicon Comté, indexé et audité.' },
+                  { num: '03', title: 'Accueillir un Digital Apéro', desc: 'Recevez l\'ensemble de l\'écosystème numérique réunissant plus de 40 décideurs dans vos propres locaux.' },
+                  { num: '04', title: 'Apéros IA mensuels & Pot de Rentrée', desc: 'Accès privilégié à nos ateliers pratiques IA appliqués chaque mois à La Table des Copains (ex-Ninkasi) et à nos grands rassemblements de networking.' },
+                  { num: '05', title: 'Interview & Visibilité Dédiée', desc: 'Mettez en lumière vos 10 ans, vos innovations ou vos déploiements mondiaux (à l\'image de Quarks dans cette édition).' }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i} 
+                    {...fadeInUp} 
+                    className="flex gap-4 md:gap-5 items-start p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-highlighter/40 hover:bg-slate-900 transition-all group"
+                  >
+                    <div className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center font-display text-base font-black bg-highlighter text-slate-950 group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(251,216,0,0.3)]">
+                      {item.num}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-base font-bold font-sans text-white mb-1 group-hover:text-highlighter transition-colors">
+                        {item.title}
+                      </h4>
+                      <p className="text-slate-400 font-light text-xs md:text-sm leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-slate-800/80 flex flex-wrap items-center gap-4">
+                <a
+                  href="https://www.siliconcomte.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-highlighter text-slate-950 px-7 py-3.5 rounded-xl font-bold font-mono text-xs md:text-sm uppercase tracking-wider flex items-center gap-2.5 hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-[0_0_25px_rgba(251,216,0,0.3)]"
+                >
+                  <span>Rejoindre la communauté</span>
+                  <ArrowRight size={16} />
+                </a>
+                <span className="text-xs font-mono text-slate-400">
+                  Cotisation annuelle déductible • Adhésion ouverte aux indépendants, startups &amp; PME
+                </span>
+              </div>
+            </div>
+            
+            {/* Right Column: Dark Luxury Holographic Member Seal Card */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-end w-full perspective-2000">
+               <motion.div 
+                 {...anim({ opacity: 0, rotateY: 25, z: -80 }, { opacity: 1, rotateY: 8, z: 0 }, { duration: 1, ease: [0.16, 1, 0.3, 1] }, 'whileInView')}
+                 viewport={{ once: true }}
+                 whileHover={isGenerating ? undefined : { rotateY: -3, rotateX: 4, scale: 1.02 }}
+                 className="relative w-full max-w-[390px] aspect-[1/1.32] bg-gradient-to-b from-[#111827] via-[#0d1424] to-[#090d16] rounded-[2.5rem] shadow-[0_30px_80px_rgba(0,0,0,0.7)] border border-slate-700/80 flex flex-col overflow-hidden transform cursor-pointer transition-all duration-700 group hover:border-highlighter/60"
+               >
+                  {/* Lanyard Clip Hole */}
+                  <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-900 rounded-b-2xl shadow-inner z-20 flex justify-center items-center border border-slate-700 border-t-0`}>
+                    <div className="w-12 h-2.5 rounded-full bg-slate-800 shadow-inner"></div>
+                  </div>
+                  
+                  {/* Gold Foil Top Ribbon */}
+                  <div className="h-28 w-full bg-gradient-to-r from-highlighter via-yellow-400 to-[#d97706] shrink-0 z-10 flex items-center justify-center pt-5 relative overflow-hidden shadow-lg">
+                    <div className="absolute inset-0 opacity-20 bg-cover mix-blend-overlay" style={{ backgroundImage: `url(${illustrationHome})` }}></div>
+                    <span className="h-8 inline-flex items-center justify-center font-display font-extrabold uppercase tracking-widest text-slate-950 text-[11px] relative z-10 bg-white/90 backdrop-blur-md px-5 rounded-full border border-white/50 leading-none shadow-sm">
+                      Sceau Adhérent 2026/2027
+                    </span>
+                  </div>
+                  
+                  {/* Badge Body */}
+                  <div className="flex-1 p-8 text-center flex flex-col justify-between relative">
+                     {/* Background watermark */}
+                     <div className="absolute inset-x-8 inset-y-16 opacity-[0.05] bg-center bg-no-repeat bg-contain pointer-events-none filter invert" style={{ backgroundImage: `url(${logoSiliconComte})` }}></div>
+                     
+                     <div className="pt-4">
+                       <h3 className="text-3xl font-display font-black text-white tracking-tight leading-none uppercase">
+                         SILICON COMTÉ
+                       </h3>
+                       <p className="font-mono text-[9.5px] text-highlighter tracking-widest uppercase mt-2 font-bold">
+                         MEMBRE ACTIF CERTIFIÉ BFC
+                       </p>
+                       
+                       <div className="w-16 h-1.5 bg-gradient-to-r from-highlighter to-yellow-500 mx-auto mt-6 rounded-full shadow-[0_2px_12px_rgba(251,216,0,0.4)]"></div>
+                     </div>
+                     
+                     {/* Unique Barcode / Laser Signature */}
+                     <div className="bg-slate-950 text-white rounded-2xl p-4.5 border border-slate-800 shadow-xl text-center max-w-[280px] mx-auto w-full">
+                       <p className="font-mono text-slate-500 text-[8.5px] uppercase tracking-widest mb-1.5">
+                         Identifiant Unique Labellisé
+                       </p>
+                       <p className="font-mono font-black text-highlighter text-sm tracking-widest">
+                         #SC-2026-BFC-759X
+                       </p>
+                       <div className="mt-2 pt-2 border-t border-slate-800/80 flex justify-center items-center gap-1.5 text-[9px] font-mono text-slate-400">
+                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                         <span>Statut vérifié &amp; Référencé</span>
+                       </div>
+                     </div>
+                     
+                     {/* Footer certification row */}
+                     <div className="flex justify-between items-center mt-4">
+                       <div className="h-7 inline-flex items-center font-mono text-[9px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/70 px-3 rounded-full border border-emerald-500/30 shadow-sm leading-none">
+                         <span className="flex items-center gap-1.5">
+                           <CheckCircle2 size={11} className="text-emerald-400 shrink-0" />
+                           VÉLOX STATUS: ACTIVE
+                         </span>
+                       </div>
+                       <img 
+                         src={logoSiliconComte} 
+                         alt="Certification" 
+                         className="w-[70px] opacity-40 filter contrast-125 rounded" 
+                       />
+                     </div>
+                  </div>
+               </motion.div>
+            </div>
+
+          </div>
+        </div>
+      </section>
 
       {/* 8. FOOTER WITH REFIND OUTLINES AND BRAND INTEGRATIONS */}
       <footer className="bg-slate-950 pt-24 pb-16 px-6 md:px-12 relative overflow-hidden text-white border-t-[12px] border-highlighter">
