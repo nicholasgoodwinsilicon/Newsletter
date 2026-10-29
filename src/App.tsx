@@ -72,7 +72,8 @@ interface EditionContent {
   recapParagraphs?: string[];
   recapEvents?: RecapEventItem[];
   agendaIntro: string;
-  agendaEvents: { date: string; title: string; desc: string; tag?: string; tagColor?: string; location?: string; link?: string }[];
+  agendaEvents: { date: string; title: string; desc: string; tag?: string; tagColor?: string; location?: string; link?: string; linkLabel?: string }[];
+
   caNewsTitle: string;
   caNewsIntro: string;
   caNewsBullet1: string;
@@ -158,6 +159,21 @@ const defaultMemberNews = {
       linkLabel: "🎟️ Réserver votre place",
       badge: "17 Nov. 2026"
     },
+    {
+      id: "apero-entrepreneurs-met-silicon-comte-a-lhonneur",
+      tag: "RÉSEAU & SYNERGIES LOCALES",
+      tagColor: "bg-amber-400/10 text-amber-300 border border-amber-400/30",
+      company: "Apéro Entrepreneurs Besançon & Silicon Comté",
+      title: "L'Apéro Entrepreneurs Besançon met Silicon Comté à l'honneur le 5 décembre",
+      dateOrSubtitle: "Samedi 5 décembre 2026 • Chez Elle et Lui (TEMIS) • Réseautage & Convivialité",
+      content: "Rendez-vous incontournable de la communauté entrepreneuriale bisontine depuis 2016, l'Apéro Entrepreneurs de Besançon consacre son édition mensuelle du 5 décembre à Silicon Comté au restaurant Chez Elle et Lui.\n\nSans cotisation, sans pitch formel et dans une atmosphère chaleureuse, ce format rassemble chaque mois porteurs de projets, dirigeants de TPE/PME et créateurs pour briser la solitude entrepreneuriale et susciter des collaborations spontanées. Venez nombreux échanger et faire rayonner nos passerelles numériques et d'affaires régionales !",
+      link: "https://siliconcomte.fr/evenements-agenda",
+      linkLabel: "Inscriptions à venir via Eventbrite",
+      badge: "5 Déc. 2026"
+    },
+
+
+
     {
       id: "recrutements-projets-reseau",
       tag: "RECRUTEMENTS & PROJETS",
@@ -343,7 +359,7 @@ function getEditionContent(editionNumber: number): EditionContent {
         image: tableDesCopainsLogo
       }
     ],
-    agendaIntro: "Ne manquez pas notre rendez-vous récurrent ! Les Apéros IA se tiennent chaque 2ème mardi du mois dans l'ambiance conviviale du restaurant La Table des Copains (anciennement Ninkasi — tabledescopains.fr) à Besançon, aux côtés de nos Digital Apéros territoriaux :",
+    agendaIntro: "Ne manquez pas nos prochains rendez-vous ! Retrouvez nos Apéros IA mensuels au restaurant La Table des Copains (anciennement Ninkasi — tabledescopains.fr) à Besançon, ainsi que notre mise à l'honneur lors de l'Apéro Entrepreneurs et nos Digital Apéros :",
     agendaEvents: [
       { 
         date: "10 NOVEMBRE 2026", 
@@ -352,6 +368,16 @@ function getEditionContent(editionNumber: number): EditionContent {
         tag: "APÉRO IA #04", 
         location: "La Table des Copains" 
       },
+      { 
+        date: "5 DÉCEMBRE 2026", 
+        title: "Apéro Entrepreneurs Besançon", 
+        desc: "Silicon Comté est mise à l'honneur lors de la rencontre mensuelle des entrepreneurs bisontins. Convivialité, échanges entre pairs et synergies régionales sans filtre.", 
+        tag: "NETWORKING // INVITÉ D'HONNEUR", 
+        tagColor: "bg-amber-400 text-slate-950 font-black border border-amber-500",
+        location: "Chez Elle et Lui • TEMIS"
+      },
+
+
       { 
         date: "8 DÉCEMBRE 2026", 
         title: "L'IA et l'écologie", 
@@ -367,6 +393,7 @@ function getEditionContent(editionNumber: number): EditionContent {
         location: "Besançon Centre-Ville" 
       }
     ],
+
     caNewsTitle: "ANNUAIRE & NOTRE COMMUNAUTÉ",
     caNewsIntro: "Faites rayonner vos compétences ! L'Annuaire des Compétences est le nouveau cœur battant de notre écosystème numérique. Propulsé par l'IA pour automatiser sa création, cet outil est une vitrine unique pour booster votre visibilité régionale.",
     caNewsBullet1: "👉 Créez votre fiche Annuaire : Vous n'avez pas encore votre fiche ? Ne restez pas dans l'ombre ! Que vous soyez membre ou non, créez dès maintenant votre profil sur notre site pour booster vos backlinks et vos opportunités d'affaires.",
@@ -1724,7 +1751,8 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                             <div style="color: #006685; font-size: 11px; font-weight: bold; margin-bottom: 8px;">
                               📍 ${ev.location || (activeEdition.editionNumber === 1 ? 'Besançon' : activeEdition.editionNumber >= 3 ? 'La Table des Copains' : 'Brasserie Ninkasi')}
                             </div>
-                            ${ev.link ? `<div><a href="${ev.link}" target="_blank" style="display: inline-block; padding: 8px 16px; background-color: #006685; color: #ffffff; font-size: 11px; font-weight: bold; font-family: sans-serif; text-decoration: none; border-radius: 6px;">🎟️ S'inscrire (Eventbrite)</a></div>` : ''}
+                            ${ev.link ? `<div><a href="${ev.link}" target="_blank" style="display: inline-block; padding: 8px 16px; background-color: #006685; color: #ffffff; font-size: 11px; font-weight: bold; font-family: sans-serif; text-decoration: none; border-radius: 6px;">🎟️ ${ev.linkLabel || "S'inscrire (Eventbrite)"}</a></div>` : ''}
+
                           </td>
                         </tr>
                       </table>
@@ -3545,8 +3573,9 @@ L'Écosystème : Le Guide de l'Innovation Numérique en BFC
                             className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-3 bg-[#006685] hover:bg-slate-900 text-white font-mono text-[11px] font-bold rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer group/btn"
                           >
                             <Ticket size={13} className="text-highlighter group-hover/btn:scale-110 transition-transform" />
-                            <span>S'inscrire (Eventbrite)</span>
+                            <span>{ev.linkLabel || "S'inscrire (Eventbrite)"}</span>
                             <ExternalLink size={12} className="opacity-80" />
+
                           </a>
                         </div>
                       )}
